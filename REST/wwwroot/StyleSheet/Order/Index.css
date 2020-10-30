@@ -1,0 +1,42 @@
+﻿.heard .card .icon {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    font-size: 4.5rem;
+    color: white;
+}
+
+.button_order {
+    background-color: whitesmoke;
+}
+
+.button_order:hover {
+    color: white;
+    background-color: #58baf9;
+}
+
+.price_order {
+    position: absolute;
+    padding: 0 8px 0 8px;
+    color: white;
+    top: 4px;
+    right: 20px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    background-color: #58baf9;
+    border-radius: 10px;
+}
+
+input[type=text] {
+    width: 100%;
+    padding: 5px 0;
+    font-size: 18px;
+    font-weight: 600;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+}
+
+input[disabled] {
+    background-color: white;
+}

@@ -1,0 +1,29 @@
+﻿.TableDocument .table.sticky th {
+    position: -webkit-sticky;
+    position: sticky;
+    top: -1px;
+    background-color: #F8FAFD;
+    padding-top: 11px;
+    padding-bottom: 11px;
+}
+
+.TableDocument .table.sticky th::after {
+    content: '';
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #E3EBF6;
+    
+}
+
+.TableDocument .table.sticky::after {
+    content: '';
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #E3EBF6;
+}

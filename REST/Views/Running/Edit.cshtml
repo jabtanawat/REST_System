@@ -1,0 +1,102 @@
+﻿@model CD_Running
+@{
+    ViewData["Title"] = "Running";
+    ViewData["System"] = "Running";
+    Layout = "_StoreBack";
+
+    string N_Running = null;
+
+    if (Model.Name == "Order"){
+        N_Running = "รายการสั่งอาหาร";
+    }else if (Model.Name == "Payment"){
+        N_Running = "รายการชำระเงิน";
+    }else if (Model.Name == "Member"){
+        N_Running = "ทะเบียนสมาชิก";
+    }
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-10 col-12 mx-auto">
+                <div class="row">
+                    <div class="col">
+                        <h6 class="text-center font-weight-bold">
+                            ข้อมูล Running @N_Running
+                        </h6>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-xl-8 mx-auto">
+                        <form name="RunningUpdate" method="post">
+                            <div class="row">
+                                <div class="col-md-6 col-12">
+                                    <input type="text" class="form-control" asp-for="Name" hidden>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-sm">อักษรนำหน้า :</label>
+                                        <input type="text" class="form-control form-control-sm" asp-for="Front">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-sm">เลข Running :</label>
+                                        <input type="text" class="form-control form-control-sm" asp-for="Number">
+                                    </div>
+                                    <div class="form-group form-check">
+                                        <input asp-for="AutoRun" type="checkbox" class="form-check-input mt-2" />
+                                        <label asp-for="AutoRun" class="col-form-label col-form-label-sm">Auto Run</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label col-form-label-sm">รูปแบบฟอร์มวันที่ :</label>
+                                        <select asp-for="SetDate" class="form-control form-control-sm">
+                                            <option value="" selected>-- กรุณาเลือกรูปแบบ --</option>
+                                            <option value="yy">yy</option>
+                                            <option value="yyMM">yyMM</option>
+                                            <option value="yyMMdd">yyMMdd</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group form-check">
+                                        <input asp-for="AutoDate" type="checkbox" class="form-check-input mt-2" />
+                                        <label asp-for="AutoDate" class="col-form-label col-form-label-sm">Auto Date</label>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </form>
+                    </div>
+                </div> 
+                <hr />
+                <div class="row">
+                    <div class="col-md-2 col-12 mx-auto">
+                        <button type="button" onclick="Update()" class="btn btn-blue btn-block shadow-sm"><i class="far fa-save"></i>&nbsp;&nbsp;<span>บันทึก</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".item_click_Running").addClass("active");
+        })
+
+        function Update() {
+            Swal.fire({
+                text: "ต้องการบันทึกข้อมูลหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    document.RunningUpdate.action = '@Url.Action("Edit", "Running")'
+                    document.RunningUpdate.submit();
+                }
+            })
+        }
+    </script>
+}

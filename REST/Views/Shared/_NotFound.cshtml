@@ -1,0 +1,28 @@
+﻿@{ 
+    ViewData["Title"] = "Not Found";
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <link href="~/StyleSheet/Layout/_StyleNotFound.css" rel="stylesheet" />
+}
+
+<div class="page-404">
+    <div class="outer">
+        <div class="middle">
+            <div class="inner">
+                <!--BEGIN CONTENT-->
+                <div class="inner-circle">
+                    <i class="fa fa-home icon_notfound"></i>
+                    <span>@ViewBag.ErrorStatus</span>
+                </div>
+                <span class="inner-detail mt-3">
+                    @ViewBag.ErrorMessage
+                    <a href="@Url.Action("Index","Home")" class="btn btn-info">
+                        <i class="fa fa-home"></i>&nbsp;Return home
+                    </a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

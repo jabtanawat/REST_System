@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "Store Back";
+    Layout = "_StoreBack";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" />
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-10 col-12 mx-auto">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="font-weight-bold"><span><i class="fas fa-circle-notch mr-2"></i>อาหาร</span></h5>
+                    </div>
+                    <div class="col">
+                        <div class="text-right">
+                            <a asp-action="Insert" class="btn btn-success btn-sm shadow-sm"><i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;New Data</a>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <table id="DT_Food" class="table table-bordered table-hover">
+                    <thead style="background-color:#F8FAFD;">
+                        <tr>
+                            <th class="text-center"> รหัส </th>
+                            <th class="text-center"> ชื่อ </th>
+                            <th class="text-center"> เครื่องเคียง </th>
+                            <th class="text-center"> ราคา </th>
+                            <th class="text-center"> กลุ่มอาหาร </th>
+                            <th class="text-center"> <i class="fas fa-ellipsis-h"></i> </th>
+                            <th class="text-center"> <i class="fas fa-ellipsis-h"></i> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in ViewBag.DT_Food)
+                        {
+                            <tr>
+                                <td>@row.FoodId</td>
+                                <td>@row.FoodName</td>
+                                <td>@row.DishName</td>
+                                <td class="text-right">@row.Price</td>
+                                <td class="text-center">@row.GroupFoodName</td>
+                                <td class="text-center" style="width:2rem;">
+                                    <a asp-action="Update" asp-route-id="@row.FoodId" class="text-info"><i class="far fa-eye"></i></a>
+                                </td>
+                                <td class="text-center" style="width:2rem;">
+                                    <a href="#" onclick="Delete('@row.FoodId')" class="text-danger"><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Plugins/DataTables/datatables.min.js"></script>
+    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            $('#DT_Food').DataTable({
+                "info": false,
+                "ordering": false
+            });
+
+            $(".item_click_Food").addClass("active");
+
+        });
+
+        function Delete(id) {
+            Swal.fire({
+                text: `ต้องการลบข้อมูล ${id} หรือไม่ ?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = `@Url.Action("Delete", "Food")/${id}`
+                }
+            })
+        }
+
+    </script>
+}

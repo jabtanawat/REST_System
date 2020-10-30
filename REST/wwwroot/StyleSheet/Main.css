@@ -1,0 +1,179 @@
+﻿@font-face {
+    font-family: 'Athiti-Regular';
+    src: url('../Plugins/Fonts/Athiti/Athiti-Regular.ttf') format('truetype');
+}
+
+body {
+    font-family: Athiti-Regular;
+    color: #5E6E82;
+    /*background-color: #EDF2F9;*/
+    /*background-color: #F9FBFD;*/
+    background-color: #F9F9FD;
+}
+
+/* BG & Text */
+
+.bg-blue {
+    background-color: #58baf9;
+}
+
+.bg-black {
+    background-color: #3B3C40;
+}
+
+.text-blue {
+    color: #58baf9;
+}
+
+.bg-primary-light {
+    background-color: #CCE5FF;
+}
+
+.bg-info-light {
+    background-color: #D1ECF1;
+}
+
+.bg-green {
+    background-color: #D4EDDA;
+}
+
+.text-green {
+    color: #D4EDDA;
+}
+
+.bg-red {
+    background-color: #F8D7DA;
+}
+
+.text-red {
+    color: #F8D7DA;
+}
+
+.bg-yellow {
+    background-color: #FFF3CD;
+}
+
+.text-yellow {
+    color: #FFF3CD;
+}
+
+/* Button */
+
+.btn-blue {
+    color: white;
+    background-color: #58baf9;
+}
+
+.btn-blue:hover {
+    color: white;
+    background-color: #36A3F0;
+}
+
+.btn-success-light {
+    font-weight: 600;
+    color: #6C757D;
+    background-color: #D4EDDA;
+}
+
+.btn-success-light:hover {
+    font-weight: 600;
+    color: #6C757D;
+    background-color: #CCE5D2;
+}
+
+.btn-primary-light {
+    font-weight: 600;
+    color: #6C757D;
+    background-color: #CCE5FF;
+}
+
+.btn-primary-light:hover {
+    font-weight: 600;
+    color: #6C757D;
+    background-color: #C2DBF5;
+}
+
+.btn-danger-light {
+    font-weight: 600;
+    color: #6C757D;
+    background-color: #F8D7DA;
+}
+
+.btn-danger-light:hover {
+    font-weight: 600;
+    color: #6C757D;
+    background-color: #F1D0D4;
+}
+
+.btn-info-light {
+    font-weight: 600;
+    color: #36757F;
+    background-color: #D1ECF1;
+}
+
+.btn-info-light:hover {
+    font-weight: 600;
+    color: #36757F;
+    background-color: #C5E0E6;
+}
+
+/* Table */
+
+.table-md th,
+.table-md td {
+    padding: 0.4rem;
+    font-size: 0.96rem;
+}
+
+.table.table-head-fixed thead tr:nth-child(1) th {
+    background-color: #F8FAFD;
+    border-bottom: 0;
+    box-shadow: inset 0 1px 0 #E3EBF6, inset 0 -1px 0 #E3EBF6;
+    position: -webkit-sticky;
+    position: sticky;
+    top: -1px;
+    z-index: 10;
+}
+
+/* Table Control Input */
+.form-table-control {
+    display: block;
+    width: 100%;
+    padding: 5px 0;
+    font-size: 1rem;
+    font-weight: 400;
+    border: none;
+}
+
+.form-table-control-sm {
+    height: calc(1.2em + 0.2rem + 2px);
+    padding: 0.1rem 0.3rem;
+    font-size: 1rem;
+    line-height: 1.3;
+    border-radius: 0.2rem;
+    color: #5E6E82;
+}
+
+.form-table-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Table sm Button */
+.btn-table-sm {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.87rem;
+    line-height: 1.3;
+    border-radius: 0.2rem;
+}
+
+/* Form Control */
+.form-label-sm {
+    padding-top: calc(0.25rem + 1px);
+    padding-bottom: calc(0.25rem + 1px);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}

@@ -1,0 +1,56 @@
+﻿@using REST.Service;
+
+<!-- Modal Trans -->
+<div class="modal fade bd-example-modal-lg" id="MadalStTrans" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="MadalStapleTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <h6 class="font-weight-bold" id="exampleModalCenterTitle"><i class="fas fa-database mr-2"></i>ข้อมูลรายการสั่งซื้อ/รับเข้า</h6>
+                    </div>
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-table-sm btn-danger text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+
+                    </div>
+                </div>
+                <hr />
+                <table id="DT_Trans" class="table table-md table-bordered table-hover mt-3">
+                    <thead style="background-color:#F8FAFD;">
+                        <tr>
+                            <th class="text-center" style="width:2rem;"><i class="fas fa-ellipsis-h"></i></th>
+                            <th class="text-center">เลขที่เอกสาร</th>
+                            <th class="text-center" style="width:5%;">วันที่ทำรายการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="TB_Staple">
+                        @{
+                            foreach (var row in ViewBag.Trans)
+                            {
+                                <tr>
+                                    <td class="text-center bg-info-light"><a href="#" onclick="Show('@row.Documents')" class="btn btn-table-sm btn-info text-white"><i class="fas fa-check-circle"></i></a></td>
+                                    <td>@row.Documents</td>
+                                    @{ 
+                                        var dates = Share.FormatDate(row.Dates).Date.ToString("dd/MM/yyyy");
+                                    } 
+                                    <td class="text-center">@dates</td>
+                                </tr>
+                                        }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#DT_Trans').DataTable({
+            "info": false,
+            "ordering": false
+        });
+    })
+</script>

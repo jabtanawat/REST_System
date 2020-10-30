@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - REST</title>
+    <link rel="stylesheet" href="~/Plugins/Bootstrap-4.5.2/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/Plugins/Fontawesome-Free-5.14.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/Plugins/SlimScroll-1.3.8/libs/prettify/prettify.css" />
+    <link rel="stylesheet" href="~/StyleSheet/Main.css" />
+    <link rel="stylesheet" href="~/StyleSheet/Layout/_StyleStoreBackDashboard.css" />
+    <link rel="stylesheet" href="~/Plugins/ToastrAlert/toastr.css" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+
+    <!---------- modal ผู้ใช้งาน ---------->
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="text-center">
+                        <img src="~/Images/System/REST_User.png" class="rounded-circle" style="width: 100px; height: 100px;" />
+                        <div class="form-group mt-3">
+                            <h5>ชื่อ: @User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value</h5>
+                            <h5>สาขา: @User.Claims.FirstOrDefault(c => c.Type == "BranchName")?.Value</h5>
+                        </div>
+                    </div>
+                    <div class="form-group mt-5">
+                        <div class="row">
+                            <div class="col">
+                                <a class="btn btn-secondary btn-sm btn-block shadow-sm" asp-controller="Home" asp-action="Index">หน้าหลัก</a>
+                            </div>
+                            <div class="col">
+                                <a class="btn btn-danger btn-sm btn-block shadow-sm" asp-controller="Login" asp-action="Logout">Logout.</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+
+        <div class="wrapper d-flex">
+            <div class="sidemenu">
+                <div class="sidebar" id="Scoll">
+                    <div class="nav_header">
+                        <div class="text-center mt-3">
+                            <div class="round_header">
+                                <a asp-controller="Member" asp-action="Index">
+                                    <img src="~/Images/System/Svg/P-SF.svg" class="rounded picture_header" />
+                                </a>
+                            </div>
+                            <div class="text_header mt-2">
+                                <a asp-controller="Member" asp-action="Index" class="nav-link link_header">ระบบหน้าร้าน</a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <ul class="navbar-nav">
+                        <li class="nav-item item_click_Store">
+                            <a asp-controller="MB_Profile" asp-action="Index" class="nav-link px-2">
+                                <i class="far fa-id-card nav_icon"></i>
+                                <span class="nav_text">ทะเบียนสมาชิก</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content">
+                <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-white nav__bar">
+                    <div class="container-fluid">
+                        <div class="d-flex justify-content-start">
+                            <a href="#" class="sidemenuClick button_hide navbar-text"><i class="fas fa-align-left"></i></a>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            @ViewData["System"] - Restaurant Systems
+                        </div>
+                        <div class="d-flex justify-content-end navbar-nav">
+                            <a class="nav-item nav-link active" href="#" data-toggle="modal" data-target=".bd-example-modal-sm"><i class="fas fa-user-cog"></i></a>
+                        </div>
+                    </div>
+                </nav>
+
+                <div class="container-fluid">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/Plugins/Jquery-3.5.1/jquery-3.5.1.js"></script>
+    <script src="~/Plugins/Bootstrap-4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/Plugins/Fontawesome-Free-5.14.0/js/all.min.js"></script>
+    <script src="~/Plugins/Sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/Plugins/SlimScroll-1.3.8/libs/prettify/prettify.js"></script>
+    <script src="~/Plugins/SlimScroll-1.3.8/jquery.slimscroll.min.js"></script>
+    <script src="~/JavaScript/Layout/_ScriptStoreBackDashboard.js"></script>
+    <script src="~/Plugins/ToastrAlert/toastr.min.js"></script>
+    <partial name="_NotificationPanel" />
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

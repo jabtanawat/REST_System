@@ -1,0 +1,21 @@
+﻿.form-login .card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20rem;
+    border-radius: 20px;
+}
+
+.form-login .card .card-img-top {
+    width: 125px;
+    height: 125px;
+    margin: 20px auto 0;
+}
+
+.form-login .card input,
+.form-login .card .input-group-prepend,
+.form-login .card span,
+.form-login .card button {
+    border-radius: 20px;
+}

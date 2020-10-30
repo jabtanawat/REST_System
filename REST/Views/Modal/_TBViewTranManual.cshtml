@@ -1,0 +1,58 @@
+﻿@using REST.Service;
+
+<!-- Modal Trans -->
+<div class="modal fade bd-example-modal-lg" id="MadalStTrans" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="MadalStapleTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <h6 class="font-weight-bold" id="exampleModalCenterTitle"><i class="fas fa-database mr-2"></i>ข้อมูลรายการตัดสต๊อกด้วยมือ</h6>
+                    </div>
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-table-sm btn-danger text-white px-2" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <hr />
+                <table id="ViewDT" class="table table-md table-bordered table-hover mt-3">
+                    <thead style="background-color:#F8FAFD;">
+                        <tr>
+                            <th class="text-center"> ชื่อ </th>
+                            <th class="text-center"> รายการ </th>
+                            <th class="text-center"> วันที่ / เวลา </th>
+                            <th class="text-center"> จำนวนก่อน </th>
+                            <th class="text-center"> จำนวนแก้ไข </th>
+                            <th class="text-center"> คงเหลือ </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var row in ViewBag.View)
+                            {
+                                <tr>
+                                    <td>@row.StapleName</td>
+                                    <td class="text-center" style="width:12%">@row.Trans</td>
+                                    <td class="text-center" style="width:20%">@row.Dates.ToString("dd/MM/yyyy")&nbsp;&nbsp;@row.Times</td>
+                                    <td class="text-right" style="width:15%">@row.After</td>
+                                    <td class="text-right" style="width:15%">@row.Edit</td>
+                                    <td class="text-right" style="width:15%">@row.Balance</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ViewDT').DataTable({
+            "info": false,
+            "ordering": false
+        });
+    })
+</script>

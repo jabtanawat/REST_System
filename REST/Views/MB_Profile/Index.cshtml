@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Member Profile";
+    ViewData["System"] = "ทะเบียนสมาชิก";
+    Layout = "_Member";
+}
+
+@section Styles{
+    <link rel="stylesheet" href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" />
+}
+
+<div class="card">
+    <div class="card-body" scroll>
+
+        <div class="row">
+            <div class="col-xl-11 mx-auto">
+
+                <section>
+                    <div class="d-flex mb-2">
+                        <div class="ml-2 mr-2">
+                            <a href="@Url.Action("FrmProfile", "MB_Profile", new { mode = "Add"})" class="btn btn-sm btn-success"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่มใหม่</a>
+                        </div>
+                    </div>
+                    <hr />
+                </section>
+
+                <section class="Frm-Table">
+                    <table id="DT_Table" class="table table-md table-hover table-bordered">
+                        <thead style="background-color:#F8FAFD;">
+                            <tr>
+                                <th class="text-center" style="width:20%;"> รหัส </th>
+                                <th class="text-center"> ชื่อ - นามสกุล </th>
+                                <th class="text-center" style="width:5%;"> <i class="fas fa-ellipsis-h"></i> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in ViewBag.MB_Profile)
+                            {
+                                <tr>
+                                    <td>@row.MemberId</td>
+                                    <td>@row.Name</td>
+                                    <td class="text-center"><a href="@Url.Action("FrmProfile", "MB_Profile", new { mode = "Edit", id = row.MemberId})" class="text-info"><i class="fas fa-edit"></i></a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </section>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Plugins/DataTables/datatables.min.js"></script>
+    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            // Scroll Bar
+            screenScroll()
+            $('#DT_Table').DataTable({
+                "info": false,
+                "ordering": false
+            });
+        });
+
+        function screenScroll() {
+            var height_P = $(window).height() - 95
+            $('[scroll]').slimScroll({
+                height: height_P,
+                railBorderRadius: 0,
+                railVisible: true
+            });
+        }
+    </script>
+}

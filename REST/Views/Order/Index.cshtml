@@ -1,0 +1,435 @@
+﻿@{
+    ViewData["Title"] = "Order";
+    Layout = "_LayoutStoreFront";
+    var DataTable = ViewBag.DataTable;
+    string bg = null;
+
+    if (DataTable.TableST == 1)
+    {
+        bg = "bg-green";
+    }
+    else if (DataTable.TableST == 2)
+    {
+        bg = "bg-red";
+    }
+    else if (DataTable.TableST == 3)
+    {
+        bg = "bg-yellow";
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/StyleSheet/Order/Index.css" />
+    <link rel="stylesheet" href="~/Plugins/SlimScroll-1.3.8/libs/prettify/prettify.css" />
+}
+
+<div class="heard">
+    <div class="row">
+        <div class="col-lg-4 col-md-5 pr-md-0 heard-left">
+            <div class="card @bg border-0 mb-3 card__Table">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3"><p class="font-weight-bold mb-1">รหัส</p></div>
+                        <div class="col-9"><p class="mb-1">: @DataTable.TableId</p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3"><p class="font-weight-bold mb-1">ชื่อโต๊ะ</p></div>
+                        <div class="col-9"><p class="mb-1">: @DataTable.TableName</p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3"><p class="font-weight-bold mb-1">สถานะ</p></div>
+                        <div class="col-9"><p class="mb-1">: @DataTable.Status</p></div>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="card border-0 mb-3">
+                <div class="card-body">
+
+                    <div class="hearder__Order">
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="text-left font-weight-bold text-secondary pt-2"><span>จำนวนรายการ</span></h6>
+                            </div>
+                            <div class="col">
+                                <input type="text" placeholder="0" id="txtCount" disabled />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <h6 class="text-left font-weight-bold text-secondary pt-2"><span>ราคาทั้งหมด ฿</span></h6>
+                            </div>
+                            <div class="col">
+                                <input type="text" placeholder="0.00" id="txtTotalPrice" disabled/>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <button class="btn btn-primary-light btn-block" onclick="SaveOrder();"><i class="fas fa-cart-arrow-down"></i>&nbsp;บันทึก</button>
+                            </div>
+                            <div class="col">
+                                <button class="btn btn-danger-light btn-block" onclick="CancelOrder();"><i class="far fa-trash-alt"></i>&nbsp;ยกเลิก</button>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                   
+                    <div class="SideBarOrder">
+                        <div class="row pb-0">
+                            <div class="col">
+
+                                <table class="table table-borderless" id="TableOrder">
+                                    <thead>
+                                        <tr hidden>
+                                            <th>1</th>
+                                            <th>2</th>
+                                            <th>3</th>
+                                            <th>4</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+
+                                <div class="row" id="NoOrder">
+                                    <div class="col text-center"><img src="~/Images/System/NoOrder.png" style="height:200px;width:200px;" /></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-7 mb-2 heard-right">
+            <div class="card border-0">
+                <div class="card-body">
+                    <div class="hearder__AreaFood">
+                        <div class="row">
+                            <div class="col"><h6 class="text-secondary"><i class="fas fa-apple-alt"></i>&nbsp;<strong>ข้อมูลอาหาร</strong></h6></div>
+                            <div class="col">
+                                <div class="d-flex justify-content-end">
+                                    <select class="form-control form-control-sm col-md-6 col-8" onchange="food(this.value);">
+                                        <option value="">Show All</option>
+                                        @foreach (var row in ViewBag.SL_GroupFood)
+                                        {
+                                            <option value="@row.GroupFoodId">@row.GroupFoodName</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                    
+                    <div class="SideBarFood">
+                        <div class="row" id="cardfood">
+
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Plugins/Numeral/numeral.js"></script>
+    <script src="~/Plugins/SlimScroll-1.3.8/libs/prettify/prettify.js"></script>
+    <script src="~/Plugins/SlimScroll-1.3.8/jquery.slimscroll.min.js"></script>
+    <script>
+
+        $(function () {
+
+            food("")
+
+            $('#TableOrder').hide();
+
+            //GetOrder()
+
+            Scroll_Order()
+        });
+
+        // Get Data
+
+        function food(val) {
+            $('#cardfood').empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetFood", "Order")',
+                dataType: 'json',
+                data: 'id=' + val,
+                success: function (data) {
+                    $.each(data, function (index, val) {
+                        val.forEach(function (value) {
+                            var image = "";
+                            var id = 'onclick=AddOrder("' + value.foodId + '");';
+                            if (value.imageName != null) {
+                                image = 'src="@Url.Action("Food","Images")' + '/' + value.imageName + '"';
+                            } else {
+                                image = 'src="@Url.Action("System","Images")' + '/' +'NOIMAGE.jpg"';
+                            }
+                            var col = '<div class="col-lg-3 col-md-4 col-sm-3 col-4 mb-3 text-truncate">'
+                                + '<button class="btn btn-block p-0 button_order" ' + id + '>'
+                                + '<span class="price_order">' + value.price + '</span>'
+                                + '<img '+ image + ' class="card-img-top" style="height:80px;width:100%;" asp-append-version="true" />'
+                                + '<p class="mb-0">' + value.foodName + '</p>'
+                                + '</button>'
+                                + '</div>';
+
+                            $('#cardfood').append(col)
+                        })
+                    })
+                }
+            });
+        }
+
+        function GetOrder() {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetOrder", "Order")',
+                dataType: 'json',
+                success: function (data) {
+                    $.each(data, function (index, val) {
+                        if (val != "") {
+                            $('#TableOrder').empty()
+                            $('#Count').empty()
+                            $('#Sum').empty()
+
+                            var count = '<h6 class="text-left"><span>จำนวน&nbsp;&nbsp;</span><strong>' + val.length + '</strong><span>&nbsp;&nbsp;รายการ</span></h6>';
+                            let sum = 0;
+                            val.forEach(function (value) {
+                                var HDelete = 'onclick=DeleteOrder("' + value.foodId + '");';
+                                sum += value.price * value.amount;
+                                var t = '<tr>'
+                                    + '<td>' + value.amount + '</td>'
+                                    + '<td>' + value.foodName + '</td>'
+                                    + '<td>' + value.price + '</td>'
+                                    + '<td class="text-danger"><a href="#" ' + HDelete + ' class="text-danger"><i class="fas fa-times"></i></a></td>'
+                                    + '</tr>';
+                                $('#TableOrder').append(t)
+                            })
+                            var HSum = '<h6 class="text-right"><span>รวม&nbsp;&nbsp;</span><strong>' + numeral(sum).format('0,0.00') + '</strong><span>&nbsp;&nbsp;บาท</span></h6>';
+                            $('#Count').append(count);
+                            $('#Sum').append(HSum);
+
+                            $('#Nocount').hide();
+                            $('#NoOrder').hide();
+                            $('#TableOrder').show();
+
+                            // Order button disabled = false
+                            $("#btn__payment").prop('disabled', false);
+
+                        } else {
+                            $('#TableOrder').hide();
+
+                            // No Order button disabled = true
+                            $("#btn__payment").prop('disabled', true);
+                            
+                        }
+
+                    })
+
+                }
+            });
+        }
+
+        // Order
+
+        function SaveOrder() {
+            Swal.fire({
+                text: "ต้องการบันทึกรายการหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+
+                    window.location.href = '@Url.Action("SaveOrder", "Order", new { id = DataTable.TableId })'
+
+                    @*$.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("SaveOrder", "Order")',
+                        data: 'id=' + @DataTable.TableId,
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data != null) {
+                                if (data == 'success') {
+                                    window.location.href = '@Url.Action("Index", "StoreFront")'
+                                } else {
+                                    window.location.href = '@Url.Action("Index", "Order")' + '/' + @DataTable.TableId
+                                }
+                            }
+                        }
+                    });*@
+                }
+            });
+        }
+
+        function AddOrder(val) {
+            $('#TableOrder').empty()
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("AddOrder", "Order")',
+                dataType: 'json',
+                data: 'id=' + val,
+                success: function (data) {
+                    $.each(data, function (index, val) {
+                        let Count = val.length;
+                        let sum = 0;
+                        val.forEach(function (value) {
+                            var HDelete = 'onclick=DeleteOrder("' + value.foodId + '");';
+                            sum += value.price * value.amount;
+                            var t = '<tr>'
+                                + '<td>' + value.amount + '</td>'
+                                + '<td>' + value.foodName + '</td>'
+                                + '<td>' + value.price.toFixed(2) + '</td>'
+                                + '<td class="text-danger"><a href="#" ' + HDelete + ' class="text-danger"><i class="fas fa-times"></i></a></td>'
+                                + '</tr>';
+                            $('#TableOrder').append(t)
+                        })
+                        $('#txtCount').val(Count);
+                        $('#txtTotalPrice').val(numeral(sum).format('0,0.00'));
+
+                    })
+
+                    $('#TableOrder').show();
+                    $('#NoOrder').hide()
+                }
+            });
+        }
+
+        function DeleteOrder(val) {
+            Swal.fire({
+                text: "ต้องการยกเลิกรายการหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    $('#TableOrder').empty()
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("DeleteOrder", "Order")',
+                        dataType: 'json',
+                        data: 'id=' + val,
+                        success: function (data) {
+                            $.each(data, function (index, val) {
+                                if (val != "") {
+                                    let Count = val.length;
+                                    let sum = 0;
+                                    val.forEach(function (value) {
+                                        var HDelete = 'onclick=DeleteOrder("' + value.foodId + '");';
+                                        sum += value.price * value.amount;
+                                        var t = '<tr>'
+                                            + '<td>' + value.amount + '</td>'
+                                            + '<td>' + value.foodName + '</td>'
+                                            + '<td>' + value.price + '</td>'
+                                            + '<td class="text-danger"><a href="#" ' + HDelete + ' class="text-danger"><i class="fas fa-times"></i></a></td>'
+                                            + '</tr>';
+                                        $('#TableOrder').append(t)
+                                    })
+                                    $('#txtCount').val(Count);
+                                    $('#txtTotalPrice').val(numeral(sum).format('0,0.00'));
+
+                                    $('#NoOrder').hide()
+                                    $('#TableOrder').show();
+                                } else {
+                                    $('#txtCount').val(0);
+                                    $('#txtTotalPrice').val(numeral(0).format('0,0.00'));
+
+                                    $('#NoOrder').show()
+                                    $('#TableOrder').hide();
+                                }
+                            })
+
+                        }
+                    });
+                }
+            });
+        }
+
+        function CancelOrder() {
+            Swal.fire({
+                text: "ต้องการยกเลิกรายการทั้งหมดหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    $('#TableOrder').empty()
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("CancelOrder", "Order")',
+                        dataType: 'json',
+                        success: function (data) {
+                            $.each(data, function (index, val) {
+                                if (val == "success") {
+                                    $('#NoOrder').show()
+                                    $('#TableOrder').hide();
+
+                                    $('#txtCount').val(0);
+                                    $('#txtTotalPrice').val(numeral(0).format('0,0.00'));
+                                } else {
+                                    $('#txtCount').val(0);
+                                    $('#txtTotalPrice').val(numeral(0).format('0,0.00'));
+                                }
+                            })
+                        }
+                    });
+                }
+            });
+        }
+
+        // Payment
+        function Payment() {
+            Swal.fire({
+                text: "ต้องการชำระเงินหรือไม่ ?",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = '@Url.Action("Index", "Payment", new { id = DataTable.TableId })'
+                }
+            });
+        }
+
+        // Scroll
+
+        function Scroll_Order() {
+
+            var height_Order = $(document).height() - $('.navbar').height() - $('.card__Table').height() - $('.hearder__Order').height() - 70 - 56
+
+            var height_Food = $(document).height() - $('.navbar').height() - $('.hearder__AreaFood').height() - 70 - 40
+
+            $('.SideBarOrder').slimScroll({
+                height: height_Order
+            });
+
+            $('.SideBarFood').slimScroll({
+                height: height_Food
+            });
+
+            console.log(height_Food);
+        }
+
+    </script>
+}

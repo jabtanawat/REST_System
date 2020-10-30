@@ -1,0 +1,250 @@
+﻿@{
+    ViewData["Title"] = "Store Front";
+    ViewData["System"] = "ระบบหน้าร้าน";
+    Layout = "_StoreFront";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/StyleSheet/StoreFront/Index.css" />
+}
+
+<section class="heard-row">
+    <div class="row">
+        <div class="col-md-4 col-xl-3 mb-3">
+            <div class="card order-card">
+                <div class="card-block">
+                    <span class="side-stick-blue"></span>
+                    <h6>จำนวนโต๊ะ</h6>
+                    <h2 class="text-right"><i class="fas fa-dice-d6 f-left"></i><span>@ViewBag.TableCount</span></h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-xl-3 mb-3">
+            <div class="card order-card">
+                <div class="card-block">
+                    <span class="side-stick-green"></span>
+                    <h6>จำนวนโต๊ะที่ว่าง</h6>
+                    <h2 class="text-right"><i class="fas fa-utensils f-left"></i><span>@ViewBag.TableST_1</span></h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-xl-3 mb-3">
+            <div class="card order-card">
+                <div class="card-block">
+                    <span class="side-stick-yellow"></span>
+                    <h6>จำนวนโต๊ะที่ไม่ว่าง</h6>
+                    <h2 class="text-right"><i class="fas fa-book-reader f-left"></i><span>@ViewBag.TableST_2</span></h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-xl-3 mb-3">
+            <div class="card order-card">
+                <div class="card-block">
+                    <span class="side-stick-red"></span>
+                    <h6>จำนวนโต๊ะที่จอง</h6>
+                    <h2 class="text-right"><i class="fas fa-ban f-left"></i><span>@ViewBag.TableST_3</span></h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content-table">
+    <div class="card">
+        <div class="card-body">
+            <div class="card border-0 bg-light">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <div class="flex-grow-1">ข้อมูลโต๊ะ</div>
+                        <div>Flex item</div>
+                        <div class="ml-2">
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" href="#"  id="dropdownMenuButton" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-align-justify"></i>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Features</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Pricing</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Dropdown link
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+</section>
+
+@*<div class="content1 mb-3">
+        <div class="row">
+            <div class="col-xl-8 col-7 mb-2">
+                <h6 class="text-secondary font-weight-bold"><i class="fas fa-box"></i>&nbsp;&nbsp;ข้อมูลโต๊ะ</h6>
+            </div>
+            <div class="col-xl col-5 mb-2">
+                <div class="row">
+                    <small class="col-md-2 pr-md-0 pt-2 text-right">โซนที่นั่ง :</small>
+                    <div class="col-md-4">
+                        <select class="form-control form-control-sm" id="txtZone" onchange="Selecttable()">
+                            <option value="">Show All</option>
+                            @{
+                                foreach (var row in ViewBag.SL_Zone)
+                                {
+                                    <option value="@row.ZoneId">@row.ZoneName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <small class="col-md-2 pr-md-0 pt-2 text-right">สถานะ :</small>
+                    <div class="col-md-4">
+                        <select class="form-control form-control-sm" id="txtStatus" onchange="Selecttable()">
+                            <option value="">Show All</option>
+                            <option value="1">ว่าง</option>
+                            <option value="2">ไม่ว่าง</option>
+                            <option value="3">จอง</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="mt-0" />
+        <div class="row mb-3" id="cardtable">
+
+        </div>
+
+        <div class="row mb-3" id="ModalTable">
+
+        </div>
+    </div>*@
+
+
+@section Scripts {
+    <script>
+        @*
+            $('#cardtable').on('load', Selecttable())
+
+            function Selecttable() {
+                $('#cardtable').empty();
+                $('#ModalTable').empty();
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("GetTable", "StoreFront")',
+                    dataType: 'json',
+                    data: { ZoneId: $('#txtZone').val(), Status: $('#txtStatus').val() },
+                    success: function (data) {
+                        $.each(data, function (index, val) {
+                            val.forEach(function (value) {
+                                var id = value.tableId;
+                                var bg = "";
+
+                                if (value.tableST == 1) {
+                                    bg = "bg-green";
+
+                                } else if (value.tableST == 2) {
+                                    bg = "bg-red";
+
+                                } else if (value.tableST == 3) {
+                                    bg = "bg-yellow";
+
+                                }
+
+                                var Buttons = '<div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-2">'
+                                    + '<a class="card__link" data-toggle="modal" data-target="#Modal' + value.tableId  + '">'
+                                    + '<div class="card border-0 ' + bg + ' rounded card__AddTable">'
+                                    + '<div class="card-body">'
+                                    + '<div class="card-icon-add">'
+                                    + '<i class="fas fa-shopping-cart"></i>'
+                                    + '</div>'
+                                    + '<h6 class="text-center text-secondary font-weight-bold mb-3">' + value.tableName + '</h6>'
+                                    + '<div class="Personal__Table text-secondary">'
+                                    + '<i class="fas fa-user"></i>&nbsp;' + value.personal + ''
+                                    + '</div>'
+                                    + '</div>'
+                                    + '</div>'
+                                    + '</a>'
+                                    + '</div>';
+
+                                $('#cardtable').append(Buttons)
+
+                                var Modals = '<div class="modal fade" id="Modal' + value.tableId + '" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">'
+                                    + '<div class="modal-dialog modal-dialog-centered" role="document">'
+                                    + '<div class="modal-content">'
+                                    + '<div class="modal-body">'
+                                    + '<div class="row mb-3">'
+                                    + '<div class="col text-right">'
+                                    + '<button type="button" class="btn btn-light btn-sm" data-dismiss="modal"><i class="fas fa-times"></i></button>'
+                                    + '</div>'
+                                    + '</div>'
+                                    + '<div class="row">'
+                                    + '<div class="col-md mb-3">'
+                                    + '<a href="@Url.Action("Index", "Payment")' + '/' + value.tableId + '" class="card__link">'
+                                    + '<div class="card border-0 bg-primary-light card__Button">'
+                                    + '<div class="card-body">'
+                                    + '<div class="icon__ModalMenu">'
+                                    + '<i class="fas fa-folder-open" aria-hidden="true"></i>'
+                                    + '</div>'
+                                    + '<p class="text-right text__ModalMenu">ข้อมูลโต๊ะอาหาร</p>'
+                                    + '</div>'
+                                    + '</div>'
+                                    + '</a>'
+                                    + '</div>'
+                                    + '<div class="col-md">'
+                                    + '<a href="@Url.Action("Index", "Order")' + '/' + value.tableId + '" class="card__link">'
+                                    + '<div class="card border-0 bg-info-light card__Button">'
+                                    + '<div class="card-body">'
+                                    + '<div class="icon__ModalMenu">'
+                                    + '<i class="fas fa-folder-plus" aria-hidden="true"></i>'
+                                    + '</div>'
+                                    + '<p class="text-right text__ModalMenu">เพิ่มรายการอาหาร</p>'
+                                    + '</div>'
+                                    + '</div>'
+                                    + '</a>'
+                                    + '</div>'
+                                    + '</div>'
+                                    + '<br />'
+                                    + '</div>'
+                                    + '</div>'
+                                    + '</div>'
+                                    + '</div>';
+
+                                $('#ModalTable').append(Modals)
+                            })
+                        })
+                    }
+                });
+            }*@
+
+    </script>
+}

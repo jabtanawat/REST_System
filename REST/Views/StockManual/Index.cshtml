@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "Stock Manual";
+    Layout = "_LayoutStockDashboard";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="~/StyleSheet/StockManual/Index.css" />
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="Head">
+            <div class="row">
+                <div class="col-xl-10 mx-auto">
+                    <div><h6 class="font-weight-bold"><span><i class="fas fa-circle-notch mr-2"></i>ตัดสต๊อกด้วยมือ</span></h6></div>
+                    <hr />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-10 mx-auto">
+                    <div class="d-flex bd-highlight mb-3">
+                        <div class="mr-auto">
+                            <input type="text" class="form-control form-control-sm" placeholder="ค้นหา.........." id="inputSerach" onkeyup="myFunction()" />
+                        </div>
+                        <div class="ml-2 mr-2">
+                            <button type="button" class="btn btn-table-sm btn-primary" data-toggle="ajax-modal" data-target="#MadalView" data-url="@Url.Action("_ViewStockManual", "Modal")"><i class="fas fa-search mr-2"></i>ดูข้อมูล</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-10 mx-auto">
+                <div class="page border mr-2">
+                    <table id="DT_Staple" class="table sticky table-md table-hover table-bordered">
+                        <thead style="background-color:#F8FAFD;">
+                            <tr>
+                                <th class="text-center"> รหัส </th>
+                                <th class="text-center"> ชื่อ </th>
+                                <th class="text-center"> จำนวน </th>
+                                <th class="text-center"> หน่วยนับ </th>
+                                <th class="text-center" style="width:5%;"> <i class="fas fa-list-alt"></i> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in ViewBag.Staple)
+                            {
+                                <tr>
+                                    <td>@row.StapleId</td>
+                                    <td>@row.StapleName</td>
+                                    <td class="text-right">@row.Amount</td>
+                                    <td class="text-center">@row.UnitName</td>
+                                    <td class="text-center" style="width:2rem;">
+                                        <button type="button" class="btn btn-table-sm btn-light" data-toggle="ajax-modal" data-target="#MadalStaple" data-url="@Url.Action("_FrmStockStaple", "Modal", new { id = row.StapleId})"><i class="fas fa-pencil-alt"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="PlaceHolderHere"></div>
+
+@section Scripts {
+    <script src="~/Plugins/DataTables/datatables.min.js"></script>
+    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Plugins/Numeral/numeral.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $(".item_click_StockManual").addClass("active");
+            // Screen Scroll Bar
+            Scroll()
+        });
+
+        function myFunction() {
+            var input, filter, table, tr, td0, td1, i, txtValue;
+            input = document.getElementById("inputSerach");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("DT_Staple");
+            tr = table.getElementsByTagName("tr");
+
+            console.log(tr.length)
+
+            for (i = 0; i < tr.length; i++) {
+                td0 = tr[i].getElementsByTagName("td")[0];
+                td1 = tr[i].getElementsByTagName("td")[1];
+                if (td0) {
+                    txtValue = td0.textContent || td0.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else if (td1) {
+                        txtValue = td1.textContent || td1.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        }
+
+        // Modal
+        var PlaceHolderElement = $('#PlaceHolderHere')
+        $('button[data-toggle="ajax-modal"]').click(function (event) {
+            var url = $(this).data('url')
+            var decodedUrl = decodeURIComponent(url)
+            $.get(url).done(function (data) {
+                PlaceHolderElement.html(data)
+                PlaceHolderElement.find('.modal').modal('show')
+            })
+        })
+
+        function Scroll() {
+            var height_P = $(window).height() - $('.Head').height() - 135
+            $('.page').slimScroll({
+                height: height_P
+            });
+        }
+
+    </script>
+}

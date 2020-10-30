@@ -1,0 +1,15 @@
+﻿.page .table.sticky th {
+    position: sticky;
+    top: -1px;
+    background-color: #F8FAFD;
+}
+
+.page .table.sticky th::after {
+    content: '';
+    width: 100%;
+    height: 1px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #E3EBF6;
+}

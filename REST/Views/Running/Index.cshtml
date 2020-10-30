@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Store Back";
+    ViewData["System"] = "Running";
+    Layout = "_StoreBack";
+
+    var R_Order = ViewBag.RunningOrder;
+    var R_Payment = ViewBag.RunningPayment;
+    var R_Store = ViewBag.RunningStore;
+    var R_Member = ViewBag.RunningMember;
+}
+
+@section Styles {
+    
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-11 col-12 mx-auto">
+                <div class="row form-group">
+                    <div class="col-4 text-right">
+                        <label class="col-form-label col-form-label-sm">รายการสั่งอาหาร</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control form-control-sm" value="@R_Order.Number" />
+                    </div>
+                    <div class="col-4 text-left">
+                        <a asp-controller="Running" asp-action="Edit" asp-route-id="@R_Order.Name" class="btn btn-sm btn-info btn-sm shadow-sm"><i class="fas fa-edit"></i></a>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4 text-right">
+                        <label class="col-form-label col-form-label-sm">ชำระเงิน</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control form-control-sm" value="@R_Payment.Number" />
+                    </div>
+                    <div class="col-4 text-left">
+                        <a asp-controller="Running" asp-action="Edit" asp-route-id="@R_Payment.Name" class="btn btn-sm btn-info btn-sm shadow-sm"><i class="fas fa-edit"></i></a>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4 text-right">
+                        <label class="col-form-label col-form-label-sm">เลขที่เอกสารสั่งซื้อ/รับเข้า</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control form-control-sm" value="@R_Store.Number" />
+                    </div>
+                    <div class="col-4 text-left">
+                        <a asp-controller="Running" asp-action="Edit" asp-route-id="@R_Store.Name" class="btn btn-sm btn-info btn-sm shadow-sm"><i class="fas fa-edit"></i></a>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-4 text-right">
+                        <label class="col-form-label col-form-label-sm">ทะเบียนสมาชิก</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control form-control-sm" value="@R_Member.Number" />
+                    </div>
+                    <div class="col-4 text-left">
+                        <a asp-controller="Running" asp-action="Edit" asp-route-id="@R_Member.Name" class="btn btn-sm btn-info btn-sm shadow-sm"><i class="fas fa-edit"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".item_click_Running").addClass("active");
+        })
+    </script>
+}

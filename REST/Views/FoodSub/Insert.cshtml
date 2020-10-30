@@ -1,0 +1,215 @@
+﻿@model REST.ViewModels.ViewFoodSub;
+
+@{
+    ViewData["Title"] = "Food Sub";
+    Layout = "_LayoutData";
+    var DataFood = ViewBag.DataFood;
+    var DataStaple = ViewBag.DataStaple;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Plugins/Tail.Select/css/bootstrap4/tail.select-default.css" />
+}
+
+    <div class="card shadow-sm mt-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-8 col-12 mx-auto">
+                    <div class="text-center">
+                        <p class="font-weight-bold">ข้อมูลอาหาร</p>
+                    </div>
+                    <hr />
+                </div>
+            </div>
+            <div class="row mt-lg-0 mt-3">
+                <div class="col-sm-8 col-12 mx-auto">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <div class="text-center">
+                                @{
+                                    if (DataFood.ImageName != null)
+                                    {
+                                        <img src="~/Images/Food/@DataFood.ImageName" alt="" style="height:150px;width:150px;border: 1px solid #E5E5E5;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Images/System/NOIMAGE.jpg" alt="" style="height:150px;width:150px;border: 1px solid #E5E5E5;" />
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="col-lg-9 mt-lg-0 mt-3">
+                            <div class="row">
+                                <div class="col-md-3 col-sm-4 col-4">
+                                    <p class="font-weight-bold">กลุ่มอาหาร :</p>
+                                </div>
+                                <div class="col-md-9 col-sm-8 col-8">
+                                    <p>@DataFood.GroupFoodName</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-4 col-4">
+                                    <p class="font-weight-bold">รหัสอาหาร :</p>
+                                </div>
+                                <div class="col-md-9 col-sm-8 col-8">
+                                    <p>@DataFood.FoodId</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-4 col-4">
+                                    <p class="font-weight-bold">ชื่ออาหาร :</p>
+                                </div>
+                                <div class="col-md-9 col-sm-8 col-8">
+                                    <p>@DataFood.FoodName</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-4 col-4">
+                                    <p class="font-weight-bold">ราคา :</p>
+                                </div>
+                                <div class="col-md-9 col-sm-8 col-8">
+                                    <p>@DataFood.Price</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow-sm mt-3 mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-8 col-12 mx-auto">
+                    <div class="text-center">
+                        <p class="font-weight-bold">ข้อมูลวัตถุดิบ</p>
+                    </div>
+                    <hr />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-sm-8 col-12 mx-auto">
+                    <div class="row mb-0">
+                        <div class="col-md-3 col-lg-2 mb-3">
+                            <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#MadalStaple"><i class="fas fa-plus-circle"></i>&nbsp;เพิ่ม</button>
+                        </div>
+                        <div class="col-md-9 col-lg-10">
+                            @{
+                                if (DataStaple.Count > 0)
+                                {
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">ชื่อ</th>
+                                                <th class="text-center">จำนวน</th>
+                                                <th class="text-center">หน่วยนับ</th>
+                                                <th class="text-center">#</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var Item in DataStaple)
+                                            {
+                                                <tr>
+                                                    <td>@Item.StapleName</td>
+                                                    <td class="text-right">@Item.Amount</td>
+                                                    <td class="text-center">@Item.UnitName</td>
+                                                    <td class="text-center"><a asp-action="DelStaple" asp-route-StapleID="@Item.StapleId" asp-route-FoodId="@DataFood.FoodId" class="text-danger"><i class="fas fa-times"></i></a></td>
+                                                </tr>
+                                            }
+                                            <tr>
+                                                <td colspan="3" class="text-right">ลบข้อมูลทั้งหมด</td>
+                                                <td class="text-center table-danger"><a asp-action="CanStaple" asp-route-FoodId="@DataFood.FoodId" class="text-white"><i class="fas fa-times"></i></a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <p class="border rounded py-2 px-2 text-danger">ไม่มีข้อมูลวัตถุดิบ</p>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-8 mx-auto">
+                    <div class="d-flex justify-content-end">
+                        <button type="button" onclick="Insert()" class="btn btn-success shadow-sm"><i class="far fa-save"></i>&nbsp;&nbsp;<span>บันทึก</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="MadalStaple" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="MadalStapleTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">ข้อมูลวัตถุดิบ</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form asp-controller="FoodSub" asp-action="AddStaple" method="post">
+                        <input type="text" asp-for="FoodId" value="@DataFood.FoodId" hidden />
+                        <div class="row mb-3">
+                            <div class="col-8">
+                                <label>วัตถุดิบ :</label>
+                                <select asp-for="StapleId" class="custom-select" id="SelectStaple">
+                                    <option value="" selected>--กรุณาเลือก--</option>
+                                    @foreach (var row in ViewBag.SL_Staple)
+                                    {
+                                        <option value="@row.StapleId">@row.StapleName</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label>จำนวน :</label>
+                                <input asp-for="Amount" type="number" class="form-control text-right floatNumber" value="1.00" />
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="text-right mb-3">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;ADD</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@section Scripts {
+    <script src="~/Plugins/Tail.Select/js/tail.select-full.min.js"></script>
+    <script>
+
+        tail.select("#SelectStaple", {
+            search: true,
+        });
+
+        $(".floatNumber").change(function () {
+            $(this).val(parseFloat($(this).val()).toFixed(2));
+        });
+
+        function Insert() {
+            Swal.fire({
+                text: "ต้องการบันทึกข้อมูลหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = '@Url.Action("SaveStaple", "FoodSub", new { FoodId = DataFood.FoodId })'
+                }
+            });
+        }
+
+
+    </script>
+}

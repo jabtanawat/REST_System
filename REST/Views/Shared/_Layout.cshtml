@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - REST</title>
+    <link rel="stylesheet" href="~/Plugins/Bootstrap-4.5.2/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/Plugins/Fontawesome-Free-5.14.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/StyleSheet/Main.css" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+
+        @RenderBody()
+
+    <script src="~/Plugins/Jquery-3.5.1/jquery-3.5.1.js"></script>
+    <script src="~/Plugins/Bootstrap-4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/Plugins/Fontawesome-Free-5.14.0/js/all.min.js"></script>
+    <script src="~/Plugins/Sweetalert2/sweetalert2.all.min.js"></script>
+    <partial name="_NotificationPanel" />
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

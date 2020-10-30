@@ -1,0 +1,130 @@
+﻿
+/* HEARD - ROW */
+.heard-row .card {
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+    box-shadow: 0 1px 2.94px 0.06px rgba(4,26,55,0.16);
+    border: none;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.heard-row .card .card-block {
+    padding: 10px 20px 10px 20px;
+}
+
+.heard-row .card .side-stick-blue {
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 5px;
+    background: linear-gradient(45deg,#4099ff,#73b4ff);
+}
+
+.heard-row .card .side-stick-green {
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 5px;
+    background: linear-gradient(45deg,#2ed8b6,#59e0c5);
+}
+
+.heard-row .card .side-stick-yellow {
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 5px;
+    background: linear-gradient(45deg,#FFB64D,#ffcb80);
+}
+
+.heard-row .card .side-stick-red {
+    position: absolute;
+    width: 5px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 5px;
+    background: linear-gradient(45deg,#FF5370,#ff869a);
+}
+
+.heard-row .order-card i {
+    font-size: 50px;
+}
+
+.heard-row .f-left {
+    float: left;
+}
+
+.heard-row .f-right {
+    float: right;
+}
+
+.content1 .card__link {
+    color: black;
+    text-decoration: none;
+}
+
+.content1 .card__AddTable {
+    cursor: pointer;
+}
+
+.content1 .card__AddTable .card-icon-add {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: white;
+    font-size: 1.7rem;
+    visibility: hidden;
+}
+
+.content1 .card__AddTable:hover .card-icon-add {
+    visibility: visible;
+}
+
+.content1 .card__AddTable .Personal__Table {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.card__Button {
+    cursor: pointer;
+}
+
+.bg-primary-light:hover {
+    background-color: #C2DBF5;
+}
+
+.bg-info-light:hover {
+    background-color: #CBE6EB;
+}
+
+.icon__ModalMenu {
+    position: absolute;
+    top: 0px;
+    font-size: 60px;
+    color: rgba(0, 0, 0, 0.15);
+}
+
+/* Modal */
+
+.text__ModalMenu {
+    font-size: 1rem;
+    font-weight: 600;
+}
+.modal .card__link {
+    color: black;
+    text-decoration: none;
+}

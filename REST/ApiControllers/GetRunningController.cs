@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using REST.Controllers;
+using REST.Data;
+using REST.Models;
+using REST.Service;
+
+namespace REST.ApiControllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class GetRunningController : BaseController
+    {
+        #region Connect db
+        private readonly DbConnection _db;
+
+        public GetRunningController(DbConnection db)
+        {
+            _db = db;
+        }
+
+        #endregion 
+
+        public string Running(string id, string branchid)
+        {
+
+            string DocRunning = null;
+            string RunLength = null;
+            int Number = 0;
+            DateTime Date = Share.FormatDate(DateTime.Now).Date;            
+
+            var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id && x.BranchId == branchid);
+
+            if (Running.AutoRun == true)
+            {
+                for (int i = 0; i < Running.Number.Length; i++)
+                {
+                    RunLength += '0';
+                }
+                Number = Int32.Parse(Running.Number) + 1;
+                DocRunning = Running.Front + Number.ToString(RunLength);
+
+                if (Running.AutoDate == true)
+                {
+                    for (int i = 0; i < Running.Number.Length; i++)
+                    {
+                        RunLength += '0';
+                    }
+                    Number = Int32.Parse(Running.Number) + 1;
+                    DocRunning = Running.Front + Date.ToString(Running.SetDate) + Number.ToString(RunLength);
+                }
+            }
+
+            return DocRunning;
+        }
+
+        public void SetRunning(string Name, string DocRunning, string branchid)
+        {
+            var Running = new CD_Running();
+            Running = _db.CD_Running.FirstOrDefault(x => x.Name == Name && x.BranchId == branchid);
+
+            if (Running.AutoRun == true)
+            {
+                int RunLength = Running.Number.Length;
+
+                Running.Number = DocRunning.Substring(DocRunning.Length - RunLength);
+
+                /* SAVE DB */
+                _db.CD_Running.Update(Running);
+                _db.SaveChanges();
+            }
+        }
+    }
+}

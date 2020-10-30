@@ -1,0 +1,30 @@
+﻿.jumbotron {
+    background-image: url('../../Images/System/REST_Jumbotron.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 4rem 0;
+}
+
+.card:hover {
+    background-color: white;
+    cursor: pointer;
+}
+
+.card .icon-home {
+    margin-top: 1rem;
+    font-size: 6rem;
+    color: #58baf9;
+}
+
+.card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@media (max-width: 960px){
+    .card-home {
+        background-color: white;
+    }
+}

@@ -1,0 +1,19 @@
+﻿.input__text {
+    width: 100%;
+    padding: 5px 0;
+    font-size: 18px;
+    font-weight: 600;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+    background-color: white;
+}
+
+.input__text:focus {
+    outline: none;
+}
+
+.table.sticky th {
+    position: sticky;
+    top: -1px;
+}
