@@ -48,32 +48,33 @@
         </div>
     </div>
 </section>
-<!-- end heard-row -->
 <!-- content-table -->
 <section class="content-table">
     <div class="card">
         <div class="card-body">
             <!-- content-table-heard -->
             <section class="content-table-heard">
-                <div class="card border-0 bg-light">
+                <div class="card border-0 bg-light mb-3">
                     <div class="card-body px-2 py-2">
                         <div class="d-flex">
                             <div class="flex-grow-1">
                                 <h6 class="font-weight-bold mb-0 mt-1">ข้อมูลโต๊ะ</h6>
                             </div>
                             <div>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-info-light dropdown-toggle" id="zonedropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-th-list"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="zonedropdown">
-                                        <a class="dropdown-item col-form-label-sm" href="#">Show All</a>
-                                        @foreach (var row in ViewBag.SL_Zone)
-                                        {
-                                            <a class="dropdown-item col-form-label-sm" href="#">@row.ZoneName</a>
-                                        }
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text text-info" for="Zone"><i class="fas fa-th-list"></i></label>
                                     </div>
-                                </div>
+                                    <select class="form-control" id="Zone">
+                                        <option value="">Show All</option>
+                                        @{
+                                            foreach (var row in ViewBag.SL_Zone)
+                                            {
+                                                <option value="@row.ZoneId">@row.ZoneName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>                                
                             </div>
                             <div class="ml-2">
                                 <div class="btn-group">
@@ -81,10 +82,10 @@
                                         <i class="fas fa-align-justify"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="tabledropdown">
-                                        <a class="dropdown-item col-form-label-sm" href="#">Show All</a>
-                                        <a class="dropdown-item col-form-label-sm" href="#">ว่าง</a>
-                                        <a class="dropdown-item col-form-label-sm" href="#">ไม่ว่าง</a>
-                                        <a class="dropdown-item col-form-label-sm" href="#">จอง</a>
+                                        <a class="dropdown-item col-form-label-sm" href="#Al">Show All</a>
+                                        <a class="dropdown-item col-form-label-sm" href="#S1"><span class="color-green"><i class="fas fa-circle"></i>&nbsp;</span>ว่าง</a>
+                                        <a class="dropdown-item col-form-label-sm" href="#S2"><span class="color-red"><i class="fas fa-circle"></i>&nbsp;</span>ไม่ว่าง</a>
+                                        <a class="dropdown-item col-form-label-sm" href="#S3"><span class="color-yellow"><i class="fas fa-circle"></i>&nbsp;</span>จอง</a>
                                     </div>
                                 </div>
                             </div>
@@ -92,7 +93,71 @@
                     </div>
                 </div>
             </section>
-            <!-- end content-table-heard -->
+            <!-- content-table-body -->
+            <section class="content-table-body" scroll>
+                <div class="row">
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST1>
+                        <div class="card border-0 bg-c-green c-table">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <p class="mb-1">A1</p>
+                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST3>
+                        <div class="card border-0 bg-c-yellow c-table">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <p class="mb-1">A2</p>
+                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST2>
+                        <div class="card border-0 bg-c-red c-table">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <p class="mb-1">A3</p>
+                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST1>
+                        <div class="card border-0 bg-c-green c-table">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <p class="mb-1">B1</p>
+                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST1>
+                        <div class="card border-0 bg-c-green c-table">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <p class="mb-1">B2</p>
+                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST3>
+                        <div class="card border-0 bg-c-yellow c-table">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <p class="mb-1">B3</p>
+                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+            </section>
         </div>
     </div>
 </section>
@@ -141,6 +206,56 @@
 
 @section Scripts {
     <script>
+        $(document).ready(function () {
+            screenScroll()
+            showtable() 
+
+            $('')
+        });
+
+        document.getElementById('zone').addEventListener('change', () => {
+            const zone = document.getElementById('Zone')
+            console.log(zone.value)
+        })
+
+        document.querySelector('[href="#Al"]').addEventListener('click', () => {
+            const zone = document.getElementById('Zone')
+            console.log('Al', zone.value )
+        })
+
+        document.querySelector('[href="#S1"]').addEventListener('click', () => {
+            const zone = document.getElementById('Zone')
+            console.log('S1', zone.value )
+        })
+
+        document.querySelector('[href="#S2"]').addEventListener('click', () => {
+            const zone = document.getElementById('Zone')
+            console.log('S2', zone.value )
+        })
+
+        document.querySelector('[href="#S3"]').addEventListener('click', () => {
+            const zone = document.getElementById('Zone')
+            console.log('S3', zone.value )
+        })
+
+        function showtable() {
+            const tableSt1 = document.querySelectorAll('[ST1]').length
+            const tableSt2 = document.querySelectorAll('[ST2]').length
+            const tableSt3 = document.querySelectorAll('[ST3]').length
+            console.log('โต๊ะว่างจำนวน: ' + tableSt1)
+            console.log('โต๊ะไม่ว่างจำนวน: ' +tableSt2)
+            console.log('โต๊ะจองจำนวน: ' +tableSt3)
+        }
+
+        function screenScroll() {
+            var height_P = $(window).height() - $('.heard-row').height() - $('.content-table-heard').height() - 150
+            $('[scroll]').slimScroll({
+                height: height_P,
+                railBorderRadius: 0,
+                railVisible: true
+            });
+        }
+
         @*
             $('#cardtable').on('load', Selecttable())
 
