@@ -82,10 +82,10 @@
                                         <i class="fas fa-align-justify"></i>
                                     </button>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="tabledropdown">
-                                        <a class="dropdown-item col-form-label-sm" href="#Al">Show All</a>
-                                        <a class="dropdown-item col-form-label-sm" href="#S1"><span class="color-green"><i class="fas fa-circle"></i>&nbsp;</span>ว่าง</a>
-                                        <a class="dropdown-item col-form-label-sm" href="#S2"><span class="color-red"><i class="fas fa-circle"></i>&nbsp;</span>ไม่ว่าง</a>
-                                        <a class="dropdown-item col-form-label-sm" href="#S3"><span class="color-yellow"><i class="fas fa-circle"></i>&nbsp;</span>จอง</a>
+                                        <button class="dropdown-item active" type="button" value="">Show All</button>
+                                        <button class="dropdown-item" type="button" value="1"><span class="color-green"><i class="fas fa-circle"></i>&nbsp;</span>ว่าง</button>
+                                        <button class="dropdown-item" type="button" value="2"><span class="color-red"><i class="fas fa-circle"></i>&nbsp;</span>ไม่ว่าง</button>
+                                        <button class="dropdown-item" type="button" value="3"><span class="color-yellow"><i class="fas fa-circle"></i>&nbsp;</span>จอง</button>
                                     </div>
                                 </div>
                             </div>
@@ -208,35 +208,39 @@
     <script>
         $(document).ready(function () {
             screenScroll()
-            showtable() 
-
-            $('')
         });
 
-        document.getElementById('zone').addEventListener('change', () => {
-            const zone = document.getElementById('Zone')
-            console.log(zone.value)
+        document.getElementById('Zone').addEventListener('change', () => {
+            const zone = $('#Zone').val()
+            const status = $('.dropdown-item.active').val()
+            const panel = $('.content-table-body')
+            panel.empty() // ให้ข้อมูลโต๊ะ = ว่าง
+            $.post("@Url.Action("GetTable","StoreFront")", { ZoneId: zone, Status: status },
+            function (data, status) {
+                $.each(data, function (index, val) {
+                    val.forEach(function (value) {
+                        console.log(value.tableId)
+                    })
+                })
+
+            });
         })
 
-        document.querySelector('[href="#Al"]').addEventListener('click', () => {
-            const zone = document.getElementById('Zone')
-            console.log('Al', zone.value )
-        })
-
-        document.querySelector('[href="#S1"]').addEventListener('click', () => {
-            const zone = document.getElementById('Zone')
-            console.log('S1', zone.value )
-        })
-
-        document.querySelector('[href="#S2"]').addEventListener('click', () => {
-            const zone = document.getElementById('Zone')
-            console.log('S2', zone.value )
-        })
-
-        document.querySelector('[href="#S3"]').addEventListener('click', () => {
-            const zone = document.getElementById('Zone')
-            console.log('S3', zone.value )
-        })
+        $(".dropdown-item").on("click", function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            const zone = $('#Zone').val()
+            const status = $('.dropdown-item.active').val()
+            const panel = $('.content-table-body')
+            panel.empty() // ให้ข้อมูลโต๊ะ = ว่าง
+            $.post("@Url.Action("GetTable","StoreFront")", { ZoneId: zone, Status: status },
+            function (data, status) {
+                $.each(data, function (index, val) {
+                    val.forEach(function (value) {
+                        console.log(value.tableId)
+                    })
+                })
+            });
+        });
 
         function showtable() {
             const tableSt1 = document.querySelectorAll('[ST1]').length
