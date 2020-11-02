@@ -58,5 +58,13 @@ namespace REST.Controllers
             ViewBag.View = GetView.ViewTranManual(BranchId);
             return PartialView("_TBViewTranManual");
         }
+
+        public IActionResult _ModalST(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            ViewBag.TableId = _db.CD_Table.FirstOrDefault(x => x.TableId == id && x.BranchId == branchid).TableId;
+            ViewBag.TableName = _db.CD_Table.FirstOrDefault(x => x.TableId == id && x.BranchId == branchid).TableName;
+            return PartialView("_ModalST");
+        }
     }
 }

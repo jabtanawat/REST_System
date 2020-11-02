@@ -115,8 +115,7 @@
     padding: 16px 10px;
 }
 
-.content1 .card__link {
-    color: black;
+.content-table-body .card-link {
     text-decoration: none;
 }
 

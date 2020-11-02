@@ -1,0 +1,43 @@
+﻿<!-- Modal Staple -->
+<div class="modal fade" id="MadalST" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="MadalStapleTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col">
+                        <p class="font-weight-bold">เมนู - @ViewBag.TableName</p>
+                    </div>
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-sm btn-danger py-0" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md">
+                        <a href="@Url.Action("Index", "Payment", new { id = ViewBag.TableId})" class="card__link">
+                            <div class="card border-0 bg-primary-light card__Button">
+                                <div class="card-body">
+                                    <div class="icon__ModalMenu">
+                                        <i class="fas fa-folder-open" aria-hidden="true"></i>
+                                    </div>
+                                    <p class="text-right text__ModalMenu">ข้อมูลโต๊ะอาหาร</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md">
+                        <a href="@Url.Action("Order", "SF_Order", new { id = ViewBag.TableId})" class="card__link">
+                            <div class="card border-0 bg-info-light card__Button">
+                                <div class="card-body">
+                                    <div class="icon__ModalMenu">
+                                        <i class="fas fa-folder-plus" aria-hidden="true"></i>
+                                    </div>
+                                    <p class="text-right text__ModalMenu">เพิ่มรายการอาหาร</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

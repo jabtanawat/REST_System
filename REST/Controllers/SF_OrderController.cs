@@ -17,41 +17,20 @@ using static REST.Service.Enums;
 namespace REST.Controllers
 {
     [Authorize]
-    public class OrderController : BaseController
+    public class SF_OrderController : BaseController
     {
         #region Connection db
         private readonly DbConnection _db;
-
-        public OrderController(DbConnection db)
+        public SF_OrderController(DbConnection db)
         {
             _db = db;
         }
-
         #endregion 
 
-        [Route("/Order/{id}")]
-        public IActionResult Index(string id)
+        public IActionResult Order(string id)
         {
-            var data = TableData(id);
-
-            var Item = new ViewTable();
-            foreach (var row in data)
-            {
-                Item.TableId = row.TableId;
-                Item.TableName = row.TableName;
-                Item.Description = row.Description;
-                Item.TableST = row.TableST;
-                Item.Status = row.Status;
-            }
-
-            ViewBag.DataTable = Item;
-            ViewBag.SL_GroupFood = SL_GroupFood();
-
-            if (HttpContext.Session.GetString("Session_ListOrder") != null)
-            {
-                HttpContext.Session.Remove("Session_ListOrder");
-            }
-
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            ViewBag.GroupFood = _db.CD_GroupFood.Where(x => x.BranchId == branchid).ToList();
             return View();
         }
 

@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Order";
+    ViewData["System"] = "รับออเดอร์";
+    Layout = "_Order";
+}
+
+<!-- content-table-heard -->
+<section class="content-table-heard">
+    <div class="card mt-3 mb-3">
+        <div class="card-body py-2">
+            <div class="d-flex">
+                <div class="mr-2">
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-primary text-white" type="button"><i class="fas fa-apple-alt"></i></button>
+                        </div>
+                        <select class="form-control" id="Zone">
+                            <option value="">Show All</option>
+                            @foreach(var row in ViewBag.GroupFood)
+                            {
+                                <option value="@row.GroupFoodId">@row.GroupFoodName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="flex-grow-1">
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="card mt-3">
+    <div class="card-body" scroll-card>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            screenScroll()
+        });
+
+        function screenScroll() {
+            var height_P = $(window).height() - $('.navbar').height() - $('.content-table-heard').height() - 70
+            $('[scroll-card]').slimScroll({
+                height: height_P,
+                railBorderRadius: 0,
+                railVisible: true
+            });
+        }
+    </script>
+}

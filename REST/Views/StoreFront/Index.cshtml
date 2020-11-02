@@ -95,114 +95,42 @@
             </section>
             <!-- content-table-body -->
             <section class="content-table-body" scroll>
-                <div class="row">
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST1>
-                        <div class="card border-0 bg-c-green c-table">
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <p class="mb-1">A1</p>
-                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
+                <div class="row" panel-table>
+                    @foreach (var row in ViewBag.Table)
+                    {
+                        string bg = null;
+                        if (row.TableST == 1)
+                        {
+                            bg = "bg-c-green";
+                        }
+                        else if (row.TableST == 2)
+                        {
+                            bg = "bg-c-red";
+                        }
+                        else if (row.TableST == 3)
+                        {
+                            bg = "bg-c-yellow";
+                        }
+                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+                            <a class="card-link" onclick="showModal('@Url.Action("_ModalST", "Modal", new { id = row.TableId})')" data-toggle="ajax-modal" data-target="#MadalST">
+                                <div class="card border-0 @bg c-table">
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <p class="mb-1">@row.TableName</p>
+                                            <p class="mb-0">จำนวนที่นั่ง : @row.Personal</p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                            </a>                            
                         </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST3>
-                        <div class="card border-0 bg-c-yellow c-table">
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <p class="mb-1">A2</p>
-                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST2>
-                        <div class="card border-0 bg-c-red c-table">
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <p class="mb-1">A3</p>
-                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST1>
-                        <div class="card border-0 bg-c-green c-table">
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <p class="mb-1">B1</p>
-                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST1>
-                        <div class="card border-0 bg-c-green c-table">
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <p class="mb-1">B2</p>
-                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3" ST3>
-                        <div class="card border-0 bg-c-yellow c-table">
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <p class="mb-1">B3</p>
-                                    <p class="mb-0">จำนวนที่นั่ง : 4</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    }                   
                 </div>                
             </section>
         </div>
     </div>
 </section>
 
-@*<div class="content1 mb-3">
-        <div class="row">
-            <div class="col-xl-8 col-7 mb-2">
-                <h6 class="text-secondary font-weight-bold"><i class="fas fa-box"></i>&nbsp;&nbsp;ข้อมูลโต๊ะ</h6>
-            </div>
-            <div class="col-xl col-5 mb-2">
-                <div class="row">
-                    <small class="col-md-2 pr-md-0 pt-2 text-right">โซนที่นั่ง :</small>
-                    <div class="col-md-4">
-                        <select class="form-control form-control-sm" id="txtZone" onchange="Selecttable()">
-                            <option value="">Show All</option>
-                            @{
-                                foreach (var row in ViewBag.SL_Zone)
-                                {
-                                    <option value="@row.ZoneId">@row.ZoneName</option>
-                                }
-                            }
-                        </select>
-                    </div>
-                    <small class="col-md-2 pr-md-0 pt-2 text-right">สถานะ :</small>
-                    <div class="col-md-4">
-                        <select class="form-control form-control-sm" id="txtStatus" onchange="Selecttable()">
-                            <option value="">Show All</option>
-                            <option value="1">ว่าง</option>
-                            <option value="2">ไม่ว่าง</option>
-                            <option value="3">จอง</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <hr class="mt-0" />
-        <div class="row mb-3" id="cardtable">
-
-        </div>
-
-        <div class="row mb-3" id="ModalTable">
-
-        </div>
-    </div>*@
-
+<div id="PlaceHolderHere"></div>
 
 @section Scripts {
     <script>
@@ -213,16 +141,36 @@
         document.getElementById('Zone').addEventListener('change', () => {
             const zone = $('#Zone').val()
             const status = $('.dropdown-item.active').val()
-            const panel = $('.content-table-body')
+            const panel = $('[panel-table]')
             panel.empty() // ให้ข้อมูลโต๊ะ = ว่าง
-            $.post("@Url.Action("GetTable","StoreFront")", { ZoneId: zone, Status: status },
+            $.post("@Url.Action("GetTable", "StoreFront")", { ZoneId: zone, Status: status },
             function (data, status) {
                 $.each(data, function (index, val) {
                     val.forEach(function (value) {
-                        console.log(value.tableId)
+                        var bg = "";
+                        if (value.tableST == 1) {
+                            bg = "bg-c-green";
+                        } else if (value.tableST == 2) {
+                            bg = "bg-c-red";
+                        } else if (value.tableST == 3) {
+                            bg = "bg-c-yellow";
+                        }
+                        var link = '@Url.Action("_ModalST", "Modal")' + '/' + value.tableId;
+                        var p = '<div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">'
+                            + `<a class="card-link" onclick="showModal('${link}')" data-toggle="ajax-modal" data-target="#MadalST">`
+                            + '<div class="card border-0 ' + bg + ' c-table">'
+                            + '<div class="card-body">'
+                            + '<div class="text-center">'
+                            + '<p class="mb-1">' + value.tableName + '</p>'
+                            + '<p class="mb-0">จำนวนที่นั่ง : ' + value.personal + '</p>'
+                            + '</div>'
+                            + '</div>'
+                            + '</div>'
+                            + '</a>'
+                            + '</div>';
+                        panel.append(p)
                     })
                 })
-
             });
         })
 
@@ -230,25 +178,46 @@
             $(this).addClass("active").siblings().removeClass("active");
             const zone = $('#Zone').val()
             const status = $('.dropdown-item.active').val()
-            const panel = $('.content-table-body')
+            const panel = $('[panel-table]')
             panel.empty() // ให้ข้อมูลโต๊ะ = ว่าง
-            $.post("@Url.Action("GetTable","StoreFront")", { ZoneId: zone, Status: status },
+            $.post("@Url.Action("GetTable", "StoreFront")", { ZoneId: zone, Status: status },
             function (data, status) {
                 $.each(data, function (index, val) {
                     val.forEach(function (value) {
-                        console.log(value.tableId)
+                        var bg = "";
+                        if (value.tableST == 1) {
+                            bg = "bg-c-green";
+                        } else if (value.tableST == 2) {
+                            bg = "bg-c-red";
+                        } else if (value.tableST == 3) {
+                            bg = "bg-c-yellow";
+                        }
+                        var link = '@Url.Action("_ModalST", "Modal")' + '/' + value.tableId;
+                        var p = '<div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">'
+                            + `<a class="card-link" onclick="showModal('${link}')" data-toggle="ajax-modal" data-target="#MadalST">`
+                            + `<div class="card border-0 ${bg} c-table">`
+                            + '<div class="card-body">'
+                            + '<div class="text-center">'
+                            + `<p class="mb-1">${value.tableName}</p>`
+                            + `<p class="mb-0">จำนวนที่นั่ง : ${value.personal}</p>`
+                            + '</div>'
+                            + '</div>'
+                            + '</div>'
+                            + '</a>'
+                            + '</div>';
+                        panel.append(p)
                     })
                 })
             });
         });
 
-        function showtable() {
-            const tableSt1 = document.querySelectorAll('[ST1]').length
-            const tableSt2 = document.querySelectorAll('[ST2]').length
-            const tableSt3 = document.querySelectorAll('[ST3]').length
-            console.log('โต๊ะว่างจำนวน: ' + tableSt1)
-            console.log('โต๊ะไม่ว่างจำนวน: ' +tableSt2)
-            console.log('โต๊ะจองจำนวน: ' +tableSt3)
+        function showModal(val) {
+            // Modal
+            var PlaceHolderElement = $('#PlaceHolderHere')
+            $.get(val).done(function (data) {
+                PlaceHolderElement.html(data)
+                PlaceHolderElement.find('.modal').modal('show')
+            })
         }
 
         function screenScroll() {
@@ -259,100 +228,5 @@
                 railVisible: true
             });
         }
-
-        @*
-            $('#cardtable').on('load', Selecttable())
-
-            function Selecttable() {
-                $('#cardtable').empty();
-                $('#ModalTable').empty();
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("GetTable", "StoreFront")',
-                    dataType: 'json',
-                    data: { ZoneId: $('#txtZone').val(), Status: $('#txtStatus').val() },
-                    success: function (data) {
-                        $.each(data, function (index, val) {
-                            val.forEach(function (value) {
-                                var id = value.tableId;
-                                var bg = "";
-
-                                if (value.tableST == 1) {
-                                    bg = "bg-green";
-
-                                } else if (value.tableST == 2) {
-                                    bg = "bg-red";
-
-                                } else if (value.tableST == 3) {
-                                    bg = "bg-yellow";
-
-                                }
-
-                                var Buttons = '<div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-2">'
-                                    + '<a class="card__link" data-toggle="modal" data-target="#Modal' + value.tableId  + '">'
-                                    + '<div class="card border-0 ' + bg + ' rounded card__AddTable">'
-                                    + '<div class="card-body">'
-                                    + '<div class="card-icon-add">'
-                                    + '<i class="fas fa-shopping-cart"></i>'
-                                    + '</div>'
-                                    + '<h6 class="text-center text-secondary font-weight-bold mb-3">' + value.tableName + '</h6>'
-                                    + '<div class="Personal__Table text-secondary">'
-                                    + '<i class="fas fa-user"></i>&nbsp;' + value.personal + ''
-                                    + '</div>'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '</a>'
-                                    + '</div>';
-
-                                $('#cardtable').append(Buttons)
-
-                                var Modals = '<div class="modal fade" id="Modal' + value.tableId + '" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">'
-                                    + '<div class="modal-dialog modal-dialog-centered" role="document">'
-                                    + '<div class="modal-content">'
-                                    + '<div class="modal-body">'
-                                    + '<div class="row mb-3">'
-                                    + '<div class="col text-right">'
-                                    + '<button type="button" class="btn btn-light btn-sm" data-dismiss="modal"><i class="fas fa-times"></i></button>'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '<div class="row">'
-                                    + '<div class="col-md mb-3">'
-                                    + '<a href="@Url.Action("Index", "Payment")' + '/' + value.tableId + '" class="card__link">'
-                                    + '<div class="card border-0 bg-primary-light card__Button">'
-                                    + '<div class="card-body">'
-                                    + '<div class="icon__ModalMenu">'
-                                    + '<i class="fas fa-folder-open" aria-hidden="true"></i>'
-                                    + '</div>'
-                                    + '<p class="text-right text__ModalMenu">ข้อมูลโต๊ะอาหาร</p>'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '</a>'
-                                    + '</div>'
-                                    + '<div class="col-md">'
-                                    + '<a href="@Url.Action("Index", "Order")' + '/' + value.tableId + '" class="card__link">'
-                                    + '<div class="card border-0 bg-info-light card__Button">'
-                                    + '<div class="card-body">'
-                                    + '<div class="icon__ModalMenu">'
-                                    + '<i class="fas fa-folder-plus" aria-hidden="true"></i>'
-                                    + '</div>'
-                                    + '<p class="text-right text__ModalMenu">เพิ่มรายการอาหาร</p>'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '</a>'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '<br />'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '</div>'
-                                    + '</div>';
-
-                                $('#ModalTable').append(Modals)
-                            })
-                        })
-                    }
-                });
-            }*@
-
     </script>
 }

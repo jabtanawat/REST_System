@@ -15,11 +15,11 @@ namespace REST.Controllers
             {
                 case 404:
                     ViewBag.ErrorStatus = statusCode;
-                    ViewBag.ErrorMessage = "Sorry, the resource you requested could not be found";
+                    ViewBag.ErrorMessage = "Sorry, the not found !";
                     break;
                 case 500:
                     ViewBag.ErrorStatus = statusCode;
-                    ViewBag.ErrorMessage = "Sorry, the resource you requested could not be found";
+                    ViewBag.ErrorMessage = "Sorry, the not found !";
                     break;
             }
 
