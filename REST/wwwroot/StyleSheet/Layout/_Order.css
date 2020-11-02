@@ -45,27 +45,3 @@
 .wrapper .sidemenu .sidebar .navbar-nav .nav-item .nav-link:hover .nav_text {
     color: #fff;
 }
-
-/* Menu Bar */
-.wrapper .menubar {
-    position: fixed;
-    margin: 0 auto 0 auto;
-    padding: 1rem 1rem 0 1rem;
-    width: 400px;
-    height: 100%;
-    transition: all ease 0.25s;
-    z-index: 1000;
-    margin-left: 1rem;
-    background-color: #3B3C40;
-    border-left: 1px solid #E3EBF6;
-}
-
-.wrapper .menubar {
-    right: 0;
-    padding: 0 1rem 0 1rem;
-    background-color: #fff;
-}
-
-.wrapper .menubar .sidebar-right {
-    margin: 1rem auto 1rem auto;
-}
