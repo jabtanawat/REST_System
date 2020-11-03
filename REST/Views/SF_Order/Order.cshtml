@@ -14,12 +14,12 @@
         <div class="card mt-3 mb-3">
             <div class="card-body py-2">
                 <div class="d-flex">
-                    <div class="mr-2">
+                    <div class="mr-auto">
                         <div class="input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <button class="btn btn-primary text-white" type="button"><i class="fas fa-apple-alt"></i></button>
                             </div>
-                            <select class="form-control" id="Zone">
+                            <select class="form-control" id="GroupFood">
                                 <option value="">Show All</option>
                                 @foreach (var row in ViewBag.GroupFood)
                                 {
@@ -28,9 +28,23 @@
                             </select>
                         </div>
                     </div>
-                    <div class="flex-grow-1">
-
-                    </div>
+                    @foreach (var row in ViewBag.Table)
+                    {
+                        string bg = "";
+                        if(row.TableST == 1)
+                        {
+                            bg = "color-green";
+                        }else if(row.TableST == 2)
+                        {
+                            bg = "color-red";
+                        }else if(row.TableST == 3)
+                        {
+                            bg = "color-yellow";
+                        }
+                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>รหัส : </strong>&nbsp;@row.TableId</h6></div>
+                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>ชื่อ : </strong>&nbsp;@row.TableName</h6></div>
+                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>สถานะ : </strong>&nbsp;<span class="@bg"><i class="fas fa-circle"></i>&nbsp;</span>@row.Status</h6></div>
+                    }
                 </div>
             </div>
         </div>
@@ -38,63 +52,18 @@
 
     <div class="card mt-3">
         <div class="card-body" scroll-card>
-            <div class="row">
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <button class="btn btn-block text-truncate p-0 button_order">
-                        <span class="price_order">100</span>
-                        <img src="~/Images/Food/NOIMAGE.jpg" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
-                        <p class="mb-0">อาหารที่ 111111111</p>
-                    </button>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <button class="btn btn-block text-truncate p-0 button_order">
-                        <span class="price_order">200</span>
-                        <img src="~/Images/Food/NOIMAGE.jpg" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
-                        <p class="mb-0">อาหารที่ 222222222</p>
-                    </button>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <button class="btn btn-block text-truncate p-0 button_order">
-                        <span class="price_order">300</span>
-                        <img src="~/Images/Food/NOIMAGE.jpg" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
-                        <p class="mb-0">อาหารที่ 333333333</p>
-                    </button>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <button class="btn btn-block text-truncate p-0 button_order">
-                        <span class="price_order">400</span>
-                        <img src="~/Images/Food/NOIMAGE.jpg" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
-                        <p class="mb-0">อาหารที่ 444444444</p>
-                    </button>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <button class="btn btn-block text-truncate p-0 button_order">
-                        <span class="price_order">500</span>
-                        <img src="~/Images/Food/NOIMAGE.jpg" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
-                        <p class="mb-0">อาหารที่ 55555555</p>
-                    </button>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <button class="btn btn-block text-truncate p-0 button_order">
-                        <span class="price_order">600</span>
-                        <img src="~/Images/Food/NOIMAGE.jpg" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
-                        <p class="mb-0">อาหารที่ 66666666</p>
-                    </button>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <button class="btn btn-block text-truncate p-0 button_order">
-                        <span class="price_order">700</span>
-                        <img src="~/Images/Food/NOIMAGE.jpg" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
-                        <p class="mb-0">อาหารที่ 77777777</p>
-                    </button>
-                </div>
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
-                    <button class="btn btn-block text-truncate p-0 button_order">
-                        <span class="price_order">800</span>
-                        <img src="~/Images/Food/G1001_Food.jpg" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
-                        <p class="mb-0">อาหารที่ 88888888</p>
-                    </button>
-                </div>
+            <div class="row" panel-food>
+                @foreach (var row in ViewBag.Food)
+                {
+                    var Image = "~/Images/Food/" + (row.ImageName ?? "NOIMAGE.jpg");
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+                        <button class="btn btn-block text-truncate p-0 button_order" onclick="amountfood('@Url.Action("_AmountFood", "Modal", new { id = row.FoodId})')" data-toggle="ajax-modal" data-target="#amountfood">
+                            <span class="price_order">@row.Price</span>
+                            <img src="@Image" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
+                            <p class="mb-0">@row.FoodName</p>
+                        </button>
+                    </div>
+                }                
             </div>
         </div>
     </div>
@@ -102,10 +71,29 @@
 
 <div class="menubar">
     <div class="sidebar-right">
-        <p>รายการ</p>
-        <hr />
-        <section class="order-body" style="background-color:blue" scroll>
-
+        <section class="order-body" scroll>
+            <table class="table table-striped">
+                <thead>
+                    <tr hidden>
+                        <th>รหัส</th>
+                        <th >ชื่อ</th>
+                        <th style="width:5%;">จำนวน</th>
+                        <th style="width:5%;">#</th>
+                    </tr>
+                </thead>
+                <tbody table-body>
+                    <tr>
+                        <td hidden>1</td>
+                        <td>
+                            <div>อาหารที่ 1</div>
+                            <div><strong>ราคา: </strong>100.00</div>
+                        </td>
+                        <td class="text-right pr-4" style="width:20%;"><strong>1</strong></td>
+                        <td style="width:5%;"><button type="button" class="btn btn-table-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>
+                    </tr>                    
+                </tbody>
+            </table>     
+            @*<img src="~/Images/System/NoOrder.png" style="position:absolute;top:50%;left:50%;transform: translate(-50%, -50%);" />*@
         </section>
         <hr />
         <section class="order-footer">
@@ -131,13 +119,65 @@
     </div>
 </div>
 
+<div id="PlaceHolderHere"></div>
 
 @section Scripts {
     <script>
         $(document).ready(function () {
             screenScroll()
-            Scroll() 
+            Scroll()
         });
+
+        document.getElementById('GroupFood').addEventListener('change', () => {
+            const groupfood = $('#GroupFood').val()
+            const panel = $('[panel-food]')
+            panel.empty() // ให้ข้อมูลโต๊ะ = ว่าง
+            $.post("@Url.Action("GetFood", "SF_Order")", { id: groupfood },
+            function (data, status) {
+                $.each(data, function (index, val) {
+                    val.forEach(function (value) {
+                        var image = "";
+                        if (value.imageName != null) {
+                            image = 'src="@Url.Action("Food","Images")' + '/' + value.imageName + '"';
+                        } else {
+                            image = 'src="@Url.Action("Food", "Images")' + '/' +'NOIMAGE.jpg"';
+                        }
+                        var link = '@Url.Action("_AmountFood", "Modal")' + '/' + value.foodId;
+                        var p = '<div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">'
+                            + `<button class="btn btn-block text-truncate p-0 button_order" onclick="amountfood('${link}')" data-toggle="ajax-modal" data-target="#amountfood">`
+                            + `<span class="price_order">${value.price}</span>`
+                            + `<img ${image} class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />`
+                            + `<p class="mb-0">${value.foodName}</p>`
+                            + '</button>'
+                            + '</div>';
+                        panel.append(p)
+                    })
+                })
+            });
+        })
+
+        function AddOrder(id, amount) {
+            const table = $('[table-body]')
+            table.empty()
+            @*$.post("@Url.Action("AddFood", "SF_Order")", { id: id, amount: amount },
+                function (data, status) {
+                    $.each(data, function (index, val) {
+
+                    })
+                }
+            )*@
+            console.log(id + ' ' + amount)
+            $('#amountfood').modal('hide')
+        }
+
+        function amountfood(val) {
+            // Modal
+            var PlaceHolderElement = $('#PlaceHolderHere')
+            $.get(val).done(function (data) {
+                PlaceHolderElement.html(data)
+                PlaceHolderElement.find('.modal').modal('show')
+            })
+        }
 
         function screenScroll() {
             var height_P = $(window).height() - $('.navbar').height() - $('.content-table-heard').height() - 70

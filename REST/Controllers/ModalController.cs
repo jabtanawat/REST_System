@@ -66,5 +66,12 @@ namespace REST.Controllers
             ViewBag.TableName = _db.CD_Table.FirstOrDefault(x => x.TableId == id && x.BranchId == branchid).TableName;
             return PartialView("_ModalST");
         }
+
+        public IActionResult _AmountFood(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            ViewBag.FoodAmount = _db.CD_Food.FirstOrDefault(x => x.FoodId == id && x.BranchId == branchid);
+            return PartialView("_AmountFood");
+        }
     }
 }

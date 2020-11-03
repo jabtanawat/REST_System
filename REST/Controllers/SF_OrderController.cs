@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using REST.ApiControllers;
 using REST.Data;
 using REST.Models;
 using REST.Service;
@@ -31,7 +32,25 @@ namespace REST.Controllers
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             ViewBag.GroupFood = _db.CD_GroupFood.Where(x => x.BranchId == branchid).ToList();
+            var _Get = new GetCD_TableController(_db);
+            ViewBag.Table = _Get.TableById(id, branchid);
+            ViewBag.Food = _db.CD_Food.Where(x => x.BranchId == branchid).ToList();
             return View();
+        }
+
+        public IActionResult GetFood(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            if(id != null)
+            {
+                var List = _db.CD_Food.Where(x => x.GroupFoodId == id && x.BranchId == branchid).ToList();
+                return Json(new { data = List });
+            }
+            else
+            {
+                var List = _db.CD_Food.Where(x => x.BranchId == branchid).ToList();
+                return Json(new { data = List });
+            }           
         }
 
         public IActionResult SaveOrder(string id)
@@ -224,7 +243,7 @@ namespace REST.Controllers
         }        
 
         [HttpPost]
-        public IActionResult GetFood(string id)
+        public IActionResult GetFooda(string id)
         {
             var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var List = new List<ViewFood>();

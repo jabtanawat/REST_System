@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using REST.Data;
 using REST.Models;
+using REST.ViewModels;
 
 namespace REST.ApiControllers
 {
@@ -49,6 +50,40 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(3))
                             Item.Description = data.GetString(3);
                         Item.TableST = data.GetInt32(4);
+                        List.Add(Item);
+                    }
+                }
+            }
+
+            return List;
+        }
+
+        public List<ViewTable> TableById(string id, string branchid)
+        {
+            var List = new List<ViewTable>();
+
+            var sql = $"SELECT TableId, TableName, Description, TableST, CASE WHEN TableST = 1 THEN 'ว่าง' WHEN TableST = 2 THEN 'ไม่ว่าง' WHEN TableST= 3 THEN 'จอง' END AS Status "
+                    + $"FROM CD_Table "
+                    + $"WHERE BranchId = '{branchid}' AND TableId = '{id}'";
+            using (var command = _db.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = sql;
+                _db.Database.OpenConnection();
+                using (var data = command.ExecuteReader())
+                {
+                    while (data.Read())
+                    {
+                        var Item = new ViewTable();
+                        if (!data.IsDBNull(0))
+                            Item.TableId = data.GetString(0);
+                        if (!data.IsDBNull(1))
+                            Item.TableName = data.GetString(1);
+                        if (!data.IsDBNull(2))
+                            Item.Description = data.GetString(2);
+                        if (!data.IsDBNull(3))
+                            Item.TableST = data.GetInt32(3);
+                        if (!data.IsDBNull(4))
+                            Item.Status = data.GetString(4);
                         List.Add(Item);
                     }
                 }

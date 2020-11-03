@@ -1,4 +1,16 @@
-﻿.button_order {
+﻿.color-green {
+    color: #2ed8b6;
+}
+
+.color-yellow {
+    color: #FFB64D;
+}
+
+.color-red {
+    color: #FF5370;
+}
+
+.button_order {
     background-color: whitesmoke;
 }
 
@@ -56,4 +68,19 @@ input[disabled] {
 
 .wrapper .menubar .sidebar-right {
     margin: 1rem auto 1rem auto;
+}
+
+@media (max-width: 870px) {
+    .menubar {
+        display: none;
+    }
+
+    .wrapper .content {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        transition: all ease 0.25s;
+        margin-right: 0px;
+    }
 }

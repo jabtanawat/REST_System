@@ -1,0 +1,40 @@
+﻿@{ 
+    var Food = ViewBag.FoodAmount;
+}
+<!-- Modal Staple -->
+<div class="modal fade bd-example-modal-sm" id="amountfood" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="amountfoodTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row mt-2">
+                    <div class="col-md-6 mx-auto text-center">
+                        <label class="font-weight-bold">จำนวน</label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6 mx-auto">
+                        <input type="hidden" value="@Food.FoodId" id="txtFoodId" />
+                        <input type="number" class="form-control text-right" value="1" id="txtAmount" />
+                    </div>
+                </div>
+                <div class="text-center mt-3 mb-2">
+                    <button type="button" class="btn btn-success" btn-select>ตกลง</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    //$('#amountfood').on('shown.bs.modal', function () {
+    //    $('#txtAmount').trigger('focus')
+    //})
+
+    document.querySelector("[btn-select]").addEventListener("click", () => {
+        const amount = document.getElementById("txtAmount").value
+        const foodid = document.getElementById("txtFoodId").value
+        AddOrder(foodid, amount)
+})
+
+</script>
