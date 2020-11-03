@@ -53,6 +53,60 @@ namespace REST.Controllers
             }           
         }
 
+        [HttpPost]
+        public IActionResult Add(string id, decimal amount)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var List = new List<ViewOrder>();
+            if (id != null)
+            {
+                var Food = new CD_Food();
+                Food = _db.CD_Food.FirstOrDefault(x => x.FoodId == id && x.BranchId == branchid);
+
+                if (HttpContext.Session.GetString("Session_Order") != null)
+                {
+                    List = JsonConvert.DeserializeObject<List<ViewOrder>>(HttpContext.Session.GetString("Session_Order"));
+                }
+
+                if (List.Exists(x => x.FoodId == id))
+                {
+                    // ถ้ามีรหัสอยู๋แล้ว ให้ลบทิ้งก่อน แล้วค่อยเพิ่มเข้าไปใหม่
+                    var delete = List.Find(x => x.FoodId == id);
+                    List.Remove(delete);
+
+                    var item = new ViewOrder
+                    {
+                        FoodId = id,
+                        FoodName = Food.FoodName,
+                        Price = Food.Price,
+                        Amount = amount,
+                    };
+
+                    List.Add(item);
+                }
+                else
+                {
+                    var item = new ViewOrder
+                    {
+                        FoodId = id,
+                        FoodName = Food.FoodName,
+                        Price = Food.Price,
+                        Amount = amount,
+                    };
+
+                    List.Add(item);
+                }
+
+                HttpContext.Session.SetString("Session_Order", JsonConvert.SerializeObject(List));
+            }
+            else
+            {
+                Alert("", "กรุณาเลือกออร์เดอร์ !", NotificationType.warning);
+            }
+
+            return Json(new { data = List });
+        }
+
         public IActionResult SaveOrder(string id)
         {
             var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
@@ -182,99 +236,7 @@ namespace REST.Controllers
             {
                 return false;
             }
-        }
-
-        // ------
-
-        public List<ViewTable> TableData(string Id)
-        {
-            var List = new List<ViewTable>();
-
-            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            var sql = $"SELECT TableId, TableName, Description, TableST, CASE WHEN TableST = 1 THEN 'ว่าง' WHEN TableST = 2 THEN 'ไม่ว่าง' WHEN TableST= 3 THEN 'จอง' END AS Status "
-                    + $"FROM CD_Table "
-                    + $"WHERE BranchId = '{BranchId}' AND TableId = '{Id}'";
-            using (var command = _db.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = sql;
-                _db.Database.OpenConnection();
-                using (var data = command.ExecuteReader())
-                {
-                    while (data.Read())
-                    {
-                        var Item = new ViewTable();
-                        Item.TableId = data.GetString(0);
-                        Item.TableName = data.GetString(1);
-                        if (!data.IsDBNull(2))
-                            Item.Description = data.GetString(2);
-                        Item.TableST = data.GetInt32(3);
-                        Item.Status = data.GetString(4);
-                        List.Add(Item);
-                    }
-                }
-            }
-
-            return List;
-        }
-
-        public List<CD_GroupFood> SL_GroupFood()
-        {
-            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            var List = new List<CD_GroupFood>();
-            var sql = $"SELECT GroupFoodId, GroupFoodName FROM CD_GroupFood "
-                    + $"WHERE BranchId = '{BranchId}'";
-            using (var command = _db.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = sql;
-                _db.Database.OpenConnection();
-                using (var data = command.ExecuteReader())
-                {
-                    while (data.Read())
-                    {
-                        var Item = new CD_GroupFood();
-                        Item.GroupFoodId = data.GetString(0);
-                        Item.GroupFoodName = data.GetString(1);
-                        List.Add(Item);
-                    }
-                }
-            }
-
-            return List;
-        }        
-
-        [HttpPost]
-        public IActionResult GetFooda(string id)
-        {
-            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            var List = new List<ViewFood>();
-            var sql = $"SELECT FoodId, FoodName, Price, GroupFoodId, ImageName "
-                    + $"FROM CD_Food "
-                    + $"WHERE BranchId = '{BranchId}' ";
-            if (id != null)
-                sql += $"AND GroupFoodId = '{id}'";
-
-            using (var command = _db.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = sql;
-                _db.Database.OpenConnection();
-                using (var data = command.ExecuteReader())
-                {
-                    while (data.Read())
-                    {
-                        var Item = new ViewFood();
-                        Item.FoodId = data.GetString(0);
-                        Item.FoodName = data.GetString(1);
-                        Item.Price = data.GetDecimal(2);
-                        Item.GroupFoodId = data.GetString(3);
-                        if (!data.IsDBNull(4))
-                            Item.ImageName = data.GetString(4);
-                        List.Add(Item);
-                    }
-                }
-            }
-
-            return Json(new { data = List });
-        }
+        }    
 
         // ------
 

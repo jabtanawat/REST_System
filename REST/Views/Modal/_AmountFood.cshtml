@@ -27,14 +27,10 @@
 </div>
 
 <script>
-    //$('#amountfood').on('shown.bs.modal', function () {
-    //    $('#txtAmount').trigger('focus')
-    //})
-
     document.querySelector("[btn-select]").addEventListener("click", () => {
         const amount = document.getElementById("txtAmount").value
         const foodid = document.getElementById("txtFoodId").value
         AddOrder(foodid, amount)
-})
+    })
 
 </script>

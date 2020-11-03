@@ -82,18 +82,10 @@
                     </tr>
                 </thead>
                 <tbody table-body>
-                    <tr>
-                        <td hidden>1</td>
-                        <td>
-                            <div>อาหารที่ 1</div>
-                            <div><strong>ราคา: </strong>100.00</div>
-                        </td>
-                        <td class="text-right pr-4" style="width:20%;"><strong>1</strong></td>
-                        <td style="width:5%;"><button type="button" class="btn btn-table-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>
-                    </tr>                    
+                                        
                 </tbody>
             </table>     
-            @*<img src="~/Images/System/NoOrder.png" style="position:absolute;top:50%;left:50%;transform: translate(-50%, -50%);" />*@
+            <img src="~/Images/System/NoOrder.png" style="position:absolute;top:50%;left:50%;transform: translate(-50%, -50%);" img-no-order />
         </section>
         <hr />
         <section class="order-footer">
@@ -124,6 +116,8 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            const img = $('[img-no-order]')
+            img.show()
             screenScroll()
             Scroll()
         });
@@ -158,15 +152,31 @@
 
         function AddOrder(id, amount) {
             const table = $('[table-body]')
+            const img = $('[img-no-order]')
             table.empty()
-            @*$.post("@Url.Action("AddFood", "SF_Order")", { id: id, amount: amount },
+            $.post("@Url.Action("Add", "SF_Order")", { id: id, amount: amount },
                 function (data, status) {
                     $.each(data, function (index, val) {
-
+                        if (val != "") {
+                            val.forEach(function (value) {
+                                var p = '<tr>'
+                                    + `<td hidden>${value.foodId}</td>`
+                                    + '<td>'
+                                    + `<div>${value.foodName}</div>`
+                                    + `<div><strong>ราคา: </strong>${value.price}</div>`
+                                    + '</td>'
+                                    + `<td class="text-right pr-4" style="width:20%;"><strong>${value.amount}</strong></td>`
+                                    + '<td style="width:5%;"><button type="button" class="btn btn-table-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>'
+                                    + '</tr>';
+                                table.append(p)
+                            })
+                            img.hide()
+                        } else {
+                            img.show()
+                        }
                     })
                 }
-            )*@
-            console.log(id + ' ' + amount)
+            )
             $('#amountfood').modal('hide')
         }
 
