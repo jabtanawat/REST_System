@@ -28,13 +28,20 @@ namespace REST.Controllers
         }
         #endregion 
 
-        public IActionResult Order(string id)
+        public IActionResult Order(string id, string mode = null)
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             ViewBag.GroupFood = _db.CD_GroupFood.Where(x => x.BranchId == branchid).ToList();
             var _Get = new GetCD_TableController(_db);
-            ViewBag.Table = _Get.TableById(id, branchid);
+            ViewBag.Table = _Get.TableById(id, branchid).FirstOrDefault();
             ViewBag.Food = _db.CD_Food.Where(x => x.BranchId == branchid).ToList();
+            if (mode == null)
+            {
+                if (HttpContext.Session.GetString("Session_Order") != null)
+                {
+                    HttpContext.Session.Remove("Session_Order");
+                }
+            }
             return View();
         }
 
@@ -51,6 +58,16 @@ namespace REST.Controllers
                 var List = _db.CD_Food.Where(x => x.BranchId == branchid).ToList();
                 return Json(new { data = List });
             }           
+        }
+
+        public IActionResult GetOrder()
+        {
+            var List = new List<ViewOrder>();
+            if (HttpContext.Session.GetString("Session_Order") != null)
+            {
+                List = JsonConvert.DeserializeObject<List<ViewOrder>>(HttpContext.Session.GetString("Session_Order"));
+            }
+            return Json(new { data = List });
         }
 
         [HttpPost]
@@ -70,7 +87,7 @@ namespace REST.Controllers
 
                 if (List.Exists(x => x.FoodId == id))
                 {
-                    // ถ้ามีรหัสอยู๋แล้ว ให้ลบทิ้งก่อน แล้วค่อยเพิ่มเข้าไปใหม่
+                    // ถ้ามีรหัสอยู่แล้ว ให้ลบทิ้งก่อน แล้วค่อยเพิ่มเข้าไปใหม่
                     var delete = List.Find(x => x.FoodId == id);
                     List.Remove(delete);
 
@@ -107,67 +124,90 @@ namespace REST.Controllers
             return Json(new { data = List });
         }
 
-        public IActionResult SaveOrder(string id)
+        [HttpPost]
+        public IActionResult Delete(string id)
         {
-            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-
-            var ListOrder = new List<ViewOrder>();
-
-            if (HttpContext.Session.GetString("Session_ListOrder") != null)
+            var List = new List<ViewOrder>();
+            if (id != null)
             {
-                ListOrder = JsonConvert.DeserializeObject<List<ViewOrder>>(HttpContext.Session.GetString("Session_ListOrder"));
-            }
 
-            if (ListOrder.Count > 0)
-            {
-                if (SaveData(ListOrder, id, BranchId))
+                if (HttpContext.Session.GetString("Session_Order") != null)
                 {
-                    if (UpdateTable(id, BranchId))
-                    {
-                        AlertTop("บันทึกรายการอาหารเรียบร้อย !", NotificationType.success);
-                        return RedirectToAction("Index", "StoreFront");
-                    }
-                    else
-                    {
-                        Alert("Error", "ไม่สามารถเปลี่ยนสถานะโต๊ะได้ !", NotificationType.error);
-                        return RedirectToAction("Index", new { id = id });
-                    }                    
+                    List = JsonConvert.DeserializeObject<List<ViewOrder>>(HttpContext.Session.GetString("Session_Order"));
                 }
-                else
+
+                if (List.Exists(x => x.FoodId == id))
                 {
-                    Alert("Error", "ไม่สามารถบันทึกรายการอาหารได้ !", NotificationType.error);
-                    return RedirectToAction("Index", new { id = id });
-                }                
+                    // ลบข้อมูลใน session 
+                    var delete = List.Find(x => x.FoodId == id);
+                    List.Remove(delete);
+                }
+
+                HttpContext.Session.SetString("Session_Order", JsonConvert.SerializeObject(List));
             }
             else
             {
-                Alert("Warning", "กรุณาเลือกรายการอาหาร !", NotificationType.warning);
-                return RedirectToAction("Index", new { id = id });
+                Alert("", "กรุณาเลือกออร์เดอร์ที่ต้องการลบ !", NotificationType.warning);
             }
+
+            return Json(new { data = List });
         }
 
-        public Boolean SaveData(List<ViewOrder> Results, string id, string BranchId)
+        [HttpPost]
+        public IActionResult Cancel()
+        {
+            string status = "success";
+            if (HttpContext.Session.GetString("Session_Order") != null)
+            {
+                HttpContext.Session.Remove("Session_Order");
+            }
+            return Json(new { data = status });
+        }
+
+
+        public IActionResult Save(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var List = new List<ViewOrder>();
+            if (HttpContext.Session.GetString("Session_Order") != null)
+            {
+                List = JsonConvert.DeserializeObject<List<ViewOrder>>(HttpContext.Session.GetString("Session_Order"));
+            }
+
+            if(List.Count > 0 )
+            {
+                if (SaveData(List, id, branchid))
+                {
+                    toastrAlert("รับออเดอร์", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
+                    return RedirectToAction("Index", "StoreFront");
+                }
+                else
+                {
+                    Alert("", "Error Data !", NotificationType.error);
+                    return RedirectToAction("Order", new { id = id, mode = "view" });
+                }
+            }
+            else
+            {
+                Alert("", "กรุณาเลือกรายการ !", NotificationType.warning);
+                return RedirectToAction("Order", new { id = id });
+            }            
+        }        
+
+        public Boolean SaveData(List<ViewOrder> Results, string id, string branchid)
         {
             try
             {
-                string DocRunning = GetRunning("Order");
+                var _Get = new GetRunningController(_db);
+                string DocRunning = _Get.Running("Order", branchid);
 
                 int i = 0;
                 decimal PTotal = 0;
 
-                var DT = new DataTable();
-                var sql = $"SELECT * FROM SF_Order WHERE TableId = '{id}' AND BranchId = '{BranchId}'";
-                using (var command = _db.Database.GetDbConnection().CreateCommand())
-                {
-                    command.CommandText = sql;
-                    _db.Database.OpenConnection();
-                    using (var data = command.ExecuteReader())
-                    {
-                        DT.Load(data);
-                    }
-                }
+                // ค้นหาออร์เดอร์ว่ามี ออร์เดอร์อยู่ไหม ถ้านับออร์เดอร์เพิ่ม ++
+                var Order = _db.SF_Order.Where(x => x.TableId == id && x.BranchId == branchid).ToList();
 
-                i = DT.Rows.Count + 1;
+                i = Order.Count + 1;
 
                 // หาจำนวนเงินทั่้งหมด
                 foreach (var row in Results)
@@ -181,11 +221,12 @@ namespace REST.Controllers
                 Item.TableId = id;
                 Item.OrderDt = Share.FormatDate(DateTime.Now).Date;
                 Item.PriceTotal = PTotal;
-                Item.BranchId = BranchId;
+                Item.ST = 1;
+                Item.BranchId = branchid;
                 Item.CreateUser = User.Identity.Name;
-                Item.CreateDate = DateTime.Now;
+                Item.CreateDate = Share.FormatDate(DateTime.Now).Date;
                 Item.UpdateUser = User.Identity.Name;
-                Item.UpdateDate = DateTime.Now;
+                Item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
                 _db.SF_Order.Add(Item);
                 _db.SaveChanges();
 
@@ -199,19 +240,24 @@ namespace REST.Controllers
                     ItemSub.FoodId = row.FoodId;
                     ItemSub.Amount = row.Amount;
                     ItemSub.Price = row.Price;
-                    ItemSub.BranchId = BranchId;
+                    ItemSub.Status = 1;
+                    ItemSub.BranchId = branchid;
                     _db.SF_OrderSub.Add(ItemSub);
                     _db.SaveChanges();
-                }
+                }                
 
-                SetRunning("Order", DocRunning, BranchId);
-
-                if (HttpContext.Session.GetString("Session_ListOrder") != null)
+                if (HttpContext.Session.GetString("Session_Order") != null)
                 {
-                    HttpContext.Session.Remove("Session_ListOrder");
+                    HttpContext.Session.Remove("Session_Order");
                 }
 
-                return true;
+                // Set Runnig
+                _Get.SetRunning("Order", DocRunning, branchid);
+
+                if (UpdateTable(id, branchid))
+                    return true;
+                else
+                    return false;             
             }
             catch (Exception)
             {
@@ -237,299 +283,5 @@ namespace REST.Controllers
                 return false;
             }
         }    
-
-        // ------
-
-        [HttpPost]
-        public IActionResult AddOrder(string id)
-        {            
-            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId").Value;
-            var ListOrder = new List<ViewOrder>();
-
-            if (id != null)
-            {
-                var Food = new CD_Food();
-                Food = _db.CD_Food.FirstOrDefault(x => x.FoodId == id && x.BranchId == BranchId);               
-
-                if (HttpContext.Session.GetString("Session_ListOrder") != null)
-                {
-                    ListOrder = JsonConvert.DeserializeObject<List<ViewOrder>>(HttpContext.Session.GetString("Session_ListOrder"));
-                }
-
-                if (ListOrder.Exists(x => x.FoodId == id))
-                {
-                    ListOrder.Find(x => x.FoodId == id).Amount++;
-                }
-                else
-                {
-                    var item = new ViewOrder
-                    {
-                        FoodId = id,
-                        FoodName = Food.FoodName,
-                        Price = Food.Price,
-                        Amount = 1,
-                    };
-
-                    ListOrder.Add(item);
-                }
-
-                HttpContext.Session.SetString("Session_ListOrder", JsonConvert.SerializeObject(ListOrder));
-            }
-            else
-            {
-                Alert("แจ้งเตือน", "กรุณาเลือกวัตถุดิบ !", NotificationType.warning);
-            }
-
-            return Json(new { data = ListOrder });
-        }
-
-        [HttpPost]
-        public IActionResult DeleteOrder(string id)
-        {
-            var ListOrder = new List<ViewOrder>();
-
-            if (HttpContext.Session.GetString("Session_ListOrder") != null)
-            {
-                ListOrder = JsonConvert.DeserializeObject<List<ViewOrder>>(HttpContext.Session.GetString("Session_ListOrder"));
-            }
-
-            if (ListOrder.Exists(x => x.FoodId == id))
-            {
-                var Delete = ListOrder.Find(x => x.FoodId == id);
-                ListOrder.Remove(Delete);
-            }
-
-            HttpContext.Session.SetString("Session_ListOrder", JsonConvert.SerializeObject(ListOrder));
-
-            return Json(new { data = ListOrder });
-        }
-
-        [HttpPost]
-        public IActionResult CancelOrder()
-        {
-            string Status = null;
-
-            if (HttpContext.Session.GetString("Session_ListOrder") != null)
-            {
-                HttpContext.Session.Remove("Session_ListOrder");
-                Status = "success";
-            }
-
-            return Json(new { data = Status });
-        }
-
-        [HttpPost]
-        public IActionResult GetOrder()
-        {
-            var ListOrder = new List<ViewOrder>();
-
-            if (HttpContext.Session.GetString("Session_ListOrder") != null)
-            {
-                ListOrder = JsonConvert.DeserializeObject<List<ViewOrder>>(HttpContext.Session.GetString("Session_ListOrder"));
-            }                
-
-            return Json(new { data = ListOrder });
-        }
-
-        // ------
-
-        public string GetRunning(string id)
-        {
-            string DocRunning = null;
-            string RunLength = null;
-            int Number = 0;
-            DateTime Date = DateTime.Now;
-            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id && x.BranchId == BranchId);
-
-            if (id != null)
-            {
-                if (Running.AutoRun == true)
-                {
-                    RunLength = null;
-                    for (int i = 0; i < Running.Number.Length; i++)
-                    {
-                        RunLength += '0';
-                    }
-                    Number = Int32.Parse(Running.Number) + 1;
-                    DocRunning = Running.Front + Number.ToString(RunLength);
-
-                    if (Running.AutoDate == true)
-                    {
-                        RunLength = null;
-                        for (int i = 0; i < Running.Number.Length; i++)
-                        {
-                            RunLength += '0';
-                        }
-                        Number = Int32.Parse(Running.Number) + 1;
-                        DocRunning = Running.Front + Date.ToString(Running.SetDate) + Number.ToString(RunLength);
-                    }
-                }
-            }
-
-            return DocRunning;
-        }
-
-        public Boolean SetRunning(string Name, string DocRunning, string BranchId)
-        {
-            var Running = new CD_Running();
-            Running = _db.CD_Running.FirstOrDefault(x => x.Name == Name && x.BranchId == BranchId);
-
-            try
-            {
-                if (Running.AutoRun == true)
-                {
-                    int RunLength = Running.Number.Length;
-                    Running.Number = DocRunning.Substring(DocRunning.Length - RunLength);
-
-                    /* DATA */
-                    Running.UpdateUser = User.Identity.Name;
-                    Running.UpdateDate = DateTime.Now;
-
-                    /* SAVE DB */
-                    _db.CD_Running.Update(Running);
-                    _db.SaveChanges();
-                }
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        // ------
-
-        [HttpPost]
-        public IActionResult DeleteOrderPayment(string OrderId, string TableId, string FoodId)
-        {
-            string Status = null;
-
-            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-
-            // Delete OrderSub By Id
-            var OrderSubDelete = _db.SF_OrderSub.FirstOrDefault(x => x.OrderId == OrderId && x.FoodId == FoodId && x.BranchId == BranchId);
-
-            if(OrderSubDelete.Status == 1 || OrderSubDelete.Status == 2){
-                Alert("Error", "ไม่สามารถลบได้ อาหารกำลังดำเนินการหรืออาหารเสร็จแล้ว !", NotificationType.error);
-                Status = "success";
-            }
-            else
-            {
-                _db.SF_OrderSub.Remove(OrderSubDelete);
-                _db.SaveChanges();
-
-                var DT1 = new DataTable();
-                var sql_Order = $"SELECT * FROM SF_OrderSub WHERE OrderId = '{OrderId}' AND BranchId = '{BranchId}'";
-                using (var command = _db.Database.GetDbConnection().CreateCommand())
-                {
-                    command.CommandText = sql_Order;
-                    _db.Database.OpenConnection();
-                    using (var data = command.ExecuteReader())
-                    {
-                        DT1.Load(data);
-                    }
-                }
-
-                if (DT1.Rows.Count > 0)
-                {
-                    var Item_Order = new SF_Order();
-                    Item_Order = _db.SF_Order.FirstOrDefault(x => x.OrderId == OrderId && x.BranchId == BranchId);
-
-                    // หาข้อมูล OrderSub
-                    var DataOrderSub = GetOrderSub(OrderId, TableId);
-
-                    decimal PTotal = 0;
-
-                    // หาจำนวนเงินทั่้งหมด
-                    foreach (var row in DataOrderSub)
-                    {
-                        PTotal += row.Price * row.Amount;
-                    }
-
-                    // Update Order
-                    Item_Order.PriceTotal = PTotal;
-                    Item_Order.UpdateUser = User.Identity.Name;
-                    Item_Order.UpdateDate = DateTime.Now;
-
-                    _db.SF_Order.Update(Item_Order);
-                    _db.SaveChanges();
-
-                    Status = "success";
-                }
-                else
-                {
-                    var OrderDelete = _db.SF_Order.FirstOrDefault(x => x.OrderId == OrderId && x.BranchId == BranchId);
-                    _db.SF_Order.Remove(OrderDelete);
-                    _db.SaveChanges();
-
-                    var DT2 = new DataTable();
-                    var sql_2 = $"SELECT * FROM SF_Order WHERE TableId = '{TableId}' AND BranchId = '{BranchId}'";
-                    using (var command = _db.Database.GetDbConnection().CreateCommand())
-                    {
-                        command.CommandText = sql_2;
-                        _db.Database.OpenConnection();
-                        using (var data = command.ExecuteReader())
-                        {
-                            DT2.Load(data);
-                        }
-                    }
-
-                    if (DT2.Rows.Count <= 0)
-                    {
-                        var Item = new CD_Table();
-                        Item = _db.CD_Table.FirstOrDefault(x => x.TableId == TableId && x.BranchId == BranchId);
-
-                        Item.TableST = 1;
-
-                        _db.CD_Table.Update(Item);
-                        _db.SaveChanges();
-
-                        Status = "error";
-                    }
-                    else
-                    {
-                        Status = "success";
-                    }
-                }
-            }            
-
-            return Json(new { data = Status });
-        }
-
-        public List<ViewOrder> GetOrderSub(string OrderId, string TableId)
-        {
-            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-
-            var List = new List<ViewOrder>();
-            var sql = $"SELECT OrderId, SF_OrderSub.i, TableId, CD_Food.FoodId, CD_Food.FoodName, Amount, CD_Food.Price, Status "
-                    + $"FROM SF_OrderSub "
-                    + $"LEFT JOIN CD_Food ON SF_OrderSub.FoodId = CD_Food.FoodId "
-                    + $"WHERE OrderId = '{OrderId}' AND TableId = '{TableId}' AND SF_OrderSub.BranchId = '{BranchId}'";
-            using (var command = _db.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = sql;
-                _db.Database.OpenConnection();
-                using (var data = command.ExecuteReader())
-                {
-                    while (data.Read())
-                    {
-                        var Item = new ViewOrder();
-                        Item.OrderId = data.GetString(0);
-                        Item.i = data.GetInt32(1);
-                        Item.TableId = data.GetString(2);
-                        Item.FoodId = data.GetString(3);
-                        Item.FoodName = data.GetString(4);
-                        Item.Amount = data.GetDecimal(5);
-                        Item.Price = data.GetDecimal(6);
-                        Item.Status = data.GetInt32(7);
-                        List.Add(Item);
-                    }
-                }
-            }
-
-            return List;
-        }
     }
 }

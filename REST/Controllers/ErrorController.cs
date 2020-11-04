@@ -17,6 +17,10 @@ namespace REST.Controllers
                     ViewBag.ErrorStatus = statusCode;
                     ViewBag.ErrorMessage = "Sorry, the not found !";
                     break;
+                case 405:
+                    ViewBag.ErrorStatus = statusCode;
+                    ViewBag.ErrorMessage = "Sorry, the not found !";
+                    break;
                 case 500:
                     ViewBag.ErrorStatus = statusCode;
                     ViewBag.ErrorMessage = "Sorry, the not found !";

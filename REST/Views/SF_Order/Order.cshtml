@@ -2,6 +2,7 @@
     ViewData["Title"] = "Order";
     ViewData["System"] = "รับออเดอร์";
     Layout = "_Order";
+    var Table = ViewBag.Table;
 }
 
 @section Styles {
@@ -28,22 +29,21 @@
                             </select>
                         </div>
                     </div>
-                    @foreach (var row in ViewBag.Table)
-                    {
+                    @{
                         string bg = "";
-                        if(row.TableST == 1)
+                        if(Table.TableST == 1)
                         {
                             bg = "color-green";
-                        }else if(row.TableST == 2)
+                        }else if(Table.TableST == 2)
                         {
                             bg = "color-red";
-                        }else if(row.TableST == 3)
+                        }else if(Table.TableST == 3)
                         {
                             bg = "color-yellow";
                         }
-                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>รหัส : </strong>&nbsp;@row.TableId</h6></div>
-                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>ชื่อ : </strong>&nbsp;@row.TableName</h6></div>
-                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>สถานะ : </strong>&nbsp;<span class="@bg"><i class="fas fa-circle"></i>&nbsp;</span>@row.Status</h6></div>
+                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>รหัส : </strong>&nbsp;@Table.TableId</h6></div>
+                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>ชื่อ : </strong>&nbsp;@Table.TableName</h6></div>
+                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>สถานะ : </strong>&nbsp;<span class="@bg"><i class="fas fa-circle"></i>&nbsp;</span>@Table.Status</h6></div>
                     }
                 </div>
             </div>
@@ -58,7 +58,7 @@
                     var Image = "~/Images/Food/" + (row.ImageName ?? "NOIMAGE.jpg");
                     <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
                         <button class="btn btn-block text-truncate p-0 button_order" onclick="amountfood('@Url.Action("_AmountFood", "Modal", new { id = row.FoodId})')" data-toggle="ajax-modal" data-target="#amountfood">
-                            <span class="price_order">@row.Price</span>
+                            <span class="price_order">@row.Price.ToString("N2")</span>
                             <img src="@Image" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
                             <p class="mb-0">@row.FoodName</p>
                         </button>
@@ -87,24 +87,29 @@
             </table>     
             <img src="~/Images/System/NoOrder.png" style="position:absolute;top:50%;left:50%;transform: translate(-50%, -50%);" img-no-order />
         </section>
-        <hr />
         <section class="order-footer">
-            <div class="form-group row">
-                <label class="col-sm-4 col-form-label">รายการ :</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-4 col-form-label">จำนวนเงิน :</label>
-                <div class="col-sm-8">
-                    <input type="text" class="form-control">
-                </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col">
-                    <button type="button" class="btn btn-outline-primary btn-block">บันทึกรายการ</button>
+            <div class="card bg-card-order">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">รายการ :</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="input-order text-right" value="0" id="txtcount" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">ราคารวม :</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="input-order text-right" value="0.00" id="txtsum" readonly>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <button type="button" class="btn btn-block btn-success" btn-save><i class="fas fa-cart-arrow-down"></i>&nbsp;บันทึก</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-block btn-outline-danger" btn-cancel><i class="fas fa-ban"></i>&nbsp;ยกเลิก</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -114,12 +119,14 @@
 <div id="PlaceHolderHere"></div>
 
 @section Scripts {
+    <script src="~/Plugins/Numeral/numeral.js"></script>
     <script>
         $(document).ready(function () {
             const img = $('[img-no-order]')
             img.show()
             screenScroll()
             Scroll()
+            Order()
         });
 
         document.getElementById('GroupFood').addEventListener('change', () => {
@@ -139,7 +146,7 @@
                         var link = '@Url.Action("_AmountFood", "Modal")' + '/' + value.foodId;
                         var p = '<div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">'
                             + `<button class="btn btn-block text-truncate p-0 button_order" onclick="amountfood('${link}')" data-toggle="ajax-modal" data-target="#amountfood">`
-                            + `<span class="price_order">${value.price}</span>`
+                            + `<span class="price_order">${numeral(value.price).format('0,0.00')}</span>`
                             + `<img ${image} class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />`
                             + `<p class="mb-0">${value.foodName}</p>`
                             + '</button>'
@@ -150,26 +157,71 @@
             });
         })
 
-        function AddOrder(id, amount) {
+        function Order() {
             const table = $('[table-body]')
             const img = $('[img-no-order]')
+            const txtcount = $('#txtcount')
+            const txtsum = $('#txtsum')
+            table.empty()
+            $.get("@Url.Action("GetOrder", "SF_Order")",
+                function (data, status) {
+                    $.each(data, function (index, val) {
+                        if (val != "") {
+                            let sum = 0;
+                            let count = 0;
+                            val.forEach(function (value) {
+                                sum += value.price * value.amount;
+                                count += value.amount;
+                                var p = '<tr>'
+                                    + `<td hidden>${value.foodId}</td>`
+                                    + '<td>'
+                                    + `<div>${value.foodName}</div>`
+                                    + `<div><strong>ราคา: </strong>${numeral(value.price).format('0,0.00')}</div>`
+                                    + '</td>'
+                                    + `<td class="text-right pr-4" style="width:20%;"><strong>${value.amount}</strong></td>`
+                                    + `<td style="width:5%;"><button type="button" onclick="Delete('${value.foodId }')" class="btn btn-table-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>`
+                                    + '</tr>';
+                                table.append(p)
+                            })
+                            txtsum.val(numeral(sum).format('0,0.00'))
+                            txtcount.val(count)
+                            img.hide()
+                        } else {
+                            img.show()
+                        }
+                    })
+                }
+            )
+        }
+
+        function Add(id, amount) {
+            const table = $('[table-body]')
+            const img = $('[img-no-order]')
+            const txtcount = $('#txtcount')
+            const txtsum = $('#txtsum')
             table.empty()
             $.post("@Url.Action("Add", "SF_Order")", { id: id, amount: amount },
                 function (data, status) {
                     $.each(data, function (index, val) {
                         if (val != "") {
+                            let sum = 0;
+                            let count = 0;
                             val.forEach(function (value) {
+                                sum += value.price * value.amount;
+                                count += value.amount;
                                 var p = '<tr>'
                                     + `<td hidden>${value.foodId}</td>`
                                     + '<td>'
                                     + `<div>${value.foodName}</div>`
-                                    + `<div><strong>ราคา: </strong>${value.price}</div>`
+                                    + `<div><strong>ราคา: </strong>${numeral(value.price).format('0,0.00')}</div>`
                                     + '</td>'
                                     + `<td class="text-right pr-4" style="width:20%;"><strong>${value.amount}</strong></td>`
-                                    + '<td style="width:5%;"><button type="button" class="btn btn-table-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>'
+                                    + `<td style="width:5%;"><button type="button" onclick="Delete('${value.foodId }')" class="btn btn-table-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>`
                                     + '</tr>';
                                 table.append(p)
                             })
+                            txtsum.val(numeral(sum).format('0,0.00'))
+                            txtcount.val(count)
                             img.hide()
                         } else {
                             img.show()
@@ -179,6 +231,100 @@
             )
             $('#amountfood').modal('hide')
         }
+
+        function Delete(id) {
+            Swal.fire({
+                text: "ลบรายการหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    const table = $('[table-body]')
+                    const img = $('[img-no-order]')
+                    const txtcount = $('#txtcount')
+                    const txtsum = $('#txtsum')
+                    table.empty()
+                    $.post("@Url.Action("Delete", "SF_Order")", { id: id },
+                        function (data, status) {
+                            $.each(data, function (index, val) {
+                                if (val != "") {
+                                    let sum = 0;
+                                    let count = 0;
+                                    val.forEach(function (value) {
+                                        sum += value.price * value.amount;
+                                        count += value.amount;
+                                        var p = '<tr>'
+                                            + `<td hidden>${value.foodId}</td>`
+                                            + '<td>'
+                                            + `<div>${value.foodName}</div>`
+                                            + `<div><strong>ราคา: </strong>${numeral(value.price).format('0,0.00')}</div>`
+                                            + '</td>'
+                                            + `<td class="text-right pr-4" style="width:20%;"><strong>${value.amount}</strong></td>`
+                                            + `<td style="width:5%;"><button type="button" onclick="Delete('${value.foodId }')" class="btn btn-table-sm btn-danger"><i class="fas fa-trash-alt"></i></button></td>`
+                                            + '</tr>';
+                                        table.append(p)
+                                    })
+                                    txtsum.val(numeral(sum).format('0,0.00'))
+                                    txtcount.val(count)
+                                    img.hide()
+                                } else {
+                                    img.show()
+                                }
+                            })
+                        }
+                    )
+                }
+            });
+        }
+
+        document.querySelector('[btn-cancel]').addEventListener('click', () => {
+            Swal.fire({
+                text: "ยกเลิกรายการหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    const table = $('[table-body]')
+                    const img = $('[img-no-order]')
+                    const txtcount = $('#txtcount')
+                    const txtsum = $('#txtsum')
+                    $.post("@Url.Action("Cancel", "SF_Order")",
+                        function (data, status) {
+                            table.empty()
+                            img.show()
+                            txtcount.val("0")
+                            txtsum.val("0.00")
+                        }
+                    )
+                }
+            });
+        })
+
+        document.querySelector('[btn-save]').addEventListener('click', () => {
+            Swal.fire({
+                text: "บันทึกออร์เดอร์หรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    //const paramUrl = new URLSearchParams(window.location.search)
+                    //const paramid = paramUrl.get('id')
+                    window.location.href = '@Url.Action("Save", "SF_Order", new { id = Table.TableId })'
+                }
+            });
+        })
 
         function amountfood(val) {
             // Modal
@@ -199,7 +345,7 @@
         }
 
         function Scroll() {
-            var height_P = $(window).height() - $('.navbar').height() - 320
+            var height_P = $(window).height() - $('.navbar').height() - $('.order-footer').height() - 55
             $('[scroll]').slimScroll({
                 height: height_P,
                 railBorderRadius: 0,

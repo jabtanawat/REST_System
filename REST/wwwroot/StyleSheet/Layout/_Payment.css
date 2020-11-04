@@ -1,0 +1,42 @@
+﻿/* Navbar */
+.nav-bar {
+    border-bottom: 1px solid #E3EBF6;
+}
+
+/* CONTENT */
+.wrapper .content {
+    width: 100%;
+    margin: 1rem 1rem 1rem 1rem;
+}
+
+/* MENU */
+.wrapper .sidemenu .sidebar .navbar-nav .nav-item .nav-link {
+    position: relative;
+    display: block;
+    white-space: nowrap;
+}
+
+/* ICON MENU */
+.wrapper .sidemenu .sidebar .navbar-nav .nav-item .nav-link .nav_icon {
+    vertical-align: middle;
+    height: 18px;
+    width: 18px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: #E3EBF6;
+}
+
+/* TEXT MENU */
+.wrapper .sidemenu .sidebar .navbar-nav .nav-item .nav-link .nav_text {
+    padding-left: 0.5rem;
+    font-size: 14px;
+    letter-spacing: 0.8px;
+    color: #E3EBF6;
+}
+
+/* NAV LINK HOVER  */
+.wrapper .sidemenu .sidebar .navbar-nav .nav-item .nav-link:hover .nav_icon,
+.wrapper .sidemenu .sidebar .navbar-nav .nav-item .nav-link:hover .nav_text {
+    color: #fff;
+}

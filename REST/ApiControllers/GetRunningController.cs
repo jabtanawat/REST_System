@@ -27,7 +27,6 @@ namespace REST.ApiControllers
 
         public string Running(string id, string branchid)
         {
-
             string DocRunning = null;
             string RunLength = null;
             int Number = 0;

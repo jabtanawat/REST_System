@@ -103,9 +103,10 @@ namespace REST.Controllers
                 HttpContext.Session.Remove("Session_StapleList");
             }
 
-            if (HttpContext.Session.GetString("Session_ListOrder") != null)
+            // remove session order 
+            if (HttpContext.Session.GetString("Session_Order") != null)
             {
-                HttpContext.Session.Remove("Session_ListOrder");
+                HttpContext.Session.Remove("Session_Order");
             }
 
             return RedirectToAction("Index", "Login");

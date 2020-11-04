@@ -14,17 +14,22 @@ using static REST.Service.Enums;
 namespace REST.Controllers
 {
     [Authorize]
-    public class PaymentController : BaseController
+    public class SF_PaymentController : BaseController
     {
         #region Connection db
         private readonly DbConnection _db;
 
-        public PaymentController(DbConnection db)
+        public SF_PaymentController(DbConnection db)
         {
             _db = db;
         }
 
         #endregion 
+
+        public IActionResult Payment(string id)
+        {
+            return View();
+        }
 
         [Route("/Payment/{id}")]
         public IActionResult Index(string id)
@@ -40,7 +45,7 @@ namespace REST.Controllers
         }
 
         [HttpPost]
-        public IActionResult Payment(string TableId)
+        public IActionResult Paymenta(string TableId)
         {
             string Status = null;
 
