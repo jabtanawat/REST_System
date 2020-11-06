@@ -14,25 +14,25 @@
 
 <div class="row">
     <div class="col-xl-3 col-lg-4 col-md-5 pr-md-0 mb-md-0 mb-3">
-        <div class="card">
+        <div class="card border-0 bg-primary-light">
             <div class="card-body">
                 <h6 class="font-weight-bold text-center">ข้อมูลชำระเงิน</h6>
-                <hr />
-                <form>
+                <hr class="text-white" />
+                <form name="FrmPayment" method="post">
                     <div class="form-group row">
-                        <label class="col-sm-4 col-form-label col-form-label-sm text-sm-right">ราคารวม : </label>
+                        <label class="col-sm-4 col-form-label col-form-label-sm font-weight-bold text-sm-right">ราคารวม : </label>
                         <div class="col-sm-8">
-                            <input asp-for="Total" id="txtTotal" type="text" class="form-control form-control-sm text-right" placeholder="0.00" readonly>
+                            <input asp-for="Total" id="txtTotal" type="text" class="form-control form-control-sm font-weight-bold text-right" placeholder="0.00" readonly>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-4 col-form-label col-form-label-sm  text-sm-right">ลด % : </label>
+                        <label class="col-sm-4 col-form-label col-form-label-sm font-weight-bold text-sm-right">ลด % : </label>
                         <div class="col-sm-8">
-                            <input asp-for="Persen" id="txtPersen" type="number" class="form-control form-control-sm text-right">
+                            <input asp-for="Persen" id="txtPersen" type="number" class="form-control form-control-sm font-weight-bold text-right">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-4 col-form-label col-form-label-sm text-sm-right">สมาชิก : </label>
+                        <label class="col-sm-4 col-form-label col-form-label-sm font-weight-bold text-sm-right">สมาชิก : </label>
                         <input asp-for="MemberId" id="txtMemberId" type="hidden" class="form-control form-control-sm">
                         <div class="col-sm-8">
                             <div class="input-group">
@@ -44,27 +44,27 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-4 col-form-label col-form-label-sm text-sm-right">รวมทั้งหมด : </label>
+                        <label class="col-sm-4 col-form-label col-form-label-sm font-weight-bold text-sm-right">รวมทั้งหมด : </label>
                         <div class="col-sm-8">
-                            <input asp-for="Balance" id="txtBalance" type="text" class="form-control form-control-sm text-right" placeholder="0.00" readonly>
+                            <input asp-for="Balance" id="txtBalance" type="text" class="form-control form-control-sm font-weight-bold text-right text-success" placeholder="0.00" readonly>
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-4 col-form-label col-form-label-sm text-sm-right">รับเงิน : </label>
+                        <label class="col-sm-4 col-form-label col-form-label-sm font-weight-bold text-sm-right">รับเงิน : </label>
                         <div class="col-sm-8">
-                            <input asp-for="MoneyPut" id="txtMoneyPut" type="text" class="form-control form-control-sm text-right" value="0.00">
+                            <input asp-for="MoneyPut" id="txtMoneyPut" type="text" class="form-control form-control-sm font-weight-bold text-right text-primary" value="0.00">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-4 col-form-label col-form-label-sm text-sm-right">เงินทอน : </label>
+                        <label class="col-sm-4 col-form-label col-form-label-sm font-weight-bold text-sm-right">เงินทอน : </label>
                         <div class="col-sm-8">
-                            <input asp-for="MoneyChange" id="txtMoneyChange" type="text" class="form-control form-control-sm text-right" value="0.00" readonly>
+                            <input asp-for="MoneyChange" id="txtMoneyChange" type="text" class="form-control form-control-sm font-weight-bold text-right text-danger" value="0.00" readonly>
                         </div>
                     </div>
                 </form>
-                <hr />
+                <hr class="text-white" />
                 <div class="text-center">
-                    <button type="button" class="btn btn-sm btn-blue"><i class="fas fa-cash-register"></i>&nbsp;บันทึก</button>
+                    <button type="button" class="btn btn-sm btn-blue"><i class="far fa-thumbs-up"></i>&nbsp;&nbsp;บันทึก</button>
                 </div>
             </div>
         </div>
@@ -73,31 +73,29 @@
         <div class="card">
             <div class="card-body">
                 <section class="data-heard">
-                    <div class="card bg-light border-0 mb-3">
-                        <div class="card-body">
-                            <div class="d-flex">
-                                <div class="flex-grow-1">
-                                    <h6 class="font-weight-bold mb-0">ข้อมูลโต๊ะ</h6>
-                                </div>
-                                @{
-                                    string bg = "";
-                                    if (Table.TableST == 1)
-                                    {
-                                        bg = "color-green";
-                                    }
-                                    else if (Table.TableST == 2)
-                                    {
-                                        bg = "color-red";
-                                    }
-                                    else if (Table.TableST == 3)
-                                    {
-                                        bg = "color-yellow";
-                                    }
-                                    <div class="ml-2"><h6 class="mb-0"><strong>รหัส : </strong>&nbsp;@Table.TableId</h6></div>
-                                    <div class="ml-3"><h6 class="mb-0"><strong>ชื่อ : </strong>&nbsp;@Table.TableName</h6></div>
-                                    <div class="ml-3"><h6 class="mb-0"><strong>สถานะ : </strong>&nbsp;<span class="@bg"><i class="fas fa-circle"></i>&nbsp;</span>@Table.Status</h6></div>
-                                }
+                    <div class="alert alert-primary py-2" role="alert">
+                        <div class="d-flex">
+                            <div class="flex-grow-1">
+                                <h6 class="font-weight-bold mb-0">ข้อมูลโต๊ะ</h6>
                             </div>
+                            @{
+                                string bg = "";
+                                if (Table.TableST == 1)
+                                {
+                                    bg = "color-green";
+                                }
+                                else if (Table.TableST == 2)
+                                {
+                                    bg = "color-red";
+                                }
+                                else if (Table.TableST == 3)
+                                {
+                                    bg = "color-yellow";
+                                }
+                                <div class="ml-2"><h6 class="mb-0"><strong>รหัส : </strong>&nbsp;@Table.TableId</h6></div>
+                                <div class="ml-3"><h6 class="mb-0"><strong>ชื่อ : </strong>&nbsp;@Table.TableName</h6></div>
+                                <div class="ml-3"><h6 class="mb-0"><strong>สถานะ : </strong>&nbsp;<span class="@bg"><i class="fas fa-circle"></i>&nbsp;</span>@Table.Status</h6></div>
+                            }
                         </div>
                     </div>
                 </section>
@@ -108,7 +106,7 @@
                                 <tr>
                                     <th class="text-center" style="width:5%;">ลำดับ</th>
                                     <th class="text-center">ชื่อ</th>
-                                    <th class="text-center" style="width:5%;"><i class="fas fa-info-circle"></i></th>
+                                    <th class="text-center text-info" style="width:5%;"><i class="fas fa-info-circle"></i></th>
                                     <th class="text-center" style="width:20%;">ราคา</th>
                                     <th class="text-center" style="width:20%;">จำนวน</th>
                                     <th class="text-center" style="width:5%;">ครั้ง</th>
@@ -138,10 +136,10 @@
                                                 {
                                                     <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                                                 }
-                                                <td class="text-right">@row.Price</td>
+                                                <td class="text-right">@row.Price.ToString("N2")</td>
                                                 <td class="text-right">@row.Amount</td>
                                                 <td class="text-center">@row.i</td>
-                                                <td class="text-center"><i class="far fa-trash-alt"></i></td>
+                                                <td class="text-center"><button type="button" class="btn btn-table-sm btn-danger-light text-danger"><i class="far fa-trash-alt"></i></button></td>
                                             </tr>
                                         }
                                     }

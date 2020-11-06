@@ -41,8 +41,8 @@ namespace REST.Controllers
                 Total += row.PriceTotal;
             }
             var item = new ViewFrmPayment();
-            item.Total = Total;
-            item.Balance = Total;
+            item.Total = Total.ToString("N2");
+            item.Balance = Total.ToString("N2");
             return View(item);
         }
 
