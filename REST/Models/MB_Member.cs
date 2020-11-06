@@ -11,6 +11,7 @@ namespace REST.Models
         [Key]
         [Required]
         public string MemberId { get; set; }
+        public int Type { get; set; }
         public DateTime DateRegister { get; set; }
         public string IdCard { get; set; }
         public string Title { get; set; }

@@ -125,6 +125,7 @@ namespace REST.Controllers
                                 Doc = Info.MemberId;
 
                             Item.MemberId = Doc;
+                            Item.Type = Info.Type;
                             Item.DateRegister = Share.FormatDate(Info.DateRegister).Date;
                             Item.IdCard = Info.IdCard;
                             Item.Title = Info.Title;
@@ -160,6 +161,7 @@ namespace REST.Controllers
 
                     case Comp.FormMode.EDIT:
                         Item = _db.MB_Member.FirstOrDefault(x => x.MemberId == Info.MemberId && x.BranchId == branchid);
+                        Item.Type = Info.Type;
                         Item.IdCard = Info.IdCard;
                         Item.Title = Info.Title;
                         Item.FirstName = Info.FirstName;
@@ -256,6 +258,7 @@ namespace REST.Controllers
             var item = new ViewMB_Member();
 
             item.MemberId = info.MemberId;
+            item.Type = info.Type;
             item.DateRegister = info.DateRegister.ToString("dd/MM/yyyy");
             item.IdCard = info.IdCard;
             item.Title = info.Title;

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using REST.ApiControllers;
 using REST.Data;
 using REST.Models;
 using REST.ViewModels;
@@ -28,7 +29,30 @@ namespace REST.Controllers
 
         public IActionResult Payment(string id)
         {
-            return View();
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;            
+            var _Get1 = new GetCD_TableController(_db);
+            var _Get2 = new GetSF_OrderController(_db);
+            ViewBag.Table = _Get1.TableById(id, branchid).FirstOrDefault();
+            ViewBag.OrderSub = _Get2.OrderSub(id, branchid);
+            var order = _db.SF_Order.Where(x => x.TableId == id && x.BranchId == branchid).ToList();
+            decimal Total = 0;
+            foreach (var row in order)
+            {
+                Total += row.PriceTotal;
+            }
+            var item = new ViewFrmPayment();
+            item.Total = Total;
+            item.Balance = Total;
+            return View(item);
+        }
+
+        [HttpPost]
+        public IActionResult ShowMember(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _Get = new GetMB_MemberController(_db);
+            var item = _Get.ViewMemberById(id, branchid);
+            return Json(new { data = item });
         }
 
         [Route("/Payment/{id}")]

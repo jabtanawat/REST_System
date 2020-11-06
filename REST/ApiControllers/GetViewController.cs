@@ -171,7 +171,7 @@ namespace REST.ApiControllers
         public List<ViewMB_Member> ViewMember(string branchId)
         {
             var List = new List<ViewMB_Member>();
-            var sql = $"SELECT MemberId, Title + ' ' + FirstName + ' ' + LastName AS Name "
+            var sql = $"SELECT MemberId, CASE WHEN Type = 1 THEN 'ทั่วไป' WHEN Type = 2 THEN 'สมาชิก' END AS TypeName, Title + ' ' + FirstName + ' ' + LastName AS Name "
                     + $"FROM MB_Member "
                     + $"WHERE BranchId = '{branchId}'";
             using (var command = _db.Database.GetDbConnection().CreateCommand())
@@ -186,7 +186,9 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(0))
                             Item.MemberId = data.GetString(0);
                         if (!data.IsDBNull(1))
-                            Item.Name = data.GetString(1);                        
+                            Item.TypeName = data.GetString(1);
+                        if (!data.IsDBNull(2))
+                            Item.Name = data.GetString(2);                        
                         List.Add(Item);
                     }
                 }

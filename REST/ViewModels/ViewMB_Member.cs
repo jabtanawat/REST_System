@@ -10,6 +10,8 @@ namespace REST.Models
     {
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string MemberId { get; set; }
+        public int Type { get; set; }
+        public string TypeName { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string DateRegister { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]

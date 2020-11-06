@@ -73,5 +73,13 @@ namespace REST.Controllers
             ViewBag.FoodAmount = _db.CD_Food.FirstOrDefault(x => x.FoodId == id && x.BranchId == branchid);
             return PartialView("_AmountFood");
         }
+
+        public IActionResult _popupMember()
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _get = new GetViewController(_db);
+            ViewBag.View = _get.ViewMember(branchid);
+            return PartialView("_popupMember");
+        }
     }
 }

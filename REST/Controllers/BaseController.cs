@@ -117,5 +117,28 @@ namespace REST.Controllers
                 return Json(new { data = Total });
             }
         }
+
+        public IActionResult FrmPayment1(string price, string persen)
+        {
+            decimal Total = 0;
+            decimal As1 = 0;
+            decimal As2 = 0;
+
+            try
+            {
+                if (price != null)
+                    As1 = Convert.ToDecimal(price);
+                if (persen != null)
+                    As2 = Convert.ToDecimal(persen);
+
+                Total = As1 - (As1 * As2) / 100;
+
+                return Json(new { data = Total });
+            }
+            catch (Exception)
+            {
+                return Json(new { data = Total });
+            }
+        }
     }
 }
