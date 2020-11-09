@@ -47,5 +47,94 @@ namespace REST.Service
 
             return datereturn;
         }
+
+        public static bool IsNullOrEmptyObject(object obj)
+        {
+            if (obj == null || Convert.IsDBNull(obj) || string.IsNullOrEmpty(obj.ToString()))
+                return true;
+            else
+                return false;
+        }
+
+        public static int FormatInteger(object obj)
+        {
+            
+            try
+            {
+                if (Share.IsNullOrEmptyObject(obj))
+                    return 0;
+                else
+                    return System.Convert.ToInt32(obj);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message != null)
+                    throw;
+                else
+                    return 0;
+            }
+        }
+
+        public static double FormatDouble(object obj)
+        {
+            try
+            {
+                if (Share.IsNullOrEmptyObject(obj))
+                    return 0;
+                else
+                    return Math.Round(System.Convert.ToDouble(obj.ToString()), 2, MidpointRounding.AwayFromZero);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message != null)
+                    throw;
+                else
+                    return 0;
+            }
+        }
+
+        public static string Cnumber(double TempValue, byte decimal_notation)
+        {
+            switch (decimal_notation)
+            {
+                case 0:
+                    {
+                        // TempValue = Math.Round(TempValue, Share.CD_Constant.RoundDecimal, MidpointRounding.AwayFromZero)
+                        return TempValue.ToString("#,##0");
+                    }
+
+                case 1:
+                    {
+                        TempValue = Math.Round(TempValue, 1, MidpointRounding.AwayFromZero);
+                        return TempValue.ToString("#,##0.0");
+                    }
+
+                case 2:
+                    {
+                        TempValue = Math.Round(TempValue, 2, MidpointRounding.AwayFromZero);
+                        return TempValue.ToString("#,##0.00");
+                    }
+
+                case 3:
+                    {
+                        TempValue = Math.Round(TempValue, 3, MidpointRounding.AwayFromZero);
+                        return TempValue.ToString("#,##0.000");
+                    }
+
+                case 4:
+                    {
+                        TempValue = Math.Round(TempValue, 4, MidpointRounding.AwayFromZero);
+                        return TempValue.ToString("#,##0.0000");
+                    }
+
+                default:
+                    {
+                        TempValue = Math.Round(TempValue, 2, MidpointRounding.AwayFromZero);
+                        return TempValue.ToString("#,##0.00");
+                    }
+            }
+        }
+
+
     }
 }

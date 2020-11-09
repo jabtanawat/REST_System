@@ -7,7 +7,7 @@
 }
 
 @section Styles{
-    <link rel="stylesheet" href="~/Plugins/Datapicker-TH/css/bootstrap-datepicker.css" />
+    <link href="~/Plugins/Datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 }
 
 <div class="card">
@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">รหัสสมาชิก :</label>
                                                 @if (ViewData["Readonly"].ToString() != "")
@@ -49,31 +49,31 @@
                                                 <span asp-validation-for="MemberId" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">ประเภท :</label>
-                                                <select asp-for="Type" class="form-control form-control-sm">                                                    
+                                                <select asp-for="Type" class="form-control form-control-sm" id="txtType">
                                                     <option value="1">ทั่วไป</option>
                                                     <option value="2">สมาชิก</option>
                                                 </select>
                                                 <span asp-validation-for="Type" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">วันที่สมัคร :</label>
-                                                <input asp-for="DateRegister" type="text" class="form-control form-control-sm" value="@ViewData["DateNow"].ToString()" placeholder="01/01/1999" date>
+                                                <input asp-for="DateRegister" type="text" class="form-control form-control-sm datepicker" value="@ViewData["DateNow"].ToString()" placeholder="dd/mm/yyyy">
                                                 <span asp-validation-for="DateRegister" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">เลขที่บัตรประชาชน :</label>
                                                 <input asp-for="IdCard" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="IdCard" class="text-danger col-form-label-sm"></span>
                                             </div>
-                                        </div>                             
-                                        <div class="col-lg-3 col-md-4">
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">คำนำหน้า :</label>
                                                 <select asp-for="Title" class="form-control form-control-sm">
@@ -85,21 +85,21 @@
                                                 <span asp-validation-for="Title" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">ชื่อ :</label>
                                                 <input asp-for="FirstName" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="FirstName" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">นามสกุล :</label>
                                                 <input asp-for="LastName" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="LastName" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <label asp-for="Status" class="col-form-label form-label-sm">สถานะ :</label>
                                             <div class="form-group">
                                                 <div class="form-check form-check-inline">
@@ -114,21 +114,21 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">วันเกิด :</label>
-                                                <input asp-for="DateBirthday" type="text" class="form-control form-control-sm" placeholder="01/01/1999" date>
+                                                <input asp-for="DateBirthday" type="text" class="form-control form-control-sm datepicker" placeholder="dd/mm/yyyy">
                                                 <span asp-validation-for="DateBirthday" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">เบอร์โทร :</label>
                                                 <input asp-for="PhoneNumber" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="PhoneNumber" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">E-Mail :</label>
                                                 <input asp-for="Email" type="text" class="form-control form-control-sm">
@@ -145,63 +145,90 @@
                             <div class="card border-0">
                                 <div class="alert alert-primary py-2 mb-0" role="alert">
                                     <i class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;ที่อยู่
-                                </div>                                
+                                </div>
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">เลขที่ :</label>
                                                 <input asp-for="AddrNo" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="AddrNo" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">หมู่ :</label>
                                                 <input asp-for="Moo" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="Moo" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">ถนน :</label>
                                                 <input asp-for="Road" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="Road" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">ซอย :</label>
                                                 <input asp-for="Soi" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="Soi" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">ตำบล / แขวง :</label>
                                                 <input asp-for="Locality" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="Locality" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">อำเภอ / เขต :</label>
                                                 <input asp-for="District" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="District" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">จังหวัด :</label>
                                                 <input asp-for="Province" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="Province" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3 col-md-4">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
                                             <div class="form-group">
                                                 <label class="col-form-label form-label-sm">รหัสไปรษณีย์ :</label>
                                                 <input asp-for="ZibCode" type="text" class="form-control form-control-sm">
                                                 <span asp-validation-for="ZibCode" class="text-danger col-form-label-sm"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Interest -->
+                        <section class="content-interest">
+                            <div class="card border-0">
+                                <div class="alert alert-success py-2 mb-0" role="alert">
+                                    <i class="fas fa-poll"></i>&nbsp;&nbsp;Promotion
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label form-label-sm">ส่วนลด :</label>
+                                                <input asp-for="Rebate" type="number" class="form-control form-control-sm text-right" id="txtRebate" value="0" placeholder="0">
+                                                <span asp-validation-for="Rebate" class="text-danger col-form-label-sm"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-3 col-lg-4 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-form-label form-label-sm">คะแนนสะสม :</label>
+                                                <input asp-for="Score" type="text" class="form-control form-control-sm text-right" value="0.00"  placeholder="0.00" readonly>
+                                                <span asp-validation-for="Score" class="text-danger col-form-label-sm"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -218,25 +245,56 @@
 </div>
 
 @section Scripts {
-    <script src="~/Plugins/Inputmask/jquery.inputmask.min.js"></script>
-    <script src="~/Plugins/Datapicker-TH/js/bootstrap-datepicker-custom.js"></script>
-    <script src="~/Plugins/Datapicker-TH/locales/bootstrap-datepicker.th.min.js"></script>
+    @*<script src="~/Plugins/Inputmask/jquery.inputmask.min.js"></script>
+        <script src="~/Plugins/Datapicker-TH/js/bootstrap-datepicker-custom.js"></script>
+        <script src="~/Plugins/Datapicker-TH/locales/bootstrap-datepicker.th.min.js"></script>*@
+    <script src="~/Plugins/Datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="~/Plugins/Datepicker/bootstrap-datepicker-thai.js"></script>
+    <script src="~/Plugins/Datepicker/locales/bootstrap-datepicker.th.js"></script>
     <script>
 
         $(document).ready(function () {
             $(".item_click_Profile").addClass("active");
+            txtRebate()
             // Scroll Bar
             screenScroll()
-            $('[date]').datepicker({
+            //$('[date]').datepicker({
+            //    format: 'dd/mm/yyyy',
+            //    todayBtn: true,
+            //    todayBtn: 'linked',
+            //    todayHighlight: true,
+            //    language: 'th',             //เปลี่ยน label ต่างของ ปฏิทิน ให้เป็น ภาษาไทย   (ต้องใช้ไฟล์ bootstrap-datepicker.th.min.js นี้ด้วย)
+            //    thaiyear: true,            //Set เป็นปี พ.ศ.
+            //    autoclose: true
+            //});
+
+            $('.datepicker').datepicker({
+                language: 'th-th',
                 format: 'dd/mm/yyyy',
+                todayHighlight: true,
                 todayBtn: true,
                 todayBtn: 'linked',
-                todayHighlight: true,
-                language: 'th',             //เปลี่ยน label ต่างของ ปฏิทิน ให้เป็น ภาษาไทย   (ต้องใช้ไฟล์ bootstrap-datepicker.th.min.js นี้ด้วย)
-                thaiyear: true,            //Set เป็นปี พ.ศ.
                 autoclose: true
             });
         });
+
+        function txtRebate() {
+            const type = document.getElementById("txtType").value
+            if (type == 1) {
+                $('#txtRebate').prop('readonly', true);
+            } else {
+                $('#txtRebate').prop('readonly', false);
+            }
+        }
+
+        document.getElementById("txtType").addEventListener('change', () => {
+            const type = document.getElementById("txtType").value
+            if (type == 1) {
+                $('#txtRebate').prop('readonly', true);
+            } else {
+                $('#txtRebate').prop('readonly', false);
+            }
+        })
 
         document.querySelector("[btn-save]").addEventListener('click', () => {
              Swal.fire({

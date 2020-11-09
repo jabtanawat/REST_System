@@ -276,6 +276,8 @@ namespace REST.Controllers
             item.District = info.District;
             item.Province = info.Province;
             item.ZibCode = info.ZibCode;
+            item.Rebate = info.Rebate;
+            item.Score = Share.Cnumber(Share.FormatDouble(info.Score), 2);
 
             return item;
         }

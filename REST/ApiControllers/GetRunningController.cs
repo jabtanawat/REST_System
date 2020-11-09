@@ -36,6 +36,7 @@ namespace REST.ApiControllers
 
             if (Running.AutoRun == true)
             {
+                RunLength = null;
                 for (int i = 0; i < Running.Number.Length; i++)
                 {
                     RunLength += '0';
@@ -45,6 +46,7 @@ namespace REST.ApiControllers
 
                 if (Running.AutoDate == true)
                 {
+                    RunLength = null;
                     for (int i = 0; i < Running.Number.Length; i++)
                     {
                         RunLength += '0';

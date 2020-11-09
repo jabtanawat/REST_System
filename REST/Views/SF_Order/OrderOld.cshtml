@@ -1,8 +1,11 @@
-﻿@{
+﻿@using REST.Service;
+@{
     ViewData["Title"] = "Order";
     ViewData["System"] = "รับออเดอร์";
     Layout = "_Order";
     var Table = ViewBag.Table;
+    var amount = 0;
+    var price = 0;
 }
 
 @section Styles {
@@ -74,11 +77,14 @@
         <section class="order-body" scroll>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">รายการอาหาร</a>
+                    <a class="nav-link active" id="new-tab" data-toggle="tab" href="#new" role="tab" aria-controls="new" aria-selected="true">รายการใหม่</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="old-tab" data-toggle="tab" href="#old" role="tab" aria-controls="old" aria-selected="false">รายการเดิม</a>
                 </li>
             </ul>
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="new-tab">
                     <table class="table table-striped">
                         <thead>
                             <tr hidden>
@@ -93,8 +99,35 @@
                     </table>
                     <img src="~/Images/System/NoOrder.png" style="position:absolute;top:50%;left:50%;transform: translate(-50%, -50%);" img-no-order />
                 </div>
-            </div>
-            
+                <div class="tab-pane fade" id="old" role="tabpanel" aria-labelledby="old-tab">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr hidden>
+                                <th>รหัส</th>
+                                <th>ชื่อ</th>
+                                <th style="width:5%;">จำนวน</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var row in ViewBag.Order)
+                                {
+                                    amount += row.Amount;
+                                    price += row.Price * row.Amount;
+                                    <tr>
+                                        <td hidden>@row.FoodId</td>
+                                        <td>
+                                            <div>@row.FoodName</div>
+                                            <div><strong> ราคา: </strong>@Share.Cnumber(Share.FormatDouble(row.Price), 2)</div>
+                                        </td>
+                                        <td class="text-right pr-4" style="width:20%;"><strong>@Share.FormatInteger(row.Amount)</strong></td>                                        
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
         </section>
         <section class="order-footer">
             <div class="card bg-card-order">
@@ -102,13 +135,13 @@
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label">รายการ :</label>
                         <div class="col-sm-8">
-                            <input type="text" class="input-order text-right" value="0" id="txtcount" readonly>
+                            <input type="text" class="input-order text-right" value="@amount" id="txtcount" readonly>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label">ราคารวม :</label>
                         <div class="col-sm-8">
-                            <input type="text" class="input-order text-right" value="0.00" id="txtsum" readonly>
+                            <input type="text" class="input-order text-right" value="@price.ToString("N2")" id="txtsum" readonly>
                         </div>
                     </div>
                     <div class="row mt-4">
@@ -176,8 +209,8 @@
                 function (data, status) {
                     $.each(data, function (index, val) {
                         if (val != "") {
-                            let sum = 0;
-                            let count = 0;
+                            let sum = @price;
+                            let count = @amount;
                             val.forEach(function (value) {
                                 sum += value.price * value.amount;
                                 count += value.amount;
@@ -213,11 +246,11 @@
                 function (data, status) {
                     $.each(data, function (index, val) {
                         if (val != "") {
-                            let sum = 0;
-                            let count = 0;
+                            let sum = @price;
+                            let count = @amount;
                             val.forEach(function (value) {
-                                sum += value.price * value.amount;
-                                count += value.amount;
+                                sum += value.price * value.amount
+                                count += value.amount
                                 var p = '<tr>'
                                     + `<td hidden>${value.foodId}</td>`
                                     + '<td>'
@@ -261,8 +294,8 @@
                         function (data, status) {
                             $.each(data, function (index, val) {
                                 if (val != "") {
-                                    let sum = 0;
-                                    let count = 0;
+                                    let sum = @price;
+                                    let count = @amount;
                                     val.forEach(function (value) {
                                         sum += value.price * value.amount;
                                         count += value.amount;
@@ -282,8 +315,8 @@
                                     img.hide()
                                 } else {
                                     img.show()
-                                    txtcount.val("0")
-                                    txtsum.val("0.00")
+                                    txtcount.val(@amount)
+                                    txtsum.val(numeral(@price).format('0,0.00'))
                                 }
                             })
                         }
@@ -311,8 +344,8 @@
                         function (data, status) {
                             table.empty()
                             img.show()
-                            txtcount.val("0")
-                            txtsum.val("0.00")
+                            txtcount.val(@amount)
+                            txtsum.val(numeral(@price).format('0,0.00'))
                         }
                     )
                 }

@@ -39,5 +39,7 @@ namespace REST.Models
         public string District { get; set; } // อำเภอ
         public string Province { get; set; }
         public string ZibCode { get; set; }
+        public int Rebate { get; set; } // ส่วนลด
+        public string Score { get; set; } // คะแนนสะสม
     }
 }

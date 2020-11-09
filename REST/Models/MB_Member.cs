@@ -29,6 +29,8 @@ namespace REST.Models
         public string District { get; set; } // อำเภอ
         public string Province { get; set; }
         public string ZibCode { get; set; }
+        public int Rebate { get; set; } // ส่วนลด
+        public decimal Score { get; set; } // คะแนนสะสม
         public string BranchId { get; set; }
         public string CreateUser { get; set; }
         public DateTime CreateDate { get; set; }
