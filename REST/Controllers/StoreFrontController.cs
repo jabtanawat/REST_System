@@ -38,6 +38,27 @@ namespace REST.Controllers
             return View();
         }     
 
+        public IActionResult FrmSF_Table(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _Table = new GetCD_TableController(_db);
+            ViewBag.Table = _Table.TableById(id, branchid).FirstOrDefault();
+            var _OrderSub = new GetSF_OrderController(_db);
+            var OrderSub = _OrderSub.OrderSub(id, branchid);
+            if (OrderSub.Count > 0)
+            {
+                ViewBag.OrderSub = OrderSub;
+                ViewData["Disible"] = "";
+            }
+            else
+            {
+                ViewBag.OrderSub = OrderSub;
+                ViewData["Disible"] = "disabled";
+            }
+           
+            return View();
+        }
+
         [HttpPost]
         public IActionResult GetTable(string ZoneId, string Status)
         {
