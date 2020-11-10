@@ -125,6 +125,12 @@ body {
     font-size: 0.96rem;
 }
 
+.table .thead-black th {
+    color: #fff;
+    background-color: #3B3C40;
+    border-color: #454d55;
+}
+
 .table.table-head-fixed thead tr:nth-child(1) th {
     background-color: #fff;
     border-bottom: 0;

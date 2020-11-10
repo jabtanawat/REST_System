@@ -1,9 +1,17 @@
-﻿@{
+﻿@using REST.Service;
+@{
     ViewData["Title"] = "Store Front";
     ViewData["System"] = "ข้อมูลโต๊ะอาหาร";
     Layout = "_StoreFront";
     var Table = ViewBag.Table;
     var OrderSub = ViewBag.OrderSub;
+    var amount = 0;
+    var price = 0;
+    foreach(var i in OrderSub)
+    {
+        amount += i.Amount;
+        price += i.Price * i.Amount;
+    }
 }
 
 @section Styles {
@@ -70,14 +78,14 @@
                                     <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">จำนวน :</label>
                                     <div class="col-sm-7">
                                         @*<input type="text" class="form-control form-control-sm">*@
-                                        <p class="col-form-label-sm border-bottom mb-0 text-right">0</p>
+                                        <p class="col-form-label-sm border-bottom mb-0 text-right">@amount</p>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ราคาทั้งหมด :</label>
                                     <div class="col-sm-7">
                                         @*<input type="text" class="form-control form-control-sm">*@
-                                        <p class="col-form-label-sm border-bottom mb-0 text-right">0.00</p>
+                                        <p class="col-form-label-sm border-bottom mb-0 text-right">@Share.Cnumber(price,2)</p>
                                     </div>
                                 </div>
                             </div>
@@ -111,46 +119,40 @@
                             <th class="text-center" style="width:5%;">ลำดับ</th>
                             <th class="text-center">ชื่อ</th>
                             <th class="text-center text-info" style="width:5%;"><i class="fas fa-info-circle"></i></th>
-                            <th class="text-center" style="width:20%;">ราคา</th>
-                            <th class="text-center" style="width:20%;">จำนวน</th>
+                            <th class="text-center" style="width:15%;">ราคา</th>
+                            <th class="text-center" style="width:10%;">จำนวน</th>
+                            <th class="text-center" style="width:15%;">รวม</th>
                             <th class="text-center" style="width:5%;">ครั้ง</th>
                             <th class="text-center" style="width:5%;">#</th>
                         </tr>
                     </thead>
                     <tbody>
                         @{
-                            if (OrderSub.Count > 0)
+                            var x = 0;
+                            foreach (var row in ViewBag.OrderSub)
                             {
-                                var x = 0;
-                                foreach (var row in ViewBag.OrderSub)
-                                {
-                                    x++;
-                                    <tr>
-                                        <td class="text-center">@x</td>
-                                        <td>@row.FoodName</td>
-                                        @if (row.Status == 1)
-                                        {
-                                            <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
-                                        }
-                                        else if (row.Status == 2)
-                                        {
-                                            <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
-                                        }
-                                        else if (row.Status == 3)
-                                        {
-                                            <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
-                                        }
-                                        <td class="text-right">@row.Price.ToString("N2")</td>
-                                        <td class="text-right">@row.Amount</td>
-                                        <td class="text-center">@row.i</td>
-                                        <td class="text-center"><button type="button" class="btn btn-table-sm btn-danger-light text-danger"><i class="far fa-trash-alt"></i></button></td>
-                                    </tr>
-                                }
-                            }
-                            else
-                            {
+                                var p = row.Price * row.Amount;
+                                x++;
                                 <tr>
-                                    <td colspan="7" class="text-center">no order</td>
+                                    <td class="text-center">@x</td>
+                                    <td>@row.FoodName</td>
+                                    @if (row.Status == 1)
+                                    {
+                                        <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
+                                    }
+                                    else if (row.Status == 2)
+                                    {
+                                        <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
+                                    }
+                                    else if (row.Status == 3)
+                                    {
+                                        <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                    }
+                                    <td class="text-right">@row.Price.ToString("N2")</td>
+                                    <td class="text-right">@row.Amount</td>
+                                    <td class="text-right">@p.ToString("N2")</td>
+                                    <td class="text-center">@row.i</td>
+                                    <td class="text-center"><button type="button" class="btn btn-table-sm btn-danger-light text-danger" onclick="cancel('@row.OrderId', '@row.TableId','@row.FoodId');"><i class="far fa-trash-alt"></i></button></td>
                                 </tr>
                             }
                         }
@@ -172,5 +174,58 @@
                 "ordering": false,
             });
         });
+
+        function cancel(orderid, tableid, foodid) {
+            Swal.fire({
+                text: "ต้องการยกเลิกรายการหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    $.post("@Url.Action("CancelOrder", "SF_Order")", { orderid: orderid, tableid: tableid, foodId: foodid },
+                        function (data, status) {
+                            $.each(data, function (index, val) {
+                                if (val == "success") {
+                                    window.location.href = '@Url.Action("FrmSF_Table", "StoreFront", new { id = Table.TableId })'
+                                } else {
+                                    window.location.href = '@Url.Action("FrmSF_Table", "StoreFront", new { id = Table.TableId })'
+                                }
+                            })
+                        }
+                    )
+
+
+                    @*var url = '@Url.Action("Cancel", new { orderid = "__orderid__", tableid = "__tableid__", foodid = "__foodid__" })';*@
+                    @*var url = '@Url.Action("Cancel")';
+                    url += '/' + orderid + '?tableid=' + tableid + '?foodid=' + foodid;
+                    //var params = url.replace('__orderid__', orderid).replace('__tableid__', tableid).replace('__foodid__', foodid);
+                    console.log(url)
+                    window.location.href = url;*@
+
+                    @*window.location.href = '@Url.Action("cancel", new { orderid = "__OrderId__", tableid = "__TableId__", foodid = "__FoodId__" })'
+                    console.log('เลขออเดอร์ ' + OrderId + ' ' + 'โต๊ะ ' + TableId + ' ' + 'อาหาร ' + FoodId)*@
+                }
+            })
+        }
+
+        //document.querySelector("[btn-cancel]").addEventListener('click', () => {
+        //    Swal.fire({
+        //        text: "ต้องการยกเลิกรายการหรือไม่ ?",
+        //        icon: 'warning',
+        //        showCancelButton: true,
+        //        confirmButtonColor: '#3085d6',
+        //        cancelButtonColor: '#d33',
+        //        confirmButtonText: 'Yes',
+        //        cancelButtonText: 'No'
+        //    }).then((result) => {
+        //        if (result.value) {
+
+        //        }
+        //    })
+        //})
     </script>
 }

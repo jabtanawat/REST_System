@@ -1,0 +1,142 @@
+﻿@{
+    ViewData["Title"] = "Kitchen";
+    ViewData["System"] = "ออเดอร์รายวัน";
+    Layout = "_Kitchen";
+    var DateNow = DateTime.Now.ToString("dd/MM/yyyy");
+}
+
+@section Styles{
+    <link href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/Plugins/Datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-11 mx-auto">
+                <div class="d-flex">
+                    <div class="flex-grow-1">ข้อมูล</div>
+                    <div class="ml-2">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">วันที่</span>
+                            </div>
+                            <input type="text" class="form-control datepicker" placeholder="dd/MM/yyyy" value="@DateNow">
+                        </div>
+                    </div>
+                    <div class="ml-2">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-sm btn-primary dropdown-toggle" id="tabledropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="tabledropdown">
+                                <button class="dropdown-item active" type="button" value="">Show All</button>
+                                <button class="dropdown-item" type="button" value="1"><span class="text-danger"><i class="far fa-times-circle"></i>&nbsp;</span>ยังไม่ได้ทำ</button>
+                                <button class="dropdown-item" type="button" value="2"><span class="text-success"><i class="far fa-check-circle"></i>&nbsp;</span>ทำเสร็จแล้ว</button>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <table class="table table-md table-bordered" id="DataTable">
+                    <thead class="thead-black">
+                        <tr>
+                            <th class="text-center" style="width:5%;">ลำดับ</th>
+                            <th class="text-center">เลขที่ออเดอร์</th>
+                            <th class="text-center" style="width:15%;">วันที่รับออเดอร์</th>
+                            <th class="text-center">ชื่อโต๊ะ</th>
+                            <th class="text-center" style="width:5%;">สถานะ</th>
+                            <th class="text-center" style="width:15%;">จำนวนเงิน</th>
+                            <th class="text-center" style="width:5%;">#</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        @{
+                            var x = 0;
+                            foreach (var row in ViewBag.DataTable)
+                            {
+                                x++;
+                                <tr>
+                                    <td class="text-center">@x</td>
+                                    <td>@row.OrderId</td>
+                                    <td class="text-center">@row.OrderDt.ToString("dd/MM/yyyy")</td>
+                                    <td class="text-center">@row.TableName</td>
+                                    @if (row.ST == 1)
+                                    {
+                                        <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                    }
+                                    <td class="text-right">@row.PriceTotal.ToString("N2")</td>
+                                    <td class="text-center"><a href="@Url.Action("FrmKC_OrderSub", "Kitchen", new { orderid = row.OrderId, tableid = row.TableId})" class="btn btn-table-sm btn-info"><i class="fas fa-search"></i></a></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Plugins/DataTables/datatables.min.js"></script>
+    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Plugins/Datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="~/Plugins/Datepicker/bootstrap-datepicker-thai.js"></script>
+    <script src="~/Plugins/Datepicker/locales/bootstrap-datepicker.th.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Add Side Menu
+            $(".item_click_OrderDate").addClass("active");
+            // DataTable
+            $('#DataTable').DataTable({
+                "info": false,
+                "ordering": false,
+                "searching": false
+            });
+            // From DatePicker
+            $('.datepicker').datepicker({
+                language: 'th-th',
+                format: 'dd/mm/yyyy',
+                todayHighlight: true,
+                todayBtn: true,
+                todayBtn: 'linked',
+                autoclose: true
+            });
+        });
+
+        $(".dropdown-item").on("click", function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            $('#table-body').empty()
+
+            var t = '<tr>'
+                + '<td class="text-center">10</td>'
+                + '<td>1111</td>'
+                + '<td class="text-center">16/07/2539</td>'
+                + '<td class="text-center">Z1</td>'
+                + '<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>'
+                + '<td class="text-right">200</td>'
+                + '<td class="text-center"><a href="#" class="btn btn-table-sm btn-info"><i class="fas fa-search"></i></a></td>'
+                + '</tr>';
+
+            $('#table-body').append(t)
+
+            var t = '<tr>'
+                + '<td class="text-center">11</td>'
+                + '<td>1111</td>'
+                + '<td class="text-center">16/07/2539</td>'
+                + '<td class="text-center">Z1</td>'
+                + '<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>'
+                + '<td class="text-right">200</td>'
+                + '<td class="text-center"><a href="#" class="btn btn-table-sm btn-info"><i class="fas fa-search"></i></a></td>'
+                + '</tr>';
+
+            $('#table-body').append(t)
+        });
+
+
+    </script>
+}

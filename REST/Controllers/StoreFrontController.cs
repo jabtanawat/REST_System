@@ -57,7 +57,7 @@ namespace REST.Controllers
             }
            
             return View();
-        }
+        }        
 
         [HttpPost]
         public IActionResult GetTable(string ZoneId, string Status)

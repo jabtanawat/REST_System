@@ -23,6 +23,48 @@ namespace REST.ApiControllers
         }
         #endregion 
 
+        public List<ViewTb_SF_Order> Order(string TableId, string OrderDt, string branchid)
+        {
+            var List = new List<ViewTb_SF_Order>();
+            var sql = $"SELECT OrderId, SF_Order.TableId, TableName, ST, PriceTotal, OrderDt "
+                    + $"FROM SF_Order "
+                    + $"LEFT JOIN CD_Table ON SF_Order.TableId = CD_Table.TableId "
+                    + $"WHERE SF_Order.BranchId = '{branchid}' ";
+                    if (TableId != null)
+                        sql += $"AND SF_Order.TableId = '{TableId}' ";
+                    if (OrderDt != null)
+                        sql += $"AND SF_Order.OrderDt = '{OrderDt}' ";
+                    sql += $"ORDER BY OrderId DESC, OrderDt DESC";
+
+            using (var command = _db.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = sql;
+                _db.Database.OpenConnection();
+                using (var data = command.ExecuteReader())
+                {
+                    while (data.Read())
+                    {
+                        var Item = new ViewTb_SF_Order();
+                        if (!data.IsDBNull(0))
+                            Item.OrderId = data.GetString(0);
+                        if (!data.IsDBNull(1))
+                            Item.TableId = data.GetString(1);
+                        if (!data.IsDBNull(2))
+                            Item.TableName = data.GetString(2);
+                        if (!data.IsDBNull(3))
+                            Item.ST = data.GetInt32(3);
+                        if (!data.IsDBNull(4))
+                            Item.PriceTotal = data.GetDecimal(4);
+                        if (!data.IsDBNull(5))
+                            Item.OrderDt = data.GetDateTime(5);
+                        List.Add(Item);
+                    }
+                }
+            }
+
+            return List;
+        }
+
         public List<ViewSF_OrderSub> OrderSub(string TableId, string branchid)
         {
             var List = new List<ViewSF_OrderSub>();

@@ -282,7 +282,7 @@ namespace REST.Controllers
                 // Set Runnig
                 _Get.SetRunning("Order", DocRunning, branchid);
 
-                if (UpdateTable(id, branchid))
+                if (UpdateTable(id, 2, branchid))
                     return true;
                 else
                     return false;             
@@ -293,14 +293,14 @@ namespace REST.Controllers
             }
         }
 
-        public Boolean UpdateTable(string id, string BranchId)
+        public Boolean UpdateTable(string id, int status, string BranchId)
         {
             try
             {
                 var Item = new CD_Table();
                 Item = _db.CD_Table.FirstOrDefault(x => x.TableId == id && x.BranchId == BranchId);
 
-                Item.TableST = 2;
+                Item.TableST = status;
 
                 _db.CD_Table.Update(Item);
                 _db.SaveChanges();
@@ -310,6 +310,108 @@ namespace REST.Controllers
             {
                 return false;
             }
-        }    
+        }
+
+        // ----------------------------------------------------------------------------
+        // Order Sub ***** Payment
+
+        [HttpPost]
+        public IActionResult CancelOrder(string orderid, string tableid, string foodid)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var Order = _db.SF_Order.FirstOrDefault(x => x.OrderId == orderid && x.BranchId == branchid);
+            var OrderSub = _db.SF_OrderSub.Where(x => x.OrderId == orderid && x.TableId == tableid && x.FoodId == foodid && x.BranchId == branchid).FirstOrDefault();
+
+            if (Order.ST == 1)
+            {
+                if (OrderSub.Status == 1)
+                {
+                    if (DeleteOrderSub(orderid, tableid, foodid, branchid))
+                    {
+                        toastrAlert("ข้อมูลโต๊ะอาหาร", "ยกเลิกเรียบร้อย", Enums.NotificationToastr.success);                     
+                    }
+                    else
+                    {
+                        Alert("", "Error Data", NotificationType.error);
+                    }                    
+                }
+                else if (OrderSub.Status == 2)
+                {
+                    Alert("", "ไม่สามารถยกเลิกได้ เนื่องจากรายการนี้กำลังทำ", NotificationType.warning);
+                }
+                else
+                {
+                    Alert("", "ไม่สามารถยกเลิกได้ เนื่องจากรายการนี้ทำแล้ว", NotificationType.warning);
+                }
+            }
+            else
+            {
+                Alert("", "ไม่สามารถยกเลิกได้ เนื่องจากออเดอร์นี้ทำแล้ว", NotificationType.warning);
+            }
+            
+
+            return Json(new { data = "success" });
+        }
+
+        public Boolean DeleteOrderSub(string orderid, string tableid, string foodid, string branchid)
+        {
+            var Order = _db.SF_Order.FirstOrDefault(x => x.OrderId == orderid && x.BranchId == branchid);
+            
+            try
+            {
+                // ลบ Order Sub
+                var i_ordersub = new SF_OrderSub();
+                i_ordersub = _db.SF_OrderSub.FirstOrDefault(x => x.OrderId == orderid && x.TableId == tableid && x.FoodId == foodid && x.BranchId == branchid);
+                _db.SF_OrderSub.Remove(i_ordersub);
+                _db.SaveChanges();
+
+                // เช็คว่า OrderSub ยังมีอยู่ไหม ถ้าไม่มีให้ลบ Order ทิ้ง 
+                var OrderSub = _db.SF_OrderSub.Where(x => x.OrderId == orderid && x.TableId == tableid && x.BranchId == branchid).ToList();
+                var i_order = new SF_Order();
+                i_order = _db.SF_Order.FirstOrDefault(x => x.OrderId == orderid && x.TableId == tableid && x.BranchId == branchid);
+                if (OrderSub.Count > 0)
+                {                    
+                    i_order.PriceTotal = i_order.PriceTotal - i_ordersub.Price;
+                    // Data History
+                    i_order.UpdateUser = User.Identity.Name;
+                    i_order.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                    _db.SF_Order.Update(i_order);
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    _db.SF_Order.Remove(i_order);
+                    _db.SaveChanges();
+                }
+                
+                // ถ้า Table ใน Order ไม่มีแล้วให้เปลี่ยนสถานะ Table เป็นว่าง 1
+                var Table = _db.SF_Order.Where(x => x.TableId == tableid && x.BranchId == branchid).ToList();
+                if (Table.Count == 0)
+                {
+                    if (UpdateTable(tableid, 1, branchid))
+                        return true;
+                    else
+                        return false;
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        // ----------------------------------------------------------------------------
+        // Order ***** Kitchen
+
+        public IActionResult OrderViewKitchen(string tableid, string orderdate)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _Order = new GetSF_OrderController(_db);
+            var List = _Order.Order(tableid, orderdate, branchid);
+            return Json(new { data = List });
+        }
     }
 }

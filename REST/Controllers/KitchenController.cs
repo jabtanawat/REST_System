@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using REST.ApiControllers;
 using REST.Data;
 using REST.Models;
 using REST.Service;
@@ -16,7 +17,7 @@ namespace REST.Controllers
     [Authorize]
     public class KitchenController : BaseController
     {
-        #region db
+        #region Connect db
         private readonly DbConnection _db;
 
         public KitchenController(DbConnection db)
@@ -33,6 +34,14 @@ namespace REST.Controllers
             ViewBag.ST_A = OrderST_A();
             ViewBag.ST_0 = OrderST_0();
             ViewBag.ST_1 = OrderST_1();
+            return View();
+        }
+
+        public IActionResult FrmKC_Order()
+        {
+            var branchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _Order = new GetSF_OrderController(_db);
+            ViewBag.DataTable = _Order.Order(null, null, branchId);
             return View();
         }
 
