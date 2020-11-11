@@ -33,7 +33,7 @@ namespace REST.Controllers
             var _Get1 = new GetCD_TableController(_db);
             var _Get2 = new GetSF_OrderController(_db);
             ViewBag.Table = _Get1.TableById(id, branchid).FirstOrDefault();
-            ViewBag.OrderSub = _Get2.OrderSub(id, branchid);
+            ViewBag.OrderSub = _Get2.OrderSub(id, null, branchid);
             var order = _db.SF_Order.Where(x => x.TableId == id && x.BranchId == branchid).ToList();
             decimal Total = 0;
             foreach (var row in order)

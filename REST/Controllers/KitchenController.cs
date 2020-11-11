@@ -41,7 +41,15 @@ namespace REST.Controllers
         {
             var branchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var _Order = new GetSF_OrderController(_db);
-            ViewBag.DataTable = _Order.Order(null, null, branchId);
+            ViewBag.DataTable = _Order.Order(null, DateTime.Now.ToString("dd/MM/yyyy"), branchId);
+            return View();
+        }
+
+        public IActionResult FrmKC_OrderSub(string id)
+        {
+            var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _Order = new GetSF_OrderController(_db);
+            ViewBag.Data = _Order.OrderSub(null, id, branch);
             return View();
         }
 
@@ -120,7 +128,7 @@ namespace REST.Controllers
                     + $"FROM SF_Order "
                     + $"WHERE BranchId = '{BranchId}' ";
             if (DATE_Order != null)
-                sql += $"AND OrderDt = '{Share.FormatDateTime_Q(DATE_Order)}'";
+                sql += $"AND OrderDt = '{Share.ConvertFieldDate(DATE_Order)}'";
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {

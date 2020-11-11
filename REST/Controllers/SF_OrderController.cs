@@ -62,7 +62,7 @@ namespace REST.Controllers
             var item = _Get.TableById(id, branchid).FirstOrDefault();
             ViewBag.Table = item;
             ViewBag.Food = _db.CD_Food.Where(x => x.BranchId == branchid).ToList();
-            ViewBag.Order = _Order.OrderSub(id, branchid);
+            ViewBag.Order = _Order.OrderSub(id, null, branchid);
             if (mode == null)
             {
                 if (HttpContext.Session.GetString("Session_Order") != null)

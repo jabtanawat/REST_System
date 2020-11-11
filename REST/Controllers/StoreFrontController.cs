@@ -44,7 +44,7 @@ namespace REST.Controllers
             var _Table = new GetCD_TableController(_db);
             ViewBag.Table = _Table.TableById(id, branchid).FirstOrDefault();
             var _OrderSub = new GetSF_OrderController(_db);
-            var OrderSub = _OrderSub.OrderSub(id, branchid);
+            var OrderSub = _OrderSub.OrderSub(id, null, branchid);
             if (OrderSub.Count > 0)
             {
                 ViewBag.OrderSub = OrderSub;

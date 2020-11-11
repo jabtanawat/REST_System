@@ -5,15 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using REST.Controllers;
 using REST.Data;
 using REST.Models;
+using REST.Service;
 using REST.ViewModels;
 
 namespace REST.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
-    public class GetSF_OrderController : ControllerBase
+    public class GetSF_OrderController : BaseController
     {
         #region Connect db
         private readonly DbConnection _db;
@@ -33,7 +35,7 @@ namespace REST.ApiControllers
                     if (TableId != null)
                         sql += $"AND SF_Order.TableId = '{TableId}' ";
                     if (OrderDt != null)
-                        sql += $"AND SF_Order.OrderDt = '{OrderDt}' ";
+                        sql += $"AND SF_Order.OrderDt = '{Share.ConvertFieldDate(OrderDt)}' ";
                     sql += $"ORDER BY OrderId DESC, OrderDt DESC";
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
@@ -56,7 +58,7 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(4))
                             Item.PriceTotal = data.GetDecimal(4);
                         if (!data.IsDBNull(5))
-                            Item.OrderDt = data.GetDateTime(5);
+                            Item.Dates = data.GetDateTime(5).ToString("dd/MM/yyyy");                        
                         List.Add(Item);
                     }
                 }
@@ -65,7 +67,7 @@ namespace REST.ApiControllers
             return List;
         }
 
-        public List<ViewSF_OrderSub> OrderSub(string TableId, string branchid)
+        public List<ViewSF_OrderSub> OrderSub(string TableId, string OrderId, string branchid)
         {
             var List = new List<ViewSF_OrderSub>();
             var sql = $"SELECT o.OrderId, o.i, o.TableId, o.FoodId, f.FoodName, o.Amount, o.Price, o.Status "
@@ -74,6 +76,8 @@ namespace REST.ApiControllers
                     + $"WHERE o.BranchId = '{branchid}' ";
             if (TableId != null)
                 sql += $"AND o.TableId = '{TableId}'";
+            if (OrderId != null)
+                sql += $"AND o.OrderId = '{OrderId}'";
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
@@ -107,5 +111,16 @@ namespace REST.ApiControllers
 
             return List;
         }
+
+
+        //----------- ACTION -----------
+
+        public JsonResult AOrder(string OrderDt)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var List = Order(null, OrderDt, branchid);
+            return Json(List);
+        }
+
     }
 }

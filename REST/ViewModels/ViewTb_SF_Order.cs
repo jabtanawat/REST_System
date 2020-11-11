@@ -11,6 +11,7 @@ namespace REST.ViewModels
         public string TableId { get; set; }
         public string TableName { get; set; }
         public DateTime OrderDt { get; set; }
+        public string Dates { get; set; }
         public decimal PriceTotal { get; set; }
         public int ST { get; set; }
     }

@@ -1,0 +1,23 @@
+﻿@using REST.Service;
+@{
+    ViewData["Title"] = "Kitchen";
+    ViewData["System"] = "รายการออเดอร์";
+    Layout = "_Kitchen";
+    var DataOrder = ViewBag.Data;
+}
+
+<div class="card">
+    <div class="card-body">
+        <h1>Order Sub</h1>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            // Add Side Menu
+            $(".item_click_OrderDate").addClass("active");            
+        });       
+    </script>
+}
