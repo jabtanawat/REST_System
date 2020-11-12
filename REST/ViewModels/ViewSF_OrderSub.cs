@@ -10,6 +10,7 @@ namespace REST.ViewModels
         public string OrderId { get; set; }
         public int i { get; set; }
         public string TableId { get; set; }
+        public string TableName { get; set; }
         public string FoodId { get; set; }
         public string FoodName { get; set; }
         public decimal Amount { get; set; }

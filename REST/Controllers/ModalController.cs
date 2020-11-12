@@ -74,12 +74,26 @@ namespace REST.Controllers
             return PartialView("_AmountFood");
         }
 
+        // -------------------------------------------
+        // ---                                     ---
+        // ***                POPUP                ***
+        // ---                                     ---
+        // -------------------------------------------
+
         public IActionResult _popupMember()
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var _get = new GetViewController(_db);
             ViewBag.View = _get.ViewMember(branchid);
             return PartialView("_popupMember");
+        }
+
+        public IActionResult _popupTable()
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _get = new GetCD_TableController(_db);
+            ViewBag.View = _get.Table(branchid);
+            return PartialView("_popupTable");
         }
     }
 }

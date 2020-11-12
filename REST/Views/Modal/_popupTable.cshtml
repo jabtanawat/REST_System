@@ -1,0 +1,61 @@
+﻿<!-- Modal Staple -->
+<div class="modal fade bd-example-modal-lg" id="popupMember" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="popupMemberTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <h6 class="font-weight-bold" id="exampleModalCenterTitle"><i class="fas fa-database mr-2"></i>ข้อมูลโต๊ะ</h6>
+                    </div>
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-table-sm btn-danger text-white px-2" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <hr />
+                <table id="ViewDT" class="table table-md table-bordered table-hover mt-3">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="text-center"> รหัส </th>
+                            <th class="text-center"> ชื่อ </th>
+                            <th class="text-center" style="width:7rem;"> สถานะ </th>
+                            <th class="text-center" style="width:1rem;"> # </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var row in ViewBag.View)
+                            {
+                                <tr>
+                                    <td>@row.TableId</td>
+                                    <td>@row.TableName</td>
+                                    @if(row.TableST == 1)
+                                    {
+                                        <td class="text-center">ว่าง</td>
+                                    }else if(row.TableST == 2)
+                                    {
+                                        <td class="text-center bg-red text-danger">ใช้บริการอยู่</td>
+                                    }else if(row.TableST == 3)
+                                    {
+                                        <td class="text-center">จอง</td>
+                                    }
+                                    <td class="text-center"><a href="@Url.Action("FrmPayment", "SF_Payment", new { TableId = row.TableId})" class="btn btn-table-sm btn-info"><i class="fas fa-location-arrow"></i></a></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#ViewDT').DataTable({
+            "info": false,
+            "ordering": false
+        });
+    })
+</script>

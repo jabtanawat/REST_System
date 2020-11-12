@@ -88,7 +88,7 @@
                     <div class="card" style="border-radius:0;">
                         <div class="card-body table-responsive p-0" scroll>
                             <table class="table table-md table-bordered table-head-fixed text-nowrap">
-                                <thead class="thead-black">
+                                <thead class="thead-light">
                                     <tr>
                                         <th class="text-center" style="width:5%;">ลำดับ</th>
                                         <th class="text-center">เลขที่ออเดอร์</th>
@@ -116,7 +116,11 @@
                                                     {
                                                         <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
                                                     }
-                                                    else
+                                                    else if(row.ST == 2)
+                                                    {
+                                                        <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
+                                                    }
+                                                    else if(row.ST == 3)
                                                     {
                                                         <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                                                     }
@@ -195,6 +199,8 @@
                                 + `<td class="text-center">${val.tableName}</td>`
                                 if (val.st == 1) {
                                     t += `<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>`
+                                } else if (val.st == 2) {
+                                    t += `<td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>`
                                 } else {
                                     t += `<td class="text-center text-success"><i class="far fa-check-circle"></i></td>`
                                 }

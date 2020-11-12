@@ -9,8 +9,11 @@
     var price = 0;
     foreach(var i in OrderSub)
     {
-        amount += i.Amount;
-        price += i.Price * i.Amount;
+        if(i.Status != 4)
+        {
+            amount += i.Amount;
+            price += i.Price * i.Amount;
+        }
     }
 }
 
@@ -100,7 +103,7 @@
             <div class="col-xl-11 mx-auto">
                 <hr />
                 <div class="text-center">
-                    <a href="#" class="btn btn-sm btn-warning @ViewData["Disible"]"><i class="fas fa-tag"></i>&nbsp;&nbsp;ชำระเงิน</a>
+                    <a href="#" class="btn btn-sm btn-warning @ViewData["Disible"]" btn-payment><i class="fas fa-tag"></i>&nbsp;&nbsp;ชำระเงิน</a>
                 </div>
             </div>
         </div>
@@ -133,27 +136,43 @@
                             {
                                 var p = row.Price * row.Amount;
                                 x++;
-                                <tr>
-                                    <td class="text-center">@x</td>
-                                    <td>@row.FoodName</td>
-                                    @if (row.Status == 1)
-                                    {
-                                        <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
-                                    }
-                                    else if (row.Status == 2)
-                                    {
-                                        <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
-                                    }
-                                    else if (row.Status == 3)
-                                    {
-                                        <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
-                                    }
-                                    <td class="text-right">@row.Price.ToString("N2")</td>
-                                    <td class="text-right">@row.Amount</td>
-                                    <td class="text-right">@p.ToString("N2")</td>
-                                    <td class="text-center">@row.i</td>
-                                    <td class="text-center"><button type="button" class="btn btn-table-sm btn-danger-light text-danger" onclick="cancel('@row.OrderId', '@row.TableId','@row.FoodId');"><i class="far fa-trash-alt"></i></button></td>
-                                </tr>
+                                if (row.Status == 4)
+                                {
+                                    <tr class="bg-red">
+                                        <td class="text-center">@x</td>
+                                        <td>@row.FoodName</td>
+                                        <td class="text-center text-danger">ยกเลิก</td>
+                                        <td class="text-right">@row.Price.ToString("N2")</td>
+                                        <td class="text-right">@row.Amount</td>
+                                        <td class="text-right">@p.ToString("N2")</td>
+                                        <td class="text-center">@row.i</td>
+                                        <td class="text-center"><button type="button" class="btn btn-table-sm btn-danger" onclick="cancel('@row.OrderId', '@row.TableId','@row.FoodId');"><i class="far fa-trash-alt"></i></button></td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td class="text-center">@x</td>
+                                        <td>@row.FoodName</td>
+                                        @if (row.Status == 1)
+                                        {
+                                            <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
+                                        }
+                                        else if (row.Status == 2)
+                                        {
+                                            <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
+                                        }
+                                        else if (row.Status == 3)
+                                        {
+                                            <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                        }
+                                        <td class="text-right">@row.Price.ToString("N2")</td>
+                                        <td class="text-right">@row.Amount</td>
+                                        <td class="text-right">@p.ToString("N2")</td>
+                                        <td class="text-center">@row.i</td>
+                                        <td class="text-center"><button type="button" class="btn btn-table-sm btn-danger" onclick="cancel('@row.OrderId', '@row.TableId','@row.FoodId');"><i class="far fa-trash-alt"></i></button></td>
+                                    </tr>
+                                }
                             }
                         }
                     </tbody>
@@ -212,20 +231,20 @@
             })
         }
 
-        //document.querySelector("[btn-cancel]").addEventListener('click', () => {
-        //    Swal.fire({
-        //        text: "ต้องการยกเลิกรายการหรือไม่ ?",
-        //        icon: 'warning',
-        //        showCancelButton: true,
-        //        confirmButtonColor: '#3085d6',
-        //        cancelButtonColor: '#d33',
-        //        confirmButtonText: 'Yes',
-        //        cancelButtonText: 'No'
-        //    }).then((result) => {
-        //        if (result.value) {
-
-        //        }
-        //    })
-        //})
+        document.querySelector("[btn-payment]").addEventListener('click', () => {
+            Swal.fire({
+                text: "ต้องการชำระเงินหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = '@Url.Action("FrmPayment", "SF_Payment", new { TableId = Table.TableId})'
+                }
+            })
+        })
     </script>
 }

@@ -13,7 +13,7 @@ using REST.Data;
 using REST.Models;
 using REST.Service;
 using REST.ViewModels;
-using static REST.Service.Enums;
+using REST.Service;
 
 namespace REST.Controllers
 {
@@ -146,7 +146,7 @@ namespace REST.Controllers
             }
             else
             {
-                Alert("", "กรุณาเลือกออร์เดอร์ !", NotificationType.warning);
+                Alert("", "กรุณาเลือกออร์เดอร์ !", Enums.NotificationType.warning);
             }
 
             return Json(new { data = List });
@@ -175,7 +175,7 @@ namespace REST.Controllers
             }
             else
             {
-                Alert("", "กรุณาเลือกออร์เดอร์ที่ต้องการลบ !", NotificationType.warning);
+                Alert("", "กรุณาเลือกออร์เดอร์ที่ต้องการลบ !", Enums.NotificationType.warning);
             }
 
             return Json(new { data = List });
@@ -211,13 +211,13 @@ namespace REST.Controllers
                 }
                 else
                 {
-                    Alert("", "Error Data !", NotificationType.error);
+                    Alert("", "Error Data !", Enums.NotificationType.error);
                     return RedirectToAction("Order", new { id = id, mode = "view" });
                 }
             }
             else
             {
-                Alert("", "กรุณาเลือกรายการ !", NotificationType.warning);
+                Alert("", "กรุณาเลือกรายการ !", Enums.NotificationType.warning);
                 return RedirectToAction("Order", new { id = id });
             }            
         }        
@@ -332,21 +332,21 @@ namespace REST.Controllers
                     }
                     else
                     {
-                        Alert("", "Error Data", NotificationType.error);
+                        Alert("", "Error Data", Enums.NotificationType.error);
                     }                    
                 }
                 else if (OrderSub.Status == 2)
                 {
-                    Alert("", "ไม่สามารถยกเลิกได้ เนื่องจากรายการนี้กำลังทำ", NotificationType.warning);
+                    Alert("", "ไม่สามารถยกเลิกได้ เนื่องจากรายการนี้กำลังทำ", Enums.NotificationType.warning);
                 }
                 else
                 {
-                    Alert("", "ไม่สามารถยกเลิกได้ เนื่องจากรายการนี้ทำแล้ว", NotificationType.warning);
+                    Alert("", "ไม่สามารถยกเลิกได้ เนื่องจากรายการนี้ทำแล้ว", Enums.NotificationType.warning);
                 }
             }
             else
             {
-                Alert("", "ไม่สามารถยกเลิกได้ เนื่องจากออเดอร์นี้ทำแล้ว", NotificationType.warning);
+                Alert("", "ไม่สามารถยกเลิกได้ เนื่องจากออเดอร์นี้ทำแล้ว", Enums.NotificationType.warning);
             }
             
 
@@ -412,6 +412,109 @@ namespace REST.Controllers
             var _Order = new GetSF_OrderController(_db);
             var List = _Order.Order(tableid, orderdate, branchid);
             return Json(new { data = List });
+        }
+
+        // -------------------------------------------
+        // --                                       --
+        // --           FUNCTION KITCHEN            --
+        // --                                       --
+        // -------------------------------------------
+
+        public IActionResult receiveOrder(string OrderId, string FoodId)
+        {
+            var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            // save data status ordersub 2 = กำลังดำเนินการ
+            var i_OrderSub = _db.SF_OrderSub.FirstOrDefault(x => x.OrderId == OrderId && x.FoodId == FoodId && x.BranchId == branch);
+            i_OrderSub.Status = 2;
+            _db.SF_OrderSub.Update(i_OrderSub);
+            _db.SaveChanges();
+            // check status order = 1, 2
+            var list1 = _db.SF_OrderSub.Where(x => x.OrderId == OrderId && x.Status == 1 || x.Status == 2 && x.BranchId == branch).ToList();
+            if(list1.Count > 0)
+            {
+                // give status order = 2
+                UpdateStatusOrder(OrderId, 2, branch);
+            }
+            else
+            {
+                // give status order = 3
+                UpdateStatusOrder(OrderId, 3, branch);
+            }
+
+            return RedirectToAction("FrmKC_OrderSub", "Kitchen", new { id = OrderId });
+        }
+
+        public IActionResult completeOrder(string OrderId, string FoodId)
+        {
+            var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            // search order sub
+            var i_OrderSub = _db.SF_OrderSub.FirstOrDefault(x => x.OrderId == OrderId && x.FoodId == FoodId && x.BranchId == branch);
+            if(i_OrderSub.Status == 2)
+            {
+                // save data status ordersub 3 = ทำเสร็จเรียบร้อยแล้ว
+                i_OrderSub.Status = 3;
+                _db.SF_OrderSub.Update(i_OrderSub);
+                _db.SaveChanges();
+                // check status ordersub = 1, 2
+                var list1 = _db.SF_OrderSub.Where(x => x.OrderId == OrderId && x.Status == 1 || x.Status == 2 && x.BranchId == branch).ToList();
+                if (list1.Count > 0)
+                {
+                    // give status order = 2
+                    UpdateStatusOrder(OrderId, 2, branch);
+                }
+                else
+                {
+                    // give status order = 3
+                    UpdateStatusOrder(OrderId, 3, branch);
+                }
+            }
+            else
+            {
+                // if status not equal to status 2 not possible
+                Alert("", "ไม่สามารถยืนยันอาหารได้ กรุณารับรายการอาหารก่อน", Enums.NotificationType.warning);
+            }            
+
+            return RedirectToAction("FrmKC_OrderSub", "Kitchen", new { id = OrderId });
+        }
+
+        public IActionResult cancelOrder(string OrderId, string FoodId)
+        {
+            var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var i_OrderSub = _db.SF_OrderSub.FirstOrDefault(x => x.OrderId == OrderId && x.FoodId == FoodId && x.BranchId == branch);
+            i_OrderSub.Status = 4;
+            _db.SF_OrderSub.Update(i_OrderSub);
+            _db.SaveChanges();
+            // check status order = 1, 2
+            var list1 = _db.SF_OrderSub.Where(x => x.OrderId == OrderId && x.Status == 1 || x.Status == 2 && x.BranchId == branch).ToList();
+            if (list1.Count > 0)
+            {
+                // give status order = 2
+                UpdateStatusOrder(OrderId, 2, branch);
+            }
+            else
+            {
+                // give status order = 3
+                UpdateStatusOrder(OrderId, 3, branch);
+            }
+
+            return RedirectToAction("FrmKC_OrderSub", "Kitchen", new { id = OrderId });
+        }
+
+        public Boolean UpdateStatusOrder(string OrderId, int status, string branchid)
+        {
+            try
+            {
+                var Item = _db.SF_Order.FirstOrDefault(x => x.OrderId == OrderId && x.BranchId == branchid);
+                Item.ST = status;
+                _db.SF_Order.Update(Item);
+                _db.SaveChanges();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

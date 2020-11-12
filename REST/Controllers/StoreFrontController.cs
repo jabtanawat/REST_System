@@ -33,7 +33,7 @@ namespace REST.Controllers
             ViewBag.TableST_3 = _db.CD_Table.Where(x => x.TableST == 3 & x.BranchId == branchid).Count();
             ViewBag.SL_Zone = _db.CD_Zone.Where(x => x.BranchId == branchid).ToList();            
             var _Get = new GetCD_TableController(_db);
-            ViewBag.Table = _Get.Table(null, null, branchid);
+            ViewBag.Table = _Get.TableZoneStatus(null, null, branchid);
 
             return View();
         }     
@@ -64,7 +64,7 @@ namespace REST.Controllers
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var _Get = new GetCD_TableController(_db);
-            var List = _Get.Table(ZoneId, Status, branchid);
+            var List = _Get.TableZoneStatus(ZoneId, Status, branchid);
             return Json(new { data = List });
         }
     }

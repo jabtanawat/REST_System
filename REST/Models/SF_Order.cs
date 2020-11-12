@@ -15,7 +15,7 @@ namespace REST.Models
         public string TableId { get; set; }
         public DateTime OrderDt { get; set; }
         public decimal PriceTotal { get; set; }
-        public int ST { get; set; }
+        public int ST { get; set; } // 1 = ยังไม่ได้ทำ, 2 = กำลังดำเนินการ, 3 = เสร็จแล้ว
         public string BranchId { get; set; }
         public string CreateUser { get; set; }
         public DateTime CreateDate { get; set; }

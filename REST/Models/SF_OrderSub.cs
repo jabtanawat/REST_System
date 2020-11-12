@@ -19,7 +19,7 @@ namespace REST.Models
         public string FoodId { get; set; }
         public decimal Amount { get; set; }
         public decimal Price { get; set; }
-        public int Status { get; set; } // 1 = ยังไม่ได้ทำ, 2 = กำลังดำเนินการ, 3 = เสร็จแล้ว
+        public int Status { get; set; } // 1 = ยังไม่ได้ทำ, 2 = กำลังดำเนินการ, 3 = เสร็จแล้ว, 4 = ยกเลิกจากระบบครัว/ไม่มีวัตถุดิบ
         public string BranchId { get; set; }
     }
 }

@@ -1,0 +1,81 @@
+﻿@model REST.ViewModels.ViewFrmPayment;
+@{
+    ViewData["Title"] = "Payment";
+    ViewData["System"] = "ชำระเงิน";
+    Layout = "_StoreFront";
+}
+
+@section Styles {
+    <link href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-11 mx-auto">
+                <div class="row">
+                    <div class="col-xl-5 col-lg-6 col-md-7 mx-auto">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">เลือกโต๊ะ :</label>
+                            <div class="col-md-9 col-sm-8">
+                                <div class="input-group input-group-sm">
+                                    <input type="text" asp-for="TableName" class="form-control" aria-describedby="txtTableName">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" id="txtTableName" data-toggle="ajax-modal" data-target="#popupTable" data-url="@Url.Action("_popupTable", "Modal")"><i class="fas fa-search"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @{
+                            if (Model.TableId != null)
+                            {
+                                if (Model.Total != null)
+                                {
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">จำนวนเงิน :</label>
+                                        <div class="col-md-9 col-sm-8">
+                                            <input type="text" asp-for="Total" class="form-control form-control-sm">
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <hr />
+                                    <div class="alert alert-warning text-center" role="alert">
+                                        ไม่พบข้อมูล ! ไม่มีการสั่งออเดอร์หรือรายการอาหารไม่ครบ
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <hr />
+                                <div class="alert alert-danger text-center" role="alert">
+                                    ไม่พบข้อมูล ! กรุณาเลือกโต๊ะ
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="PlaceHolderHere"></div>
+
+@section Scripts {
+    <script src="~/Plugins/DataTables/datatables.min.js"></script>
+    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        /* Modal */
+        var PlaceHolderElement = $('#PlaceHolderHere')
+        $('button[data-toggle="ajax-modal"]').click(function (event) {
+            var url = $(this).data('url')
+            var decodedUrl = decodeURIComponent(url)
+            $.get(decodedUrl).done(function (data) {
+                PlaceHolderElement.html(data)
+                PlaceHolderElement.find('.modal').modal('show')
+            })
+        })
+    </script>
+}

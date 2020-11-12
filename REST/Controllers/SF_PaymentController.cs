@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using REST.ApiControllers;
 using REST.Data;
 using REST.Models;
+using REST.Service;
 using REST.ViewModels;
 using static REST.Service.Enums;
 
@@ -27,7 +28,43 @@ namespace REST.Controllers
 
         #endregion 
 
-        public IActionResult Payment(string id)
+        public IActionResult FrmPayment(string TableId = null)
+        {
+            var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _ordersub = new GetSF_OrderController(_db);
+            var item = new ViewFrmPayment();
+            if(TableId != null)
+            {
+                var order = _db.SF_OrderSub.Where(x => x.TableId == TableId && x.Status == 1 || x.Status == 2 && x.BranchId == branch).ToList();
+                if(order.Count > 0)
+                {
+                    item.TableId = TableId;
+                    Alert("", "รายการอาหาร ยังทำไม่เสร็จหรือได้ไม่ครบ", Enums.NotificationType.warning);
+                    return View(item);
+                }
+                else
+                {
+                    var info = _ordersub.OrderSubByTableId(TableId, branch);
+                    decimal price = 0;
+                    foreach (var row in info)
+                    {
+                        price += row.Price * row.Amount;
+                    }
+                    // input pricer ordersub
+                    item.TableId = TableId;
+                    item.TableName = TableId;
+                    item.Total = Share.Cnumber(Share.FormatDouble(price), 2);
+
+                    return View(item);
+                }                
+            }
+            else
+            {
+                return View(item);
+            }            
+        }
+
+        public IActionResult Payment1(string id)
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;            
             var _Get1 = new GetCD_TableController(_db);
