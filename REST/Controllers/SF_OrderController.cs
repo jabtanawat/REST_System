@@ -33,7 +33,7 @@ namespace REST.Controllers
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             ViewBag.GroupFood = _db.CD_GroupFood.Where(x => x.BranchId == branchid).ToList();
             var _Get = new GetCD_TableController(_db);
-            var item = _Get.TableById(id, branchid).FirstOrDefault();
+            var item = _Get.TableById(id, branchid);
             ViewBag.Table = item;
             ViewBag.Food = _db.CD_Food.Where(x => x.BranchId == branchid).ToList();
             if (mode == null)
@@ -59,7 +59,7 @@ namespace REST.Controllers
             ViewBag.GroupFood = _db.CD_GroupFood.Where(x => x.BranchId == branchid).ToList();
             var _Get = new GetCD_TableController(_db);
             var _Order = new GetSF_OrderController(_db);
-            var item = _Get.TableById(id, branchid).FirstOrDefault();
+            var item = _Get.TableById(id, branchid);
             ViewBag.Table = item;
             ViewBag.Food = _db.CD_Food.Where(x => x.BranchId == branchid).ToList();
             ViewBag.Order = _Order.OrderSub(id, null, branchid);

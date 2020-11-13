@@ -42,7 +42,7 @@ namespace REST.Controllers
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var _Table = new GetCD_TableController(_db);
-            ViewBag.Table = _Table.TableById(id, branchid).FirstOrDefault();
+            ViewBag.Table = _Table.TableById(id, branchid);
             var _OrderSub = new GetSF_OrderController(_db);
             var OrderSub = _OrderSub.OrderSub(id, null, branchid);
             if (OrderSub.Count > 0)

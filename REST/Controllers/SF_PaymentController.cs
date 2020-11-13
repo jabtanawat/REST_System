@@ -31,6 +31,7 @@ namespace REST.Controllers
         public IActionResult FrmPayment(string TableId = null)
         {
             var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _table = new GetCD_TableController(_db);
             var _ordersub = new GetSF_OrderController(_db);
             var item = new ViewFrmPayment();
             if(TableId != null)
@@ -44,7 +45,8 @@ namespace REST.Controllers
                 }
                 else
                 {
-                    var info = _ordersub.OrderSubByTableId(TableId, branch);
+                    var table = _table.TableById(TableId, branch);
+                    var info = _ordersub.OrderSubByTableId(TableId, branch);                    
                     decimal price = 0;
                     foreach (var row in info)
                     {
@@ -52,8 +54,21 @@ namespace REST.Controllers
                     }
                     // input pricer ordersub
                     item.TableId = TableId;
-                    item.TableName = TableId;
+                    item.TableName = table.TableName;
+                    item.St = table.TableST;
+                    if (table.TableST == 1)
+                    {                        
+                        item.Status = "ว่าง";
+                    }else if(table.TableST == 2)
+                    {
+                        item.Status = "ใช้บริการอยู่";
+                    }
+                    else if(table.TableST == 3)
+                    {
+                        item.Status = "จอง";
+                    }
                     item.Total = Share.Cnumber(Share.FormatDouble(price), 2);
+                    item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
                     item.OrderSub = _ordersub.OrderSub(TableId, null, branch);
 
                     return View(item);
@@ -70,7 +85,7 @@ namespace REST.Controllers
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;            
             var _Get1 = new GetCD_TableController(_db);
             var _Get2 = new GetSF_OrderController(_db);
-            ViewBag.Table = _Get1.TableById(id, branchid).FirstOrDefault();
+            ViewBag.Table = _Get1.TableById(id, branchid);
             ViewBag.OrderSub = _Get2.OrderSub(id, null, branchid);
             var order = _db.SF_Order.Where(x => x.TableId == id && x.BranchId == branchid).ToList();
             decimal Total = 0;
@@ -89,7 +104,12 @@ namespace REST.Controllers
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var _Get = new GetMB_MemberController(_db);
-            var item = _Get.ViewMemberById(id, branchid);
+            var member = _Get.ViewMemberById(id, branchid);
+            var item = new ViewMB_Member();
+            item.MemberId = id;
+            item.Name = member.Name;
+            item.Rebate = member.Rebate;
+            item.Score = member.Score;
             return Json(new { data = item });
         }
 

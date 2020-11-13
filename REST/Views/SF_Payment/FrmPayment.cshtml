@@ -1,4 +1,5 @@
-﻿@model REST.ViewModels.ViewFrmPayment;
+﻿@using REST.Service;
+@model REST.ViewModels.ViewFrmPayment;
 @{
     ViewData["Title"] = "Payment";
     ViewData["System"] = "ชำระเงิน";
@@ -14,10 +15,10 @@
         <div class="row">
             <div class="col-xl-11 mx-auto">
                 <div class="row">
-                    <div class="col-xl-5 col-lg-6 col-md-7 mx-auto">
+                    <div class="col-xl-6 col-lg-8 col-md-9 mx-auto">
                         <div class="form-group row">
-                            <label class="col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">เลือกโต๊ะ :</label>
-                            <div class="col-md-9 col-sm-8">
+                            <label class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">เลือกโต๊ะ :</label>
+                            <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 pr-xl-5">
                                 <div class="input-group input-group-sm">
                                     <input type="text" asp-for="TableName" class="form-control" aria-describedby="txtTableName">
                                     <div class="input-group-append">
@@ -31,11 +32,79 @@
                             {
                                 if (Model.Total != null)
                                 {
-                                    <div class="form-group row">
-                                        <label class="col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">จำนวนเงิน :</label>
-                                        <div class="col-md-9 col-sm-8">
-                                            <input type="text" asp-for="Total" class="form-control form-control-sm">
+                                    if (Model.St == 1)
+                                    {
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">สถานะ :</label>
+                                            <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 pr-xl-5">
+                                                <input type="text" asp-for="Status" class="form-control form-control-sm text-success">
+                                            </div>
                                         </div>
+                                    }
+                                    else if (Model.St == 2)
+                                    {
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">สถานะ :</label>
+                                            <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 pr-xl-5">
+                                                <input type="text" asp-for="Status" class="form-control form-control-sm text-danger">
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (Model.St == 3)
+                                    {
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">สถานะ :</label>
+                                            <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 pr-xl-5">
+                                                <input type="text" asp-for="Status" class="form-control form-control-sm text-warning">
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="form-group row">
+                                        <label class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">จำนวนเงิน :</label>
+                                        <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 pr-xl-5">
+                                            <input type="text" asp-for="Total" id="txtTotal" class="form-control form-control-sm text-right" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">ลด% :</label>
+                                        <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 pr-xl-5">
+                                            <input type="number" asp-for="Persen" id="txtPersen" class="form-control form-control-sm text-right">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">สมาชิก/ทั่วไป :</label>
+                                        <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 pr-xl-5">
+                                            <div class="input-group input-group-sm">
+                                                <input type="hidden" asp-for="MemberId" id="txtMemberId" class="form-control">
+                                                <input type="text" asp-for="MemberName" id="txtMemberName" class="form-control" aria-describedby="txtMemberName">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-primary" type="button" data-toggle="ajax-modal" data-target="#popupMember" data-url="@Url.Action("_popupMember", "Modal")"><i class="fas fa-search"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <section class="PaymentMember" hidden>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">% :</label>
+                                            <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 pr-xl-5">
+                                                <input type="text" asp-for="Rebate" id="txtRebate" class="form-control form-control-sm text-right" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">คะแนนสะสม :</label>
+                                            <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 pr-xl-5">
+                                                <input type="text" asp-for="Score" id="txtScore" class="form-control form-control-sm text-right" readonly>
+                                            </div>
+                                        </div>
+                                    </section>                                    
+                                    <div class="form-group row">
+                                        <label class="col-xl-3 col-lg-4 col-md-3 col-sm-4 col-form-label col-form-label-sm text-sm-right">ราคารวม :</label>
+                                        <div class="col-xl-9 col-lg-8 col-md-9 col-sm-8 pr-xl-5">
+                                            <input type="text" asp-for="Balance" id="txtBalance" class="form-control form-control-sm text-right" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <a href="#" class="btn btn-sm btn-blue" btn-payment><i class="fab fa-paypal"></i>&nbsp;&nbsp;ชำระเงิน</a>
                                     </div>
                                 }
                                 else
@@ -71,15 +140,19 @@
                                     <th class="text-center" style="width:10%;">จำนวน</th>
                                     <th class="text-center" style="width:15%;">รวม</th>
                                     <th class="text-center" style="width:5%;">ครั้ง</th>
-                                    <th class="text-center" style="width:5%;">#</th>
                                 </tr>
                             </thead>
                             <tbody>
                             @{
+                                decimal total = 0;
                                 var x = 0;
                                 foreach (var row in Model.OrderSub)
                                 {
-                                    var p = row.Price * row.Amount;
+                                    if (row.Status != 4)
+                                    {
+                                        total += row.Price * row.Amount;
+                                    }
+                                    var pr = row.Price * row.Amount;
                                     x++;
                                     if (row.Status == 4)
                                     {
@@ -89,37 +162,40 @@
                                             <td class="text-center">ยกเลิก</td>
                                             <td class="text-right">@row.Price.ToString("N2")</td>
                                             <td class="text-right">@row.Amount</td>
-                                            <td class="text-right">@p.ToString("N2")</td>
-                                            <td class="text-center">@row.i</td>
-                                            <td class="text-center"><button type="button" class="btn btn-table-sm btn-danger" onclick="cancel('@row.OrderId', '@row.TableId','@row.FoodId');"><i class="far fa-trash-alt"></i></button></td>
+                                            <td class="text-right">@pr.ToString("N2")</td>
+                                            <td class="text-center">@row.i</td>                                            
                                         </tr>
                                     }
                                     else
                                     {
                                         <tr>
                                             <td class="text-center">@x</td>
-                                               <td>@row.FoodName</td>
-                                               @if (row.Status == 1)
-                                               {
-                                                   <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
-                                               }
-                                               else if (row.Status == 2)
-                                               {
-                                                   <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
-                                               }
-                                               else if (row.Status == 3)
-                                               {
-                                                   <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
-                                               }
-                                               <td class="text-right">@row.Price.ToString("N2")</td>
-                                               <td class="text-right">@row.Amount</td>
-                                               <td class="text-right">@p.ToString("N2")</td>
-                                               <td class="text-center">@row.i</td>
-                                               <td class="text-center"><button type="button" class="btn btn-table-sm btn-danger" onclick="cancel('@row.OrderId', '@row.TableId','@row.FoodId');"><i class="far fa-trash-alt"></i></button></td>
-                                           </tr>
-                                       }
-                                   }
-                               }
+                                            <td>@row.FoodName</td>
+                                            @if (row.Status == 1)
+                                            {
+                                                <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
+                                            }
+                                            else if (row.Status == 2)
+                                            {
+                                                <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
+                                            }
+                                            else if (row.Status == 3)
+                                            {
+                                                <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                            }
+                                            <td class="text-right">@row.Price.ToString("N2")</td>
+                                            <td class="text-right">@row.Amount</td>
+                                            <td class="text-right">@pr.ToString("N2")</td>
+                                            <td class="text-center">@row.i</td>                                            
+                                        </tr>
+                                    }
+                                }
+                            }
+                                <tr>
+                                    <td class="text-right font-weight-bold" colspan="5">รวมทั้งหมด : </td>
+                                    <td class="text-right font-weight-bold">@Share.Cnumber(Share.FormatDouble(total), 2)</td>
+                                    <td></td>
+                                </tr>
                            </tbody>
                        </table>
                     }
@@ -135,6 +211,10 @@
     <script src="~/Plugins/DataTables/datatables.min.js"></script>
     <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script>
+        $(document).ready(function () {
+            calculate() 
+        });
+
         /* Modal */
         var PlaceHolderElement = $('#PlaceHolderHere')
         $('button[data-toggle="ajax-modal"]').click(function (event) {
@@ -145,5 +225,34 @@
                 PlaceHolderElement.find('.modal').modal('show')
             })
         })
+
+        /* Member */
+        function showMember(id) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ShowMember", "SF_Payment")',
+                data: { id: id },
+                success: function (data) {
+                    $.each(data, function (index, val) {
+                        $('#txtMemberId').val(val.memberId)
+                        $('#txtMemberName').val(val.name)
+                        $('#txtRebate').val(val.rebate)
+                        $('#txtScore').val(val.score)
+                    })
+                    $('#popupMember').modal('hide')
+                    $('.PaymentMember').removeAttr('hidden')
+                }
+            })
+            calculate() 
+        }
+
+        function calculate() {
+            const total = parseFloat($('#txtTotal').val().replace(/,/g, ''))
+            console.log(total)
+            const persen = $('#txtPersen').val()
+            const rebate = $('#txtRebate').val()
+            const balance = $('#txtBalance').val()
+
+        }
     </script>
 }

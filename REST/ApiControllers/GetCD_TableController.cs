@@ -92,9 +92,9 @@ namespace REST.ApiControllers
             return List;
         }
 
-        public List<ViewTable> TableById(string id, string branchid)
+        public ViewTable TableById(string id, string branchid)
         {
-            var List = new List<ViewTable>();
+            var Item = new ViewTable();
 
             var sql = $"SELECT TableId, TableName, Description, TableST, CASE WHEN TableST = 1 THEN 'ว่าง' WHEN TableST = 2 THEN 'ไม่ว่าง' WHEN TableST= 3 THEN 'จอง' END AS Status "
                     + $"FROM CD_Table "
@@ -106,8 +106,7 @@ namespace REST.ApiControllers
                 using (var data = command.ExecuteReader())
                 {
                     while (data.Read())
-                    {
-                        var Item = new ViewTable();
+                    {                        
                         if (!data.IsDBNull(0))
                             Item.TableId = data.GetString(0);
                         if (!data.IsDBNull(1))
@@ -118,12 +117,11 @@ namespace REST.ApiControllers
                             Item.TableST = data.GetInt32(3);
                         if (!data.IsDBNull(4))
                             Item.Status = data.GetString(4);
-                        List.Add(Item);
                     }
                 }
             }
 
-            return List;
+            return Item;
         }
     }
 }

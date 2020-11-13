@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using REST.Data;
 using REST.Models;
+using REST.Controllers;
+using REST.Service;
 
 namespace REST.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GetMB_MemberController : ControllerBase
+    public class GetMB_MemberController : BaseController
     {
         #region Connect db
         private readonly DbConnection _db;
@@ -26,7 +28,7 @@ namespace REST.ApiControllers
         public ViewMB_Member ViewMemberById(string id, string branchId)
         {
             var Item = new ViewMB_Member();
-            var sql = $"SELECT MemberId, Title + ' ' + FirstName + ' ' + LastName AS Name "
+            var sql = $"SELECT MemberId, Title + ' ' + FirstName + ' ' + LastName AS Name, Rebate, Score "
                     + $"FROM MB_Member "
                     + $"WHERE BranchId = '{branchId}' ";
                 if (id != null)
@@ -43,6 +45,10 @@ namespace REST.ApiControllers
                             Item.MemberId = data.GetString(0);
                         if (!data.IsDBNull(1))
                             Item.Name = data.GetString(1);
+                        if (!data.IsDBNull(2))
+                            Item.Rebate = data.GetInt32(2);
+                        if (!data.IsDBNull(3))
+                            Item.Score = Share.FormatString(data.GetDecimal(3));
                     }
                 }
             }

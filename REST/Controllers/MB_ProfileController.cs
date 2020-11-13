@@ -143,6 +143,7 @@ namespace REST.Controllers
                             Item.District = Info.District;
                             Item.Province = Info.Province;
                             Item.ZibCode = Info.ZibCode;
+                            Item.Rebate = Info.Rebate;                            
                             /* DATA */
                             Item.BranchId = branchid;
                             Item.CreateUser = User.Identity.Name;
@@ -178,6 +179,7 @@ namespace REST.Controllers
                         Item.District = Info.District;
                         Item.Province = Info.Province;
                         Item.ZibCode = Info.ZibCode;
+                        Item.Rebate = Info.Rebate;
                         /* DATA */
                         Item.BranchId = branchid;
                         Item.UpdateUser = User.Identity.Name;
