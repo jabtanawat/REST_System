@@ -54,6 +54,7 @@ namespace REST.Controllers
                     item.TableId = TableId;
                     item.TableName = TableId;
                     item.Total = Share.Cnumber(Share.FormatDouble(price), 2);
+                    item.OrderSub = _ordersub.OrderSub(TableId, null, branch);
 
                     return View(item);
                 }                

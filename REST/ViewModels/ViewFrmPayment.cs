@@ -15,5 +15,6 @@ namespace REST.ViewModels
         public string Balance { get; set; }
         public decimal MoneyPut { get; set; }
         public decimal MoneyChange { get; set; }
+        public List<ViewSF_OrderSub> OrderSub { get; set; }
     }
 }
