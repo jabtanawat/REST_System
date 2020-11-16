@@ -113,6 +113,21 @@ namespace REST.Service
             }
         }
 
+        public static decimal FormatDecimal(object obj)
+        {
+            try
+            {
+                if (Share.IsNullOrEmptyObject(obj))
+                    return 0;
+                else
+                    return Math.Round(System.Convert.ToDecimal(obj.ToString()), 2, MidpointRounding.AwayFromZero);
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
         public static string Cnumber(double TempValue, byte decimal_notation)
         {
             switch (decimal_notation)

@@ -31,6 +31,8 @@ namespace REST.Data
         // ***StoreFront SF
         public DbSet<SF_Order> SF_Order { get; set; }
         public DbSet<SF_OrderSub> SF_OrderSub { get; set; }
+        public DbSet<SF_Payment> SF_Payment { get; set; }
+        public DbSet<SF_PaymentSub> SF_PaymentSub { get; set; }
 
         // ***Stock ST
         public DbSet<ST_Trans> ST_Trans { get; set; }
@@ -60,6 +62,8 @@ namespace REST.Data
             // ***StoreFront SF
             modelBuilder.Entity<SF_Order>().HasKey(x => new { x.OrderId, x.BranchId });
             modelBuilder.Entity<SF_OrderSub>().HasKey(x => new { x.OrderId, x.TableId, x.FoodId, x.BranchId });
+            modelBuilder.Entity<SF_Payment>().HasKey(x => new { x.PaymentId, x.TableId, x.MemberId, x.BranchId });
+            modelBuilder.Entity<SF_PaymentSub>().HasKey(x => new { x.PaymentId, x.i, x.TableId, x.FoodId, x.BranchId });
 
             // ***Stock ST
             modelBuilder.Entity<ST_Trans>().HasKey(x => new { x.Documents, x.BranchId });

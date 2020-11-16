@@ -80,6 +80,114 @@ namespace REST.Controllers
             }            
         }
 
+        [HttpPost]
+        public IActionResult FrmPayment(ViewFrmPayment info)
+        {
+            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
+            if (ModelState.IsValid)
+            {
+                if (SaveData(info, branchid))
+                {
+                    toastrAlert("ชำระเงิน", "ชำระเงินเรียบร้อย", Enums.NotificationToastr.success);
+                    return RedirectToAction("Index", "StoreFront");
+                }
+                else
+                {                    
+                    return View();
+                }                
+            }
+            else
+            {
+                Alert("", "ไม่สามารถบันทึกข้อมูลได้ !", Enums.NotificationType.error);
+                return View();
+            }            
+        }
+
+        public Boolean SaveData(ViewFrmPayment info, string branchid)
+        {         
+            var _Get = new GetRunningController(_db);
+            var _order = new SF_OrderController(_db);
+            string Doc = null;
+            try
+            {
+                /* Get Running */
+                Doc = _Get.Running("Payment", branchid);
+
+                // Save Payment
+                var item = new SF_Payment();
+                item.PaymentId = Doc;
+                item.TableId = info.TableId;
+                item.Total = Share.FormatDecimal(info.Total);
+                item.Persen = info.Persen;
+                item.MemberId = info.MemberId;
+                item.Rebate = info.Rebate;
+                item.Score = info.Score;
+                item.Balance = Share.FormatDecimal(info.Balance);
+                item.PayType = info.PayType;
+                item.MoneyPut = info.MoneyPut;
+                item.MoneyChange = info.MoneyChange;
+                item.Dates = Share.FormatDate(DateTime.Now).Date;
+                /* DATA */
+                item.BranchId = branchid;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                _db.SF_Payment.Add(item);
+                _db.SaveChanges();
+
+                // Save Payment Sub
+                var result = _db.SF_OrderSub.Where(x => x.TableId == info.TableId && x.BranchId == branchid).ToList();
+                foreach (var row in result)
+                {
+                    var itemsub = new SF_PaymentSub();
+                    itemsub.PaymentId = Doc;
+                    itemsub.i = row.i;
+                    itemsub.TableId = row.TableId;
+                    itemsub.FoodId = row.FoodId;
+                    itemsub.Amount = row.Amount;
+                    itemsub.Price = row.Price;
+                    itemsub.Status = row.Status;
+                    itemsub.BranchId = branchid;
+
+                    _db.SF_PaymentSub.Add(itemsub);
+                    _db.SaveChanges();
+                }
+
+                // Set Running
+                _Get.SetRunning("Payment", Doc, branchid);
+
+                // Set Update Table Status 1
+                _order.UpdateTable(info.TableId, 1, branchid);
+
+                // Remove Order
+                var order = _db.SF_Order.Where(x => x.TableId == info.TableId && x.BranchId == branchid).ToList();
+                _db.SF_Order.RemoveRange(order);
+                _db.SaveChanges();
+
+                // Remove OrderSub
+                var ordersub = _db.SF_OrderSub.Where(x => x.TableId == info.TableId && x.BranchId == branchid).ToList();
+                _db.SF_OrderSub.RemoveRange(ordersub);
+                _db.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.InnerException.Message);
+                Alert("", "Error Data !", Enums.NotificationType.error);
+                return false;
+            }
+        }
+
+        public ViewFrmPayment info(ViewFrmPayment info)
+        {
+            var item = new ViewFrmPayment();
+
+            return item;
+        }
+
         public IActionResult Payment1(string id)
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;            

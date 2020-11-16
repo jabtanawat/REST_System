@@ -1,0 +1,81 @@
+﻿@model REST.ViewModels.ViewZone;
+@{
+    ViewData["Title"] = "Store Back";
+    ViewData["System"] = "โซนที่นั่ง";
+    Layout = "_StoreBack";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-11 mx-auto">
+                <!-- Header -->
+                <section class="Frm-Header">
+                    <div class="d-flex mb-2">
+                        <div class="mr-auto">
+                            <a href="@Url.Action("FrmTitle", "CD_Title", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่มใหม่</a>
+                        </div>
+                        <div class="ml-2">
+                            <a href="#" class="btn btn-sm btn-danger mr-3 @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
+                        </div>
+                        <div class="ml-2">
+                            <a href="#" class="btn btn-sm btn-blue" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
+                        </div>
+                    </div>
+                    <hr />
+                </section>
+                <!-- Form -->
+                <section class="Frm-Table" scroll>
+                    <form name="FrmTitle" method="post">
+                        <div class="row">
+                            <div class="col-xl-5 col-lg-6 col-md-8 col-12 mx-auto">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm text-sm-right">รหัส</label>
+                                    <div class="col-sm-9">
+                                        @if (ViewData["Readonly"].ToString() != "")
+                                        {
+                                            <input asp-for="TitleId" type="text" class="form-control form-control-sm" readonly>
+                                        }
+                                        else
+                                        {
+                                            <input asp-for="TitleId" type="text" class="form-control form-control-sm">
+                                        }
+                                        <span asp-validation-for="TitleId" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm text-sm-right">ชื่อ</label>
+                                    <div class="col-sm-9">
+                                        <input asp-for="TitleName" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="TitleName" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label col-form-label-sm text-sm-right">รายละเอียด</label>
+                                    <div class="col-sm-9">
+                                        <textarea asp-for="Description" rows="3" class="form-control form-control-sm"></textarea>
+                                        <span asp-validation-for="Description" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".item_click_Zone").addClass("active");
+
+            $('[scroll]').slimScroll({
+                height: $(window).height() - 95,
+                railBorderRadius: 0,
+                railVisible: true
+            });
+        });
+    </script>
+}

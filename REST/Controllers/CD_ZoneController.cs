@@ -12,13 +12,13 @@ using REST.ViewModels;
 
 namespace REST.Controllers
 {
-    public class ZoneController : BaseController
+    public class CD_ZoneController : BaseController
     {
 
         #region Connect db
         private readonly DbConnection _db;
 
-        public ZoneController(DbConnection db)
+        public CD_ZoneController(DbConnection db)
         {
             _db = db;
         }
@@ -32,6 +32,8 @@ namespace REST.Controllers
             ViewBag.DT_Zone = GetZone();
             return View();
         }
+
+
 
         public IActionResult Insert()
         {
