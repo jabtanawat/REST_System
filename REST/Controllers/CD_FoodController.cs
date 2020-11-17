@@ -20,28 +20,67 @@ using static REST.Service.Enums;
 namespace REST.Controllers
 {
     [Authorize]
-    public class FoodController : BaseController
+    public class CD_FoodController : BaseController
     {
-        #region Connect db
+        #region Connect db / Data System
 
         private readonly DbConnection _db;
+        public static string _mode = Comp.FormMode.ADD;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public FoodController(DbConnection db, IWebHostEnvironment hostEnvironment)
+        public CD_FoodController(DbConnection db, IWebHostEnvironment hostEnvironment)
         {
             _db = db;
             _hostEnvironment = hostEnvironment;
         }
 
         #endregion 
-        
-        // -----
 
         public IActionResult Index()
         {
             ViewBag.DT_Food = GetFood();
             return View();
         }
+
+        public IActionResult FrmFood(string mode, string id = null)
+        {
+            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
+            if (mode == "Add")
+            {
+                _mode = Comp.FormMode.ADD;
+                FrmMode();
+                return View();
+            }
+            else
+            {
+                _mode = Comp.FormMode.EDIT;
+                FrmMode();
+                var item = _db.CD_Dish.FirstOrDefault(x => x.DishId == id && x.BranchId == branchid);
+                return View(item);
+            }
+        }
+
+        public void FrmMode()
+        {
+            if (_mode == Comp.FormMode.ADD)
+            {
+                ViewData["Disible-delete"] = "disabled";
+                ViewData["Disible-save"] = "";
+                ViewData["Readonly"] = "";
+            }
+            else
+            {
+                ViewData["Disible-delete"] = "";
+                ViewData["Disible-save"] = "disabled";
+                ViewData["Readonly"] = "readonly";
+            }
+        }
+
+
+
+
+
+
 
         public IActionResult Insert()
         {

@@ -26,9 +26,10 @@ namespace REST.ApiControllers
         public List<ViewTable> Table(string branchid)
         {
             var List = new List<ViewTable>();
-            var sql = $"SELECT TableId, TableName, Description, TableST, CASE WHEN TableST = 1 THEN 'ว่าง' WHEN TableST = 2 THEN 'ไม่ว่าง' WHEN TableST= 3 THEN 'จอง' END AS Status "
+            var sql = $"SELECT TableId, TableName, Personal, TableST, CASE WHEN TableST = 1 THEN 'ว่าง' WHEN TableST = 2 THEN 'ไม่ว่าง' WHEN TableST= 3 THEN 'จอง' END AS Status, ZoneName "
                     + $"FROM CD_Table "
-                    + $"WHERE BranchId = '{branchid}' ";
+                    + $"LEFT JOIN CD_Zone ON CD_Table.ZoneId = CD_Zone.ZoneId "
+                    + $"WHERE CD_Table.BranchId = '{branchid}'";
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
@@ -44,11 +45,13 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(1))
                             Item.TableName = data.GetString(1);
                         if (!data.IsDBNull(2))
-                            Item.Description = data.GetString(2);
+                            Item.Personal = data.GetInt32(2);
                         if (!data.IsDBNull(3))
                             Item.TableST = data.GetInt32(3);
                         if (!data.IsDBNull(4))
                             Item.Status = data.GetString(4);
+                        if (!data.IsDBNull(5))
+                            Item.ZoneName = data.GetString(5);
                         List.Add(Item);
                     }
                 }

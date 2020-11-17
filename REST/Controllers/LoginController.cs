@@ -27,7 +27,7 @@ namespace REST.Controllers
             if (returnUrl != null)
             {
                 await HttpContext.SignOutAsync();
-                Alert("", "รหัสหมดอายุ กรูณาเข้าสู่ระบบใหม่ !", NotificationType.warning);
+                Alert("", "หมดเวลาเข้าใช้งาน กรูณาเข้าสู่ระบบใหม่ !", NotificationType.warning);
             }
 
             return View();

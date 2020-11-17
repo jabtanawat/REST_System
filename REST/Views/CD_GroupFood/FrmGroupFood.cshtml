@@ -1,7 +1,7 @@
-﻿@model REST.ViewModels.ViewZone;
+﻿@model REST.ViewModels.ViewGroupFood;
 @{
     ViewData["Title"] = "Store Back";
-    ViewData["System"] = "โซนที่นั่ง";
+    ViewData["System"] = "กลุ่มอาหาร";
     Layout = "_StoreBack";
 }
 
@@ -13,7 +13,7 @@
                 <section class="FrmHeader">
                     <div class="d-flex mb-2">
                         <div class="mr-auto">
-                            <a href="@Url.Action("FrmZone", "CD_Zone", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmGroupFood", "CD_GroupFood", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
                         <div class="ml-2">
                             <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
@@ -25,30 +25,30 @@
                     <hr />
                 </section>
                 <!-- Form -->
-                <section class="FrmPanel" scroll>
-                    <form name="FrmZone" method="post">
+                <section scroll>
+                    <form name="FrmGroupFood" method="post">
                         <div class="row">
                             <div class="col-lg-8 col-md-12 col-12 mx-auto">
                                 <div class="row">
-                                    <div class="col-md-7">
+                                    <div class="col-md-7 border-right border-light">
                                         <h6 class="text-center font-weight-bold">ข้อมูล</h6>
                                         <hr />
                                         <div class="form-group">
                                             <label class="col-form-label col-form-label-sm">รหัส :</label>
                                             @if (ViewData["Readonly"].ToString() != "")
                                             {                                                
-                                                <input type="text" class="form-control form-control-sm" asp-for="ZoneId" readonly>
+                                                <input type="text" class="form-control form-control-sm" asp-for="GroupFoodId" readonly>
                                             }
                                             else
                                             {
-                                                <input type="text" class="form-control form-control-sm" asp-for="ZoneId">
+                                                <input type="text" class="form-control form-control-sm" asp-for="GroupFoodId">
                                             }
-                                            <span asp-validation-for="ZoneId" class="text-danger col-form-label-sm"></span>
+                                            <span asp-validation-for="GroupFoodId" class="text-danger col-form-label-sm"></span>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-form-label col-form-label-sm">ชื่อ :</label>
-                                            <input type="text" class="form-control form-control-sm" asp-for="ZoneName">
-                                            <span asp-validation-for="ZoneName" class="text-danger col-form-label-sm"></span>
+                                            <input type="text" class="form-control form-control-sm" asp-for="GroupFoodName">
+                                            <span asp-validation-for="GroupFoodName" class="text-danger col-form-label-sm"></span>
                                         </div>
                                         <div class="form-group">
                                             <label class="col-form-label col-form-label-sm">รายละเอียด :</label>
@@ -74,7 +74,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>                        
+                        </div>
                     </form>
                 </section>
             </div>
@@ -85,7 +85,7 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $(".item_click_Zone").addClass("active");
+            $(".item_click_GroupFood").addClass("active");
 
             $('[scroll]').slimScroll({
                 height: $(window).height() - $('.FrmHeader').height() - 150,
@@ -105,8 +105,8 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    document.FrmZone.action = '@Url.Action("FrmZone")'
-                    document.FrmZone.submit();
+                    document.FrmGroupFood.action = '@Url.Action("FrmGroupFood")'
+                    document.FrmGroupFood.submit();
                 }
             })
         })
@@ -122,8 +122,8 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    document.FrmZone.action = '@Url.Action("Delete")'
-                    document.FrmZone.submit();
+                    document.FrmGroupFood.action = '@Url.Action("Delete")'
+                    document.FrmGroupFood.submit();
                 }
             })
         })

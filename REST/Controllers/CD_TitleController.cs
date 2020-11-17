@@ -47,7 +47,7 @@ namespace REST.Controllers
             else
             {
                 _mode = Comp.FormMode.EDIT;
-                ViewData["Disible"] = "";
+                ViewData["Disible-delete"] = "";
                 ViewData["Disible-save"] = "disabled"; 
                 ViewData["Readonly"] = "readonly";
                 var Item = _db.CD_Title.FirstOrDefault(x => x.TitleId == id && x.BranchId == branchid);
@@ -167,7 +167,7 @@ namespace REST.Controllers
             }
             else
             {
-                ViewData["Disible"] = "";
+                ViewData["Disible-delete"] = "";
                 ViewData["Disible-save"] = "disabled";
                 ViewData["Readonly"] = "readonly";
             }

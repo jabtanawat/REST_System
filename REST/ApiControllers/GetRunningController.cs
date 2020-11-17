@@ -11,7 +11,7 @@ using REST.Service;
 
 namespace REST.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class GetRunningController : BaseController
     {
@@ -30,21 +30,13 @@ namespace REST.ApiControllers
             string DocRunning = null;
             string RunLength = null;
             int Number = 0;
-            DateTime Date = Share.FormatDate(DateTime.Now).Date;            
+            DateTime Date = Share.FormatDate(DateTime.Now).Date;
 
-            var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id && x.BranchId == branchid);
-
-            if (Running.AutoRun == true)
+            if (id != null)
             {
-                RunLength = null;
-                for (int i = 0; i < Running.Number.Length; i++)
-                {
-                    RunLength += '0';
-                }
-                Number = Int32.Parse(Running.Number) + 1;
-                DocRunning = Running.Front + Number.ToString(RunLength);
+                var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id && x.BranchId == branchid);
 
-                if (Running.AutoDate == true)
+                if (Running.AutoRun == true)
                 {
                     RunLength = null;
                     for (int i = 0; i < Running.Number.Length; i++)
@@ -52,9 +44,20 @@ namespace REST.ApiControllers
                         RunLength += '0';
                     }
                     Number = Int32.Parse(Running.Number) + 1;
-                    DocRunning = Running.Front + Date.ToString(Running.SetDate) + Number.ToString(RunLength);
+                    DocRunning = Running.Front + Number.ToString(RunLength);
+
+                    if (Running.AutoDate == true)
+                    {
+                        RunLength = null;
+                        for (int i = 0; i < Running.Number.Length; i++)
+                        {
+                            RunLength += '0';
+                        }
+                        Number = Int32.Parse(Running.Number) + 1;
+                        DocRunning = Running.Front + Date.ToString(Running.SetDate) + Number.ToString(RunLength);
+                    }
                 }
-            }
+            }            
 
             return DocRunning;
         }
@@ -74,6 +77,19 @@ namespace REST.ApiControllers
                 _db.CD_Running.Update(Running);
                 _db.SaveChanges();
             }
+        }
+
+        // -------------------------------------------
+        // --                                       --
+        // --            ACTION RUNNING             --
+        // --                                       --
+        // -------------------------------------------
+
+        public JsonResult ARunning(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var item = Running(id, branchid);
+            return Json(item);
         }
     }
 }

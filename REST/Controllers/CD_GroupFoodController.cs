@@ -10,34 +10,32 @@ using REST.Data;
 using REST.Models;
 using REST.Service;
 using REST.ViewModels;
+using static REST.Service.Enums;
 
 namespace REST.Controllers
 {
     [Authorize]
-    public class CD_ZoneController : BaseController
+    public class CD_GroupFoodController : BaseController
     {
-
         #region Connect db / Data System
         private readonly DbConnection _db;
         public static string _mode = Comp.FormMode.ADD;
 
-        public CD_ZoneController(DbConnection db)
+        public CD_GroupFoodController(DbConnection db)
         {
             _db = db;
         }
 
         #endregion 
 
-        //------
-        
         public IActionResult Index()
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
-            ViewBag.DT_Zone = _db.CD_Zone.Where(x => x.BranchId == branchid).ToList();
+            ViewBag.DT_GroupFood = _db.CD_GroupFood.Where(x => x.BranchId == branchid).ToList();
             return View();
         }
 
-        public IActionResult FrmZone(string mode, string id = null)
+        public IActionResult FrmGroupFood(string mode, string id = null)
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             if (mode == "Add")
@@ -56,14 +54,14 @@ namespace REST.Controllers
         }
 
         [HttpPost]
-        public IActionResult FrmZone(ViewZone info)
+        public IActionResult FrmGroupFood(ViewGroupFood info)
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             if (ModelState.IsValid)
             {
                 if (SaveData(info, branchid))
                 {
-                    toastrAlert("โซนที่นั่ง", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
+                    toastrAlert("กลุ่มอาหาร", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
                     return RedirectToAction("Index");
                 }
                 else
@@ -81,49 +79,49 @@ namespace REST.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(ViewZone info)
+        public IActionResult Delete(ViewGroupFood info)
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             try
             {
                 // Delete Zone
-                var item1 = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == info.ZoneId && x.BranchId == branchid);
-                _db.CD_Zone.Remove(item1);
+                var item1 = _db.CD_GroupFood.FirstOrDefault(x => x.GroupFoodId == info.GroupFoodId && x.BranchId == branchid);
+                _db.CD_GroupFood.Remove(item1);
                 _db.SaveChanges();
 
                 // Delete Running
-                var item2 = _db.CD_Running.FirstOrDefault(x => x.Name == info.ZoneId && x.BranchId == branchid);
+                var item2 = _db.CD_Running.FirstOrDefault(x => x.Name == info.GroupFoodId && x.BranchId == branchid);
                 _db.CD_Running.Remove(item2);
                 _db.SaveChanges();
 
-                toastrAlert("โซนที่นั่ง", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
+                toastrAlert("กลุ่มอาหาร", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
                 return RedirectToAction("Index");
             }
             catch (Exception)
             {
                 Alert("", "ไม่สามารถลบข้อมูลได้", Enums.NotificationType.warning);
-                return RedirectToAction("FrmZone", new { mode = "Edit", id = info.ZoneId });
+                return RedirectToAction("FrmGroupFood", new { mode = "Edit", id = info.GroupFoodId });
             }
         }
 
-        public Boolean SaveData(ViewZone info, string branchid)
+        public Boolean SaveData(ViewGroupFood info, string branchid)
         {
-            var item = new CD_Zone();
+            var item = new CD_GroupFood();
             try
             {
                 switch (_mode)
                 {
                     case Comp.FormMode.ADD:
 
-                        var IsNull = _db.CD_Zone.Where(x => x.ZoneId == info.ZoneId && x.BranchId == branchid).ToList();
+                        var IsNull = _db.CD_GroupFood.Where(x => x.GroupFoodId == info.GroupFoodId && x.BranchId == branchid).ToList();
                         if (IsNull.Count > 0)
                         {
                             Alert("", "รหัสนี้มีอยู่แล้ว !", Enums.NotificationType.warning);
                         }
                         else
                         {
-                            item.ZoneId = info.ZoneId;
-                            item.ZoneName = info.ZoneName;
+                            item.GroupFoodId = info.GroupFoodId;
+                            item.GroupFoodName = info.GroupFoodName;
                             item.Description = info.Description;
                             /* DATA */
                             item.BranchId = branchid;
@@ -132,7 +130,7 @@ namespace REST.Controllers
                             item.UpdateUser = User.Identity.Name;
                             item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                            _db.CD_Zone.Add(item);
+                            _db.CD_GroupFood.Add(item);
                             _db.SaveChanges();
                         }
 
@@ -140,15 +138,15 @@ namespace REST.Controllers
 
                     case Comp.FormMode.EDIT:
 
-                        item = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == info.ZoneId && x.BranchId == branchid);
-                        item.ZoneName = info.ZoneName;
+                        item = _db.CD_GroupFood.FirstOrDefault(x => x.GroupFoodId == info.GroupFoodId && x.BranchId == branchid);
+                        item.GroupFoodName = info.GroupFoodName;
                         item.Description = info.Description;
                         /* DATA */
                         item.BranchId = branchid;
                         item.UpdateUser = User.Identity.Name;
                         item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                        _db.CD_Zone.Update(item);
+                        _db.CD_GroupFood.Update(item);
                         _db.SaveChanges();
 
                         break;
@@ -168,16 +166,16 @@ namespace REST.Controllers
             }
         }
 
-        public Boolean SaveRunning(ViewZone info, string branchid)
+        public Boolean SaveRunning(ViewGroupFood info, string branchid)
         {
             var item = new CD_Running();
             try
             {
-                var IsNull = _db.CD_Running.Where(x => x.Name == info.ZoneId && x.BranchId == branchid).ToList();
+                var IsNull = _db.CD_Running.Where(x => x.Name == info.GroupFoodId && x.BranchId == branchid).ToList();
                 if (IsNull.Count > 0)
                 {
-                    item = _db.CD_Running.FirstOrDefault(x => x.Name == info.ZoneId && x.BranchId == branchid);
-                    item.Name = info.ZoneId;
+                    item = _db.CD_Running.FirstOrDefault(x => x.Name == info.GroupFoodId && x.BranchId == branchid);
+                    item.Name = info.GroupFoodId;
                     item.Front = info.Front;
                     item.Number = info.Number;
                     item.AutoRun = info.AutoRun;
@@ -190,7 +188,7 @@ namespace REST.Controllers
                 }
                 else
                 {
-                    item.Name = info.ZoneId;
+                    item.Name = info.GroupFoodId;
                     item.Front = info.Front;
                     item.Number = info.Number;
                     item.AutoRun = info.AutoRun;
@@ -231,15 +229,15 @@ namespace REST.Controllers
             }
         }
 
-        public ViewZone LoadData(string id, string branchid)
+        public ViewGroupFood LoadData(string id, string branchid)
         {
-            var item = new ViewZone();
+            var item = new ViewGroupFood();
 
-            var CD_Zone = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == id && x.BranchId == branchid);
-            item.ZoneId = CD_Zone.ZoneId;
-            item.ZoneName = CD_Zone.ZoneName;
-            item.Description = CD_Zone.Description;
-            var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id && x.BranchId == branchid);            
+            var CD_GroupFood = _db.CD_GroupFood.FirstOrDefault(x => x.GroupFoodId == id && x.BranchId == branchid);
+            item.GroupFoodId = CD_GroupFood.GroupFoodId;
+            item.GroupFoodName = CD_GroupFood.GroupFoodName;
+            item.Description = CD_GroupFood.Description;
+            var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id && x.BranchId == branchid);
             item.Front = Running.Front;
             item.Number = Running.Number;
             item.AutoRun = Running.AutoRun;
