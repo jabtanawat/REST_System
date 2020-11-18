@@ -2,25 +2,27 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using REST.ApiControllers;
 using REST.Data;
 using REST.Models;
 using REST.Service;
+using REST.ViewModels;
+using static REST.Service.Enums;
 
 namespace REST.Controllers
 {
     [Authorize]
-    public class CD_DishController : BaseController
+    public class CD_StapleController : BaseController
     {
         #region Connect db / Data System
         private readonly DbConnection _db;
         public static string _mode = Comp.FormMode.ADD;
 
-        public CD_DishController(DbConnection db)
+        public CD_StapleController(DbConnection db)
         {
             _db = db;
         }
@@ -29,12 +31,13 @@ namespace REST.Controllers
 
         public IActionResult Index()
         {
-            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            ViewBag.DT_Dish = _db.CD_Dish.Where(x => x.BranchId == branchid).ToList();
+            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
+            var _staple = new GetCD_StapleController(_db);
+            ViewBag.DT_Staple = _staple.StapleAll(branchid);
             return View();
         }
 
-        public IActionResult FrmDish(string mode, string id = null)
+        public IActionResult FrmStaple(string mode, string id = null)
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             if (mode == "Add")
@@ -47,20 +50,20 @@ namespace REST.Controllers
             {
                 _mode = Comp.FormMode.EDIT;
                 FrmMode();
-                var item = _db.CD_Dish.FirstOrDefault(x => x.DishId == id && x.BranchId == branchid);
+                var item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == branchid);
                 return View(item);
             }
         }
 
         [HttpPost]
-        public IActionResult FrmDish(CD_Dish info)
+        public IActionResult FrmStaple(CD_Staple info)
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             if (ModelState.IsValid)
             {
                 if (SaveData(info, branchid))
                 {
-                    toastrAlert("เครื่องเคียง", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
+                    toastrAlert("วัตถุดิบ", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
                     return RedirectToAction("Index");
                 }
                 else
@@ -78,55 +81,46 @@ namespace REST.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(CD_Dish info)
+        public IActionResult Delete(CD_Staple info)
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             try
             {
-                // check dishid = food 
-                var isnull = _db.CD_Food.Where(x => x.DishId == info.DishId && x.BranchId == branchid).ToList();
-                if (isnull.Count > 0)
-                {
-                    Alert("", "ไม่สามารถลบข้อมูลได้", Enums.NotificationType.warning);
-                    return RedirectToAction("FrmUnit", new { mode = "Edit", id = info.DishId });
-                }
-                else
-                {
-                    // Delete Dish
-                    var item = _db.CD_Dish.FirstOrDefault(x => x.DishId == info.DishId && x.BranchId == branchid);
-                    _db.CD_Dish.Remove(item);
-                    _db.SaveChanges();
+                // Delete Staple
+                var item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == info.StapleId && x.BranchId == branchid);
+                _db.CD_Staple.Remove(item);
+                _db.SaveChanges();
 
-                    toastrAlert("เครื่องเคียง", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
-                    return RedirectToAction("Index");
-                }                
+                toastrAlert("วัตถุดิบ", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
+                return RedirectToAction("Index");
             }
             catch (Exception)
             {
-                Alert("", "Error Data", Enums.NotificationType.warning);
-                return RedirectToAction("FrmDish", new { mode = "Edit", id = info.DishId });
+                Alert("", "ไม่สามารถลบข้อมูลได้", Enums.NotificationType.warning);
+                return RedirectToAction("FrmStaple", new { mode = "Edit", id = info.StapleId });
             }
         }
 
-        public Boolean SaveData(CD_Dish info, string branchid)
+        public Boolean SaveData(CD_Staple info, string branchid)
         {
-            var item = new CD_Dish();
+            var item = new CD_Staple();
             try
             {
                 switch (_mode)
                 {
                     case Comp.FormMode.ADD:
 
-                        var IsNull = _db.CD_Dish.Where(x => x.DishId == info.DishId && x.BranchId == branchid).ToList();
+                        var IsNull = _db.CD_Staple.Where(x => x.StapleId == info.StapleId && x.BranchId == branchid).ToList();
                         if (IsNull.Count > 0)
                         {
                             Alert("", "รหัสนี้มีอยู่แล้ว !", Enums.NotificationType.warning);
                         }
                         else
                         {
-                            item.DishId = info.DishId;
-                            item.DishName = info.DishName;
-                            item.Description = info.Description;
+                            item.StapleId = info.StapleId;
+                            item.StapleName = info.StapleName;
+                            item.Amount = info.Amount;
+                            item.UnitId = info.UnitId;
                             /* DATA */
                             item.BranchId = branchid;
                             item.CreateUser = User.Identity.Name;
@@ -134,7 +128,7 @@ namespace REST.Controllers
                             item.UpdateUser = User.Identity.Name;
                             item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                            _db.CD_Dish.Add(item);
+                            _db.CD_Staple.Add(item);
                             _db.SaveChanges();
                         }
 
@@ -142,15 +136,16 @@ namespace REST.Controllers
 
                     case Comp.FormMode.EDIT:
 
-                        item = _db.CD_Dish.FirstOrDefault(x => x.DishId == info.DishId && x.BranchId == branchid);
-                        item.DishName = info.DishName;
-                        item.Description = info.Description;
+                        item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == info.StapleId && x.BranchId == branchid);
+                        item.StapleName = info.StapleName;
+                        item.Amount = info.Amount;
+                        item.UnitId = info.UnitId;
                         /* DATA */
                         item.BranchId = branchid;
                         item.UpdateUser = User.Identity.Name;
                         item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                        _db.CD_Dish.Update(item);
+                        _db.CD_Staple.Update(item);
                         _db.SaveChanges();
 
                         break;
@@ -167,17 +162,20 @@ namespace REST.Controllers
 
         public void FrmMode()
         {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             if (_mode == Comp.FormMode.ADD)
             {
                 ViewData["Disible-delete"] = "disabled";
                 ViewData["Disible-save"] = "";
                 ViewData["Readonly"] = "";
+                ViewBag.SL_Unit = _db.CD_Unit.Where(x => x.BranchId == branchid).ToList();
             }
             else
             {
                 ViewData["Disible-delete"] = "";
                 ViewData["Disible-save"] = "disabled";
                 ViewData["Readonly"] = "readonly";
+                ViewBag.SL_Unit = _db.CD_Unit.Where(x => x.BranchId == branchid).ToList();
             }
         }        
     }

@@ -1,0 +1,51 @@
+﻿<!-- Modal Staple -->
+<div class="modal fade bd-example-modal-lg" id="popupStaple" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="popupStapleTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <h6 class="font-weight-bold" id="exampleModalCenterTitle"><i class="fas fa-database mr-2"></i>ข้อมูลสินค้า</h6>
+                    </div>
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-table-sm btn-danger text-white" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+
+                    </div>
+                </div>
+                <hr />
+                <table id="DT_Staple" class="table table-md table-bordered table-hover mt-3">
+                    <thead style="background-color:#F8FAFD;">
+                        <tr>
+                            <th class="text-center" style="width:2rem;"></th>
+                            <th class="text-center" style="width:10rem;">รหัส</th>
+                            <th class="text-center">ชื่อ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="TB_Staple">
+                        @{
+                            foreach (var row in ViewBag.Staple)
+                            {
+                                <tr>
+                                    <td class="text-center bg-info-light"><a href="#" onclick="show('@row.StapleId')" class="text-info">เลือก</a></td>
+                                    <td>@row.StapleId</td>
+                                    <td>@row.StapleName</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#DT_Staple').DataTable({
+            "info": false,
+            "ordering": false
+        });
+    })
+</script>

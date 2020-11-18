@@ -86,22 +86,32 @@ namespace REST.Controllers
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             try
             {
-                // Delete Zone
-                var item1 = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == info.ZoneId && x.BranchId == branchid);
-                _db.CD_Zone.Remove(item1);
-                _db.SaveChanges();
+                // check zoneid = table 
+                var isnull = _db.CD_Table.Where(x => x.ZoneId == info.ZoneId && x.BranchId == branchid).ToList();
+                if (isnull.Count > 0)
+                {
+                    Alert("", "ไม่สามารถลบข้อมูลได้", Enums.NotificationType.warning);
+                    return RedirectToAction("FrmUnit", new { mode = "Edit", id = info.ZoneId });
+                }
+                else
+                {
+                    // Delete Zone
+                    var item1 = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == info.ZoneId && x.BranchId == branchid);
+                    _db.CD_Zone.Remove(item1);
+                    _db.SaveChanges();
 
-                // Delete Running
-                var item2 = _db.CD_Running.FirstOrDefault(x => x.Name == info.ZoneId && x.BranchId == branchid);
-                _db.CD_Running.Remove(item2);
-                _db.SaveChanges();
+                    // Delete Running
+                    var item2 = _db.CD_Running.FirstOrDefault(x => x.Name == info.ZoneId && x.BranchId == branchid);
+                    _db.CD_Running.Remove(item2);
+                    _db.SaveChanges();
 
-                toastrAlert("โซนที่นั่ง", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
-                return RedirectToAction("Index");
+                    toastrAlert("โซนที่นั่ง", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
+                    return RedirectToAction("Index");
+                }                
             }
             catch (Exception)
             {
-                Alert("", "ไม่สามารถลบข้อมูลได้", Enums.NotificationType.warning);
+                Alert("", "Error Data", Enums.NotificationType.warning);
                 return RedirectToAction("FrmZone", new { mode = "Edit", id = info.ZoneId });
             }
         }

@@ -62,17 +62,22 @@ namespace REST.Controllers
 
         public void FrmMode()
         {
+            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             if (_mode == Comp.FormMode.ADD)
             {
                 ViewData["Disible-delete"] = "disabled";
                 ViewData["Disible-save"] = "";
                 ViewData["Readonly"] = "";
+                ViewBag.GroupFood = _db.CD_GroupFood.Where(x => x.BranchId == BranchId).ToList();
+                ViewBag.Dish = _db.CD_Dish.Where(x => x.BranchId == BranchId).ToList();
             }
             else
             {
                 ViewData["Disible-delete"] = "";
                 ViewData["Disible-save"] = "disabled";
                 ViewData["Readonly"] = "readonly";
+                ViewBag.GroupFood = _db.CD_GroupFood.Where(x => x.BranchId == BranchId).ToList();
+                ViewBag.Dish = _db.CD_Dish.Where(x => x.BranchId == BranchId).ToList();
             }
         }
 

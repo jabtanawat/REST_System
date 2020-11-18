@@ -95,5 +95,12 @@ namespace REST.Controllers
             ViewBag.View = _get.Table(branchid);
             return PartialView("_popupTable");
         }
+
+        public IActionResult _popupStaple()
+        {
+            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            ViewBag.Staple = _db.CD_Staple.Where(x => x.BranchId == BranchId).ToList();
+            return PartialView("_popupStaple");
+        }
     }
 }

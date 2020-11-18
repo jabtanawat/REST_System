@@ -10,51 +10,53 @@
 
         <div class="row">
             <div class="col-xl-11 mx-auto">
-
-                <section class="Frm-Header">
-                    <div class="d-flex justify-content-end mb-2">
-                        <a href="@Url.Action("FrmTitle", "CD_Title", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่มใหม่</a>
-                        <a href="#" class="btn btn-sm btn-danger mr-3 @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
-                        <a href="#" class="btn btn-sm btn-blue" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
+                <!-- Header -->
+                <section class="FrmHeader">
+                    <div class="d-flex mb-2">
+                        <div class="mr-auto">
+                            <a href="@Url.Action("FrmUnit", "CD_Unit", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                        </div>
                     </div>
                     <hr />
                 </section>
 
-                <section class="Frm-Table" scroll>
+                <section class="Frm-Table">
                     <form name="FrmTitle" method="post">
                         <div class="row">
-                            <div class="col-xl-5 col-lg-6 col-md-8 col-12 mx-auto">
-                                <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm text-sm-right">รหัส</label>
-                                    <div class="col-sm-9">
-                                        @if (ViewData["Readonly"].ToString() != "")
-                                        {
-                                            <input asp-for="TitleId" type="text" class="form-control form-control-sm" readonly>
-                                        }
-                                        else
-                                        {
-                                            <input asp-for="TitleId" type="text" class="form-control form-control-sm">
-                                        }
-                                        <span asp-validation-for="TitleId" class="text-danger col-form-label-sm"></span>
-                                    </div>
+                            <div class="col-lg-5 col-12 mx-auto">
+                                <div class="form-group">
+                                    <label class="col-form-label col-form-label-sm text-sm-right">รหัส :</label>
+                                    @if (ViewData["Readonly"].ToString() != "")
+                                    {
+                                        <input asp-for="TitleId" type="text" class="form-control form-control-sm" readonly>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="TitleId" type="text" class="form-control form-control-sm">
+                                    }
+                                    <span asp-validation-for="TitleId" class="text-danger col-form-label-sm"></span>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm text-sm-right">ชื่อ</label>
-                                    <div class="col-sm-9">
-                                        <input asp-for="TitleName" type="text" class="form-control form-control-sm">
-                                        <span asp-validation-for="TitleName" class="text-danger col-form-label-sm"></span>
-                                    </div>
+                                <div class="form-group">
+                                    <label class="col-form-label col-form-label-sm text-sm-right">ชื่อ :</label>
+                                    <input asp-for="TitleName" type="text" class="form-control form-control-sm">
+                                    <span asp-validation-for="TitleName" class="text-danger col-form-label-sm"></span>
                                 </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-3 col-form-label col-form-label-sm text-sm-right">รายละเอียด</label>
-                                    <div class="col-sm-9">
-                                        <textarea asp-for="Description" rows="3" class="form-control form-control-sm"></textarea>
-                                        <span asp-validation-for="Description" class="text-danger col-form-label-sm"></span>
-                                    </div>
+                                <div class="form-group">
+                                    <label class="col-form-label col-form-label-sm text-sm-right">รายละเอียด :</label>
+                                    <textarea asp-for="Description" rows="3" class="form-control form-control-sm"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger col-form-label-sm"></span>
                                 </div>
                             </div>
                         </div>
                     </form>
+                </section>
+
+                <!-- Footer -->
+                <section>
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="#" class="btn btn-sm btn-blue mr-3" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
+                        <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
+                    </div>
                 </section>
 
             </div>

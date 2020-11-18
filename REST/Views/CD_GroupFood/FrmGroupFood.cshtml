@@ -15,17 +15,11 @@
                         <div class="mr-auto">
                             <a href="@Url.Action("FrmGroupFood", "CD_GroupFood", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
-                        <div class="ml-2">
-                            <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
-                        </div>
-                        <div class="ml-2">
-                            <a href="#" class="btn btn-sm btn-blue" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
-                        </div>
                     </div>
                     <hr />
                 </section>
                 <!-- Form -->
-                <section scroll>
+                <section>
                     <form name="FrmGroupFood" method="post">
                         <div class="row">
                             <div class="col-lg-8 col-md-12 col-12 mx-auto">
@@ -36,7 +30,7 @@
                                         <div class="form-group">
                                             <label class="col-form-label col-form-label-sm">รหัส :</label>
                                             @if (ViewData["Readonly"].ToString() != "")
-                                            {                                                
+                                            {
                                                 <input type="text" class="form-control form-control-sm" asp-for="GroupFoodId" readonly>
                                             }
                                             else
@@ -76,6 +70,13 @@
                             </div>
                         </div>
                     </form>
+                </section>
+                <!-- Footer -->
+                <section>
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="#" class="btn btn-sm btn-blue mr-3" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
+                        <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
+                    </div>
                 </section>
             </div>
         </div>

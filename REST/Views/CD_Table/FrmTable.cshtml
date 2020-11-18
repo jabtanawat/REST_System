@@ -15,20 +15,14 @@
                         <div class="mr-auto">
                             <a href="@Url.Action("FrmTable", "CD_Table", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
-                        <div class="ml-2">
-                            <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
-                        </div>
-                        <div class="ml-2">
-                            <a href="#" class="btn btn-sm btn-blue" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
-                        </div>
                     </div>
                     <hr />
                 </section>
                 <!-- Form -->
-                <section class="FrmPanel" scroll>
+                <section class="FrmPanel">
                     <form name="FrmTable" method="post">
                         <div class="row">
-                            <div class="col-lg-5 col-md-12 col-12  mx-auto">                              
+                            <div class="col-lg-5 col-md-12 col-12  mx-auto">
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">โซนที่นั่ง :</label>
                                     @if (ViewData["Readonly"].ToString() != "")
@@ -44,7 +38,7 @@
                                                 <option value="@row.ZoneId">@row.ZoneName</option>
                                             }
                                         </select>
-                                    }                                    
+                                    }
                                     <span asp-validation-for="ZoneId" class="text-danger col-form-label-sm"></span>
                                 </div>
                                 <div class="form-group">
@@ -85,6 +79,13 @@
                             </div>
                         </div>
                     </form>
+                </section>
+                <!-- Footer -->
+                <section>
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="#" class="btn btn-sm btn-blue mr-3" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
+                        <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
+                    </div>
                 </section>
             </div>
         </div>

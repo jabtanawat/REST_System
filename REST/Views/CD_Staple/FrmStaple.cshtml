@@ -1,7 +1,7 @@
-﻿@model CD_Dish;
+﻿@model CD_Staple
 @{
     ViewData["Title"] = "Store Back";
-    ViewData["System"] = "เครื่องเคียง";
+    ViewData["System"] = "วัตถุดิบ";
     Layout = "_StoreBack";
 }
 
@@ -13,37 +13,50 @@
                 <section class="FrmHeader">
                     <div class="d-flex mb-2">
                         <div class="mr-auto">
-                            <a href="@Url.Action("FrmDish", "CD_Dish", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmStaple", "CD_Staple", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
                     </div>
                     <hr />
                 </section>
                 <!-- Form -->
-                <section class="FrmPanel" scroll>
-                    <form name="FrmDish" method="post">
+                <section class="FrmPanel">
+                    <form name="FrmStaple" method="post">
                         <div class="row">
-                            <div class="col-lg-5 col-md-12 col-12  mx-auto">
+                            <div class="col-xl-5 col-lg-6 col-md-8 col-12  mx-auto">
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">รหัส :</label>
                                     @if (ViewData["Readonly"].ToString() != "")
                                     {
-                                        <input type="text" class="form-control form-control-sm" asp-for="DishId" readonly>
+                                        <input type="text" class="form-control form-control-sm" asp-for="StapleId" readonly>
                                     }
                                     else
                                     {
-                                        <input type="text" class="form-control form-control-sm" asp-for="DishId">
+                                        <input type="text" class="form-control form-control-sm" asp-for="StapleId">
                                     }
-                                    <span asp-validation-for="DishId" class="text-danger col-form-label-sm"></span>
+                                    <span asp-validation-for="StapleId" class="text-danger col-form-label-sm"></span>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">ชื่อ :</label>
-                                    <input type="text" class="form-control form-control-sm" asp-for="DishName">
-                                    <span asp-validation-for="DishName" class="text-danger col-form-label-sm"></span>
+                                    <input type="text" class="form-control form-control-sm" asp-for="StapleName">
+                                    <span asp-validation-for="StapleName" class="text-danger col-form-label-sm"></span>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-form-label col-form-label-sm">รายละเอียด :</label>
-                                    <textarea class="form-control form-control-sm" asp-for="Description" rows="3"></textarea>
-                                    <span asp-validation-for="Description" class="text-danger col-form-label-sm"></span>
+                                <div class="form-group row">
+                                    <div class="col-md-7 mb-3">
+                                        <label class="col-form-label col-form-label-sm">จำนวน :</label>
+                                        <input asp-for="Amount" type="number" class="form-control form-control-sm text-right" placeholder="0.00">
+                                        <span asp-validation-for="Amount" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="col-form-label col-form-label-sm">หน่วยนับ :</label>
+                                        <select asp-for="UnitId" class="form-control form-control-sm">
+                                            <option value="" selected>-- กรุณาเลือก --</option>
+                                            @foreach (var row in ViewBag.SL_Unit)
+                                            {
+                                                <option value="@row.UnitId">@row.UnitName</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="UnitId" class="text-danger col-form-label-sm"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -64,13 +77,7 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $(".item_click_Dish").addClass("active");
-
-            $('[scroll]').slimScroll({
-                height: $(window).height() - $('.FrmHeader').height() - 150,
-                railBorderRadius: 0,
-                railVisible: true
-            });
+            $(".item_click_Staple").addClass("active");
         });
 
         document.querySelector("[btn-save]").addEventListener('click', () => {
@@ -84,8 +91,8 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    document.FrmDish.action = '@Url.Action("FrmDish")'
-                    document.FrmDish.submit();
+                    document.FrmStaple.action = '@Url.Action("FrmStaple")'
+                    document.FrmStaple.submit();
                 }
             })
         })
@@ -101,8 +108,8 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    document.FrmDish.action = '@Url.Action("Delete")'
-                    document.FrmDish.submit();
+                    document.FrmStaple.action = '@Url.Action("Delete")'
+                    document.FrmStaple.submit();
                 }
             })
         })

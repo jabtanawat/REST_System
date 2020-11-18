@@ -5,6 +5,32 @@
     Layout = "_StoreBack";
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" />
+    <style>
+        .head-area {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .image-preview {
+            width: 150px;
+            min-height: 150px;
+            border: 1px solid #E3EBF6;
+            border-radius: 1rem;
+        }
+
+        .preview__image {
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+        }
+    </style>
+}
+
 <div class="card">
     <div class="card-body">
         <div class="row">
@@ -15,26 +41,117 @@
                         <div class="mr-auto">
                             <a href="@Url.Action("FrmFood", "CD_Food", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
-                        <div class="ml-2">
-                            <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
-                        </div>
-                        <div class="ml-2">
-                            <a href="#" class="btn btn-sm btn-blue" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
-                        </div>
                     </div>
                     <hr />
                 </section>
                 <!-- Form -->
-                <section class="FrmPanel" scroll>
+                <section class="FrmPanel">
                     <form name="FrmFood" method="post">
+                        <div class="head-area">
+                            <div class="panel-area">
+                                <div class="image-preview">
+                                    <img src="~/Images/System/NOIMAGE.jpg" alt="" class="preview__image" />
+                                </div>
+                                <input type="file" class="form-control-file mt-4" id="inputFile" hidden>
+                                <button type="button" class="btn btn-sm btn-block btn-light rounded-pill mt-2" id="btn-file"><i class="far fa-images"></i>&nbsp;CHOOSE A FILE</button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label col-form-label-sm">กลุ่มอาหาร :</label>
+                                    <select asp-for="GroupFoodId" class="form-control form-control-sm" onchange="CheckRunning(this.value);">
+                                        <option value="" selected>-- กรุณาเลือกกลุ่มอาหาร --</option>
+                                        @foreach (var row in ViewBag.GroupFood)
+                                        {
+                                            <option value="@row.GroupFoodId">@row.GroupFoodName</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="GroupFoodId" class="text-danger col-form-label-sm"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label col-form-label-sm">รหัส :</label>
+                                    <input asp-for="FoodId" type="text" id="FoodId" class="form-control form-control-sm" />
+                                    <span asp-validation-for="FoodId" class="text-danger col-form-label-sm"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label col-form-label-sm">ชื่อ :</label>
+                                    <input asp-for="FoodName" type="text" class="form-control form-control-sm" />
+                                    <span asp-validation-for="FoodName" class="text-danger col-form-label-sm"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label col-form-label-sm">เครื่องเคียง :</label>
+                                    <select asp-for="DishId" class="form-control form-control-sm">
+                                        <option value="" selected>-- กรุณาเลือกเครื่องเคียง --</option>
+                                        @foreach (var row in ViewBag.Dish)
+                                        {
+                                            <option value="@row.DishId">@row.DishName</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="GroupFoodId" class="text-danger col-form-label-sm"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label col-form-label-sm">ราคา :</label>
+                                    <input asp-for="Price" type="text" class="form-control form-control-sm text-right" placeholder="0.00" id="txtPrice" />
+                                    <span asp-validation-for="Price" class="text-danger col-form-label-sm"></span>
+                                </div>
+                            </div>
+                        </div>
                     </form>
+
+
+
+                    <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;วัตถุดิบ</p>
+                    <table class="table table-md table-bordered" id="tableStaple">
+                        <caption><a href="#" class="text-primary" data-toggle="ajax-modal" data-target="#popupStaple" data-url="@Url.Action("_popupStaple", "Modal")">เพิ่มรายการ</a></caption>
+                        <thead class="thead-black">
+                            <tr>
+                                <th class="text-center" style="width:5%"><i class="fas fa-sort"></i></th>
+                                <th class="text-center">ชื่อ</th>
+                                <th class="text-center" style="width:20%">จำนวน</th>
+                                <th class="text-center" style="width:20%">หน่วยนับ</th>
+                                <th class="text-center" style="width:5%"><i class="fas fa-info"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyt">
+                            <tr id="NoResults">
+                                <td class="text-center text-danger" colspan="5">ไม่มีรายการ</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </section>
+
+
+                <!-- Footer -->
+                <section>
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="#" class="btn btn-sm btn-blue mr-3" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
+                        <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
+                    </div>
+                </section>
+
+
+
+
             </div>
         </div>
     </div>
 </div>
 
+<div id="PlaceHolderHere"></div>
+
 @section Scripts {
+    <script src="~/Plugins/DataTables/datatables.min.js"></script>
+    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script>
         $(document).ready(function () {
             $(".item_click_Food").addClass("active");
@@ -45,6 +162,89 @@
                 railVisible: true
             });
         });
+
+        document.getElementById('btn-file').addEventListener('click', () => {
+            const input_file = document.getElementById('inputFile')
+            input_file.click()
+        })
+
+        document.getElementById('inputFile').addEventListener('change', function () {
+            const previewImage = document.querySelector('.preview__image')
+            const file = this.files[0];
+
+            if (file) {
+
+                const reader = new FileReader();
+
+                reader.addEventListener('load', function () {
+                    previewImage.setAttribute('src', this.result)
+                });
+
+                reader.readAsDataURL(file);
+            } else {
+                previewImage.setAttribute('src', '/Images/System/NOIMAGE.jpg')
+            }
+        });
+
+        function CheckRunning(id) {
+            $.get("@Url.Action("GetRunning", "api")" + "/ARunning", { id: id },
+                function (data, status) {
+                    if (data != null) {
+                        $('#FoodId').val(data);
+                        $('#FoodId').prop('readonly', true);
+                    } else {
+                        $('#FoodId').val(data);
+                        $('#FoodId').prop('readonly', false);
+                    }
+                }
+            )
+        }
+
+        // Modal
+        var PlaceHolderElement = $('#PlaceHolderHere')
+        $('a[data-toggle="ajax-modal"]').click(function (event) {
+            var url = $(this).data('url')
+            $.get(url).done(function (data) {
+                PlaceHolderElement.html(data)
+                PlaceHolderElement.find('.modal').modal('show')
+            })
+        })
+
+        function show(id) {
+
+            $('#NoResults').remove();
+
+            $.get("@Url.Action("GetCD_Staple", "api")" + "/AShowStaple" , { id: id },
+                function (data, status) {
+
+                    // เช็คข้อมูลในตาราง
+                    var table = document.getElementById('tableStaple')
+                    for (let i = 0; i < table.rows.length; i++) {
+                        var id = (table.rows[i].cells[0].innerHTML)
+                        if (data.stapleId == id) {
+                            Swal.fire({
+                                text: "วัตถุดิบนี้มีอยู่แล้ว",
+                                icon: 'warning'
+                            })
+                            return;
+                        }
+                    }
+
+                    var countRow = $('#tableStaple tr').length;
+                    var rowItem = `<tr>`
+                        + `<td hidden>${data.stapleId}</td>`
+                        + `<td class="text-center">${countRow}</td>`
+                        + `<td>${data.stapleName}</td>`
+                        + `<td class="text-right">0.00</td>`
+                        + `<td class="text-center">${data.unitName}</td>`
+                        + `<td class="text-center"><a href="#" class="text-danger">ลบ</a></td>`
+                        + `</tr>`;
+                    $(rowItem).appendTo($("#bodyt"));
+                }
+            )
+
+            $('#popupStaple').modal('hide')
+        }
 
         document.querySelector("[btn-save]").addEventListener('click', () => {
              Swal.fire({

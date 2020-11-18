@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Store Back";
-    ViewData["System"] = "โซนที่นั่ง";
+    ViewData["System"] = "วัตถุดิบ";
     Layout = "_StoreBack";
 }
 
@@ -16,35 +16,39 @@
                 <section>
                     <div class="d-flex mb-2">
                         <div class="ml-2 mr-2">
-                            <a href="@Url.Action("FrmZone", "CD_Zone", new { mode = "Add"})" class="btn btn-sm btn-success"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmStaple", "CD_Staple", new { mode = "Add"})" class="btn btn-sm btn-success"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
                     </div>
                     <hr />
                 </section>
                 <!-- Table -->
-                <section class="Frm-Table">
+                <section>
                     <table id="DT_Table" class="table table-md table-hover table-bordered">
                         <thead class="thead-black">
                             <tr>
                                 <th class="text-center" style="width:20%;"> รหัส </th>
                                 <th class="text-center"> ชื่อ </th>
+                                <th class="text-center" style="width:15%;"> จำนวน </th>
+                                <th class="text-center" style="width:15%;"> หน่วยนับ </th>
                                 <th class="text-center" style="width:5%;"> <i class="fas fa-info"></i> </th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var row in ViewBag.DT_Zone)
+                            @foreach (var row in ViewBag.DT_Staple)
                             {
                                 <tr>
-                                    <td>@row.ZoneId</td>
-                                    <td>@row.ZoneName</td>
-                                    <td class="text-center"><a href="@Url.Action("FrmZone", "CD_Zone", new { mode = "Edit", id = row.ZoneId})" class="text-info"><i class="fas fa-edit"></i></a></td>
+                                    <td>@row.StapleId</td>
+                                    <td>@row.StapleName</td>
+                                    <td class="text-right">@row.Amount</td>
+                                    <td class="text-center">@row.UnitName</td>
+                                    <td class="text-center"><a href="@Url.Action("FrmStaple", "CD_Staple", new { mode = "Edit", id = row.StapleId})" class="text-info"><i class="fas fa-edit"></i></a></td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </section>
             </div>
-        </div>        
+        </div>
     </div>
 </div>
 
@@ -52,38 +56,13 @@
     <script src="~/Plugins/DataTables/datatables.min.js"></script>
     <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script>
-
         $(document).ready(function () {
-
-            $(".item_click_Zone").addClass("active");
+            $(".item_click_Staple").addClass("active");
 
             $('#DT_Table').DataTable({
                 "info": false,
                 "ordering": false
             });
-
-            $('[scroll]').slimScroll({
-                height: $(window).height() - 95,
-                railBorderRadius: 0,
-                railVisible: true
-            });
         });
-
-        @*function Delete(id) {
-            Swal.fire({
-                text: 'ต้องการลบข้อมูล ' + id + ' หรือไม่ ?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No'
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href = '@Url.Action("Delete", "Zone")/' + id
-                }
-            })
-        }*@
-
     </script>
 }
