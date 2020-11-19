@@ -3,6 +3,7 @@
     ViewData["Title"] = "Store Back";
     ViewData["System"] = "อาหาร";
     Layout = "_StoreBack";
+    var Image = Model.ImageName ?? "NOIMAGE.jpg";
 }
 
 @section Styles {
@@ -46,14 +47,15 @@
                 </section>
                 <!-- Form -->
                 <section class="FrmPanel">
-                    <form name="FrmFood" method="post">
+                    <form name="FrmFood" method="post" id="FrmFood" enctype="multipart/form-data">
+                        <!-- image -->
                         <div class="head-area">
                             <div class="panel-area">
                                 <div class="image-preview">
-                                    <img src="~/Images/System/NOIMAGE.jpg" alt="" class="preview__image" />
+                                    <img src="~/Images/Food/@Image" alt="" class="preview__image" />
                                 </div>
-                                <input type="file" class="form-control-file mt-4" id="inputFile" hidden>
-                                <button type="button" class="btn btn-sm btn-block btn-light rounded-pill mt-2" id="btn-file"><i class="far fa-images"></i>&nbsp;CHOOSE A FILE</button>
+                                <input asp-for="ImageFile" type="file" class="form-control-file mt-4" id="inputFile" hidden>
+                                <button type="button" class="btn btn-sm btn-block btn-info rounded-pill mt-3" id="btn-file"><i class="far fa-images"></i>&nbsp;CHOOSE A FILE</button>
                             </div>
                         </div>
 
@@ -61,34 +63,52 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">กลุ่มอาหาร :</label>
-                                    <select asp-for="GroupFoodId" class="form-control form-control-sm" onchange="CheckRunning(this.value);">
-                                        <option value="" selected>-- กรุณาเลือกกลุ่มอาหาร --</option>
-                                        @foreach (var row in ViewBag.GroupFood)
-                                        {
-                                            <option value="@row.GroupFoodId">@row.GroupFoodName</option>
-                                        }
-                                    </select>
-                                    <span asp-validation-for="GroupFoodId" class="text-danger col-form-label-sm"></span>
+                                    @if (ViewData["Readonly"].ToString() != "")
+                                    {
+                                        <select asp-for="GroupFoodId" class="form-control form-control-sm" id="txtGroupFoodId" onchange="CheckRunning(this.value);" disabled>
+                                            <option value="" selected>-- กรุณาเลือกกลุ่มอาหาร --</option>
+                                            @foreach (var row in ViewBag.GroupFood)
+                                            {
+                                                <option value="@row.GroupFoodId">@row.GroupFoodName</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select asp-for="GroupFoodId" class="form-control form-control-sm" id="txtGroupFoodId" onchange="CheckRunning(this.value);">
+                                            <option value="" selected>-- กรุณาเลือกกลุ่มอาหาร --</option>
+                                            @foreach (var row in ViewBag.GroupFood)
+                                            {
+                                                <option value="@row.GroupFoodId">@row.GroupFoodName</option>
+                                            }
+                                        </select>
+                                    }
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-6">
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">รหัส :</label>
-                                    <input asp-for="FoodId" type="text" id="FoodId" class="form-control form-control-sm" />
-                                    <span asp-validation-for="FoodId" class="text-danger col-form-label-sm"></span>
+                                    @if (ViewData["Readonly"].ToString() != "")
+                                    {
+                                        <input asp-for="FoodId" type="text" id="txtFoodId" class="form-control form-control-sm" readonly />
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="FoodId" type="text" id="txtFoodId" class="form-control form-control-sm" />
+                                    }
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-6">
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">ชื่อ :</label>
-                                    <input asp-for="FoodName" type="text" class="form-control form-control-sm" />
+                                    <input asp-for="FoodName" type="text" id="txtFoodName" class="form-control form-control-sm" />
                                     <span asp-validation-for="FoodName" class="text-danger col-form-label-sm"></span>
                                 </div>
                             </div>
                             <div class="col-md-4 col-sm-6">
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">เครื่องเคียง :</label>
-                                    <select asp-for="DishId" class="form-control form-control-sm">
+                                    <select asp-for="DishId" id="txtDishId" class="form-control form-control-sm">
                                         <option value="" selected>-- กรุณาเลือกเครื่องเคียง --</option>
                                         @foreach (var row in ViewBag.Dish)
                                         {
@@ -101,15 +121,14 @@
                             <div class="col-md-4 col-sm-6">
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">ราคา :</label>
-                                    <input asp-for="Price" type="text" class="form-control form-control-sm text-right" placeholder="0.00" id="txtPrice" />
+                                    <input asp-for="Price" type="text" id="txtPrice" class="form-control form-control-sm text-right numberonly" placeholder="0.00" />
                                     <span asp-validation-for="Price" class="text-danger col-form-label-sm"></span>
                                 </div>
                             </div>
                         </div>
                     </form>
 
-
-
+                    <!-- Table Staple -->
                     <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;วัตถุดิบ</p>
                     <table class="table table-md table-bordered" id="tableStaple">
                         <caption><a href="#" class="text-primary" data-toggle="ajax-modal" data-target="#popupStaple" data-url="@Url.Action("_popupStaple", "Modal")">เพิ่มรายการ</a></caption>
@@ -123,13 +142,35 @@
                             </tr>
                         </thead>
                         <tbody id="bodyt">
-                            <tr id="NoResults">
-                                <td class="text-center text-danger" colspan="5">ไม่มีรายการ</td>
-                            </tr>
+                            @{
+                                if (Model.FoodSub != null && Model.FoodSub.Count() > 0)
+                                {
+                                    var x = 0;
+                                    foreach (var row in Model.FoodSub)
+                                    {
+                                        x++;
+                                        <tr>
+                                            <td hidden>@row.StapleId</td>
+                                            <td class="text-center">@x</td>
+                                            <td>@row.StapleName</td>
+                                            <td>
+                                                <input type="text" class="form-table-control form-table-control-sm text-right numberonly" value="@row.Amount" >
+                                            </td>
+                                            <td class="text-center">@row.UnitName</td>
+                                            <td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr id="NoResults">
+                                        <td class="text-center text-danger" colspan="5">ไม่มีรายการ</td>
+                                    </tr>
+                                }
+                            }
                         </tbody>
                     </table>
                 </section>
-
 
                 <!-- Footer -->
                 <section>
@@ -138,9 +179,6 @@
                         <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
                     </div>
                 </section>
-
-
-
 
             </div>
         </div>
@@ -152,6 +190,7 @@
 @section Scripts {
     <script src="~/Plugins/DataTables/datatables.min.js"></script>
     <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Plugins/Numeral/numeral.js"></script>
     <script>
         $(document).ready(function () {
             $(".item_click_Food").addClass("active");
@@ -190,11 +229,11 @@
             $.get("@Url.Action("GetRunning", "api")" + "/ARunning", { id: id },
                 function (data, status) {
                     if (data != null) {
-                        $('#FoodId').val(data);
-                        $('#FoodId').prop('readonly', true);
+                        $('#txtFoodId').val(data);
+                        $('#txtFoodId').prop('readonly', true);
                     } else {
-                        $('#FoodId').val(data);
-                        $('#FoodId').prop('readonly', false);
+                        $('#txtFoodId').val(data);
+                        $('#txtFoodId').prop('readonly', false);
                     }
                 }
             )
@@ -222,10 +261,7 @@
                     for (let i = 0; i < table.rows.length; i++) {
                         var id = (table.rows[i].cells[0].innerHTML)
                         if (data.stapleId == id) {
-                            Swal.fire({
-                                text: "วัตถุดิบนี้มีอยู่แล้ว",
-                                icon: 'warning'
-                            })
+                            Swal.fire({ text: "วัตถุดิบนี้มีอยู่แล้ว", icon: 'warning' })
                             return;
                         }
                     }
@@ -235,9 +271,11 @@
                         + `<td hidden>${data.stapleId}</td>`
                         + `<td class="text-center">${countRow}</td>`
                         + `<td>${data.stapleName}</td>`
-                        + `<td class="text-right">0.00</td>`
+                        + `<td>`
+                        + `<input type="text" class="form-table-control form-table-control-sm text-right numberonly" value="0.00" >`
+                        + `</td>`
                         + `<td class="text-center">${data.unitName}</td>`
-                        + `<td class="text-center"><a href="#" class="text-danger">ลบ</a></td>`
+                        + `<td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>`
                         + `</tr>`;
                     $(rowItem).appendTo($("#bodyt"));
                 }
@@ -245,6 +283,32 @@
 
             $('#popupStaple').modal('hide')
         }
+
+        $('body').on('click', '#remove', function () {
+            $(this).parents('tr').remove();
+            var table = document.getElementById('bodyt')
+            if (table.rows.length == 0) {
+                var t = '<tr id="NoResults">'
+                    + '<td class="text-center text-danger" colspan="5">ไม่มีรายการ</td>'
+                    + '</tr>';
+                $('#bodyt').append(t)
+            }
+        })
+
+        $(document).on('keypress ', '.numberonly', function () {
+            const e = event.keyCode
+            if (e >= 48 && e <= 57 || e === 8 || e === 13 || e === 46) {
+                event.returnValue = true
+            } else {
+                Swal.fire({ text: "สามารถกดได้แค่ตัวเลข", icon: 'warning' })
+                event.returnValue = false
+            }
+        })
+
+        $(document).on('blur ', '.numberonly', function () {
+            const number = $(this).val()
+            $(this).val(numeral(number).format('0,0.00'))
+        })
 
         document.querySelector("[btn-save]").addEventListener('click', () => {
              Swal.fire({
@@ -257,8 +321,70 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    document.FrmFood.action = '@Url.Action("FrmFood")'
-                    document.FrmFood.submit();
+
+                    if ($('#txtGroupFoodId').val() == '') {
+                        Swal.fire({ text: "กรุณากรอกข้อมูล กลุ่มอาหาร", icon: 'warning' })
+                        return;
+                    }
+
+                    if ($('#txtFoodId').val() == '') {
+                        Swal.fire({ text: "กรุณากรอกข้อมูล รหัส", icon: 'warning' })
+                        return;
+                    }
+
+                    if ($('#txtFoodName').val() == '') {
+                        Swal.fire({ text: "กรุณากรอกข้อมูล ชื่อ", icon: 'warning' })
+                        return;
+                    }
+
+                    if ($('#txtPrice').val() == '' || $('#txtPrice').val() == 0) {
+                        Swal.fire({ text: "กรุณากรอกข้อมูล ราคา", icon: 'warning' })
+                        return;
+                    }
+
+                    var tdata = [];
+
+                    // ตาราง
+                    var t = document.getElementById('bodyt')
+                    if (t.rows[0].cells[0].innerHTML != "ไม่มีรายการ") {
+                        if (t.rows.length > 0) {
+                            for (let i = 0; i < t.rows.length; i++) {
+                                var row = 0;
+                                var id = t.rows[i].cells[0].innerHTML
+                                var amount = t.rows[i].cells[3].getElementsByTagName("input")[0].value
+
+                                var obj = { StapleId: id, Amount: amount }
+                                tdata.push(obj)
+                            }
+                        }
+                    }
+
+                    var data = new FormData();
+                    var myfile = document.getElementById('inputFile').files[0];
+                    data.append('ImageFile', myfile);
+                    data.append('GroupFoodId', $('#txtGroupFoodId').val());
+                    data.append('FoodId', $('#txtFoodId').val());
+                    data.append('FoodName', $('#txtFoodName').val());
+                    data.append('DishId', $('#txtDishId').val());
+                    data.append('Price', $('#txtPrice').val());
+                    data.append('Sub', JSON.stringify(tdata));
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("FrmSave", "CD_Food")',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (data) {
+                            $.each(data, function (index, val) {
+                                if (val == "success") {
+                                    window.location.href = '@Url.Action("Index", "CD_Food")'
+                                } else {
+                                    Swal.fire({ text: "ไม่สามารถบันทึกข้อมูลได้", icon: 'warning'} )
+                                }
+                            })
+                        }
+                    });
                 }
             })
         })

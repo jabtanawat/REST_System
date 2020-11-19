@@ -68,7 +68,7 @@
             </div>
         </div>
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card h-100">
+            <div class="card h-100" id="Manage">
                 <div class="text-center">
                     <i class="fas fa-chart-pie icon-home"></i>
                 </div>
@@ -83,25 +83,29 @@
 @section Scripts {
     <script>
 
-    $('#StoreBack').on('click', function () {
-        window.location.href = '@Url.Action("Index", "StoreBack")'
-    });
+        $('#StoreBack').on('click', function () {
+            window.location.href = '@Url.Action("Index", "StoreBack")'
+        });
 
-    $('#StoreFront').on('click', function () {
-        window.location.href = '@Url.Action("Index", "StoreFront")'
-    });
+        $('#StoreFront').on('click', function () {
+            window.location.href = '@Url.Action("Index", "StoreFront")'
+        });
 
-    $('#Kitchen').on('click', function () {
-        window.location.href = '@Url.Action("Index", "Kitchen")'
-    });
+        $('#Kitchen').on('click', function () {
+            window.location.href = '@Url.Action("Index", "Kitchen")'
+        });
 
-    $('#Stock').on('click', function () {
-        window.location.href = '@Url.Action("Index", "Stock")'
-    });
+        $('#Stock').on('click', function () {
+            window.location.href = '@Url.Action("Index", "Stock")'
+        });
 
-    $('#Member').on('click', function () {
-        window.location.href = '@Url.Action("Index", "Member")'
-    });
+        $('#Member').on('click', function () {
+            window.location.href = '@Url.Action("Index", "Member")'
+        });
+
+        $('#Manage').on('click', function () {
+            window.location.href = '@Url.Action("Index", "Manage")'
+        });
 
     </script>
 }

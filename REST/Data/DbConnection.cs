@@ -15,7 +15,6 @@ namespace REST.Data
         }
 
         // ***Common CD
-        public DbSet<CD_Branch> CD_Branch { get; set; }
         public DbSet<CD_Dish> CD_Dish { get; set; }
         public DbSet<CD_Food> CD_Food { get; set; }
         public DbSet<CD_FoodSub> CD_FoodSub { get; set; }
@@ -42,11 +41,13 @@ namespace REST.Data
         // ***Member MB
         public DbSet<MB_Member> MB_Member { get; set; }
 
+        // ***Manage MG
+        public DbSet<MG_Branch> MG_Branch { get; set; }
+
         // ***Setting pramary key
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // ***ทะเบียน CD
-            modelBuilder.Entity<CD_Branch>().HasKey(x => new { x.BranchId });
             modelBuilder.Entity<CD_Dish>().HasKey(x => new { x.DishId, x.BranchId });
             modelBuilder.Entity<CD_Food>().HasKey(x => new { x.FoodId, x.BranchId });
             modelBuilder.Entity<CD_FoodSub>().HasKey(x => new { x.FoodId, x.StapleId, x.BranchId });
@@ -72,6 +73,9 @@ namespace REST.Data
 
             // ***Member MB
             modelBuilder.Entity<MB_Member>().HasKey(x => new { x.MemberId, x.BranchId });
+
+            // ***บริหาร MG
+            modelBuilder.Entity<MG_Branch>().HasKey(x => new { x.BranchId });
         }
     }
 }

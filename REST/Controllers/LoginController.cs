@@ -70,7 +70,7 @@ namespace REST.Controllers
                 }
 
                 var Login = _db.CD_UserLogin.FirstOrDefault(x => x.UserName == Results.UserName && x.PassWord == Results.PassWord);
-                var Branch = _db.CD_Branch.FirstOrDefault(x => x.BranchId == Login.BranchId);
+                var Branch = _db.MG_Branch.FirstOrDefault(x => x.BranchId == Login.BranchId);
 
                 var claims = new List<Claim>
                     {

@@ -27,7 +27,13 @@
                                     <label class="col-form-label col-form-label-sm">โซนที่นั่ง :</label>
                                     @if (ViewData["Readonly"].ToString() != "")
                                     {
-                                        <input type="text" class="form-control form-control-sm" asp-for="ZoneId" readonly>
+                                        <select asp-for="ZoneId" class="form-control form-control-sm" onchange="CheckZone(this.value);" disabled>
+                                            <option value="" selected>-- กรุณาเลือกโซนที่นั่ง --</option>
+                                            @foreach (var row in ViewBag.SL_Zone)
+                                            {
+                                                <option value="@row.ZoneId">@row.ZoneName</option>
+                                            }
+                                        </select>
                                     }
                                     else
                                     {

@@ -15,7 +15,7 @@ namespace REST.ViewModels
         [Required]
         public string FoodName { get; set; }
         [Required]
-        public decimal Price { get; set; }
+        public string Price { get; set; }
         public string GroupFoodId { get; set; }
         public string GroupFoodName { get; set; }
         public string DishId { get; set; }
@@ -23,5 +23,9 @@ namespace REST.ViewModels
         public string ImageName { get; set; }
         [NotMapped]
         public IFormFile ImageFile { get; set; }
+        public string Sub { get; set; }
+
+        public List<ViewFoodSub> FoodSub { get; set; }
+
     }
 }
