@@ -31,7 +31,7 @@ namespace REST.Controllers
         public IActionResult Index()
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
-            ViewBag.DT_GroupFood = _db.CD_GroupFood.Where(x => x.BranchId == branchid).ToList();
+            ViewBag.DT_GroupFood = _db.CD_GroupFood.ToList();
             return View();
         }
 
@@ -124,7 +124,16 @@ namespace REST.Controllers
                             item.GroupFoodName = info.GroupFoodName;
                             item.Description = info.Description;
                             /* DATA */
-                            item.BranchId = branchid;
+                            if (info.Bch == 1)
+                            {
+                                item.Bch = info.Bch;
+                                item.BranchId = branchid;
+                            }                                
+                            else
+                            {
+                                item.Bch = info.Bch;
+                                item.BranchId = info.BranchId;
+                            }                                
                             item.CreateUser = User.Identity.Name;
                             item.CreateDate = Share.FormatDate(DateTime.Now).Date;
                             item.UpdateUser = User.Identity.Name;
@@ -142,7 +151,10 @@ namespace REST.Controllers
                         item.GroupFoodName = info.GroupFoodName;
                         item.Description = info.Description;
                         /* DATA */
-                        item.BranchId = branchid;
+                        if (info.Bch == 1)
+                            item.BranchId = branchid;
+                        else
+                            item.BranchId = info.BranchId;
                         item.UpdateUser = User.Identity.Name;
                         item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
@@ -220,12 +232,14 @@ namespace REST.Controllers
                 ViewData["Disible-delete"] = "disabled";
                 ViewData["Disible-save"] = "";
                 ViewData["Readonly"] = "";
+                ViewBag.Branch = _db.MG_Branch.ToList();
             }
             else
             {
                 ViewData["Disible-delete"] = "";
                 ViewData["Disible-save"] = "disabled";
                 ViewData["Readonly"] = "readonly";
+                ViewBag.Branch = _db.MG_Branch.ToList();
             }
         }
 

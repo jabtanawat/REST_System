@@ -149,6 +149,7 @@
 .wrapper .sidemenu .sidebar .navbar-nav .nav-item .nav-link .nav_text {
     padding-left: 0.5rem;
     font-size: 14px;
+    font-weight: 600;
     letter-spacing: 0.8px;
     color: #E3EBF6;
 }
@@ -162,6 +163,11 @@
     font-size: 13px;
     transition: transform 0.4s;
     color: #E3EBF6;
+}
+
+/* LINK LIST */
+.wrapper .sidemenu .sidebar .navbar-nav .link-list {
+    padding-top: 0;
 }
 
 /* TEXT MENU LIST */
@@ -235,10 +241,9 @@
 /* ICON MENU */
 .wrapper.active .sidemenu .sidebar .navbar-nav .nav-item .nav-link .nav_icon {
     margin-right: 4px;
-    font-size: 20px;
     vertical-align: middle;
-    height: 25px;
-    width: 25px;
+    height: 20px;
+    width: 20px;
     display: inline-flex;
     justify-content: center;
     align-items: center;

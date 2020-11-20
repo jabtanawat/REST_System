@@ -7,13 +7,14 @@
 //});
 
 $(function () {
-    $('.sidebar').slimScroll({
-        height: document.documentElement.clientHeight
+    $('.sidbar-menu').slimScroll({
+        height: $(window).height() - $('.nav_header').height(),
+        distance: '-10px'
     });
 
     $(window).resize(function () {
-        $('.sidebar').slimScroll({
-            height: document.documentElement.clientHeight - $('.navbar').outerHeight()
+        $('.sidbar-menu').slimScroll({
+            height: $(window).height() - $('.nav_header').height() - $('.navbar').outerHeight()
         });
     });
 });

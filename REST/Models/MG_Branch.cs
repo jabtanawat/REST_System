@@ -10,9 +10,9 @@ namespace REST.Models
     public class MG_Branch
     {
         [Key]
-        [Required]
+        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string BranchId { get; set; }
-        [Required]
+        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string BranchName { get; set; }
         public string CreateUser { get; set; }
         public DateTime CreateDate { get; set; }
