@@ -18,6 +18,7 @@ namespace REST.Models
         public Boolean AutoRun { get; set; }
         public string SetDate { get; set; }
         public Boolean AutoDate { get; set; }
+        public string BchName { get; set; }
         public string BranchId { get; set; }
         public string CreateUser { get; set; }
         public DateTime CreateDate { get; set; }

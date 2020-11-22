@@ -167,7 +167,7 @@
 
 /* LINK LIST */
 .wrapper .sidemenu .sidebar .navbar-nav .link-list {
-    padding-top: 0;
+    padding: 2px 0 2px 0;
 }
 
 /* TEXT MENU LIST */

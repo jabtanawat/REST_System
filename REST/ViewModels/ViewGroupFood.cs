@@ -18,6 +18,6 @@ namespace REST.ViewModels
         public Boolean AutoRun { get; set; }
         // -------------------------------------------------------
         public int Bch { get; set; } // 1 = ใช้ได้ทุกสาขา, 2 = เลือกสาขา
-        public string BranchId { get; set; }
+        public string BchName { get; set; }
     }
 }

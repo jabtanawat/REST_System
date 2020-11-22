@@ -29,7 +29,7 @@ namespace REST.Controllers
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             var _Get = new GetViewController(_db);
-            ViewBag.MB_Profile = _Get.ViewMember(branchid);
+            ViewBag.MB_Profile = _Get.ViewMember(null);
             return View();
         }
 

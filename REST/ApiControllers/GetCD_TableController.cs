@@ -26,10 +26,16 @@ namespace REST.ApiControllers
         public List<ViewTable> Table(string branchid)
         {
             var List = new List<ViewTable>();
+            string sqlWhrer = null;
             var sql = $"SELECT TableId, TableName, Personal, TableST, CASE WHEN TableST = 1 THEN 'ว่าง' WHEN TableST = 2 THEN 'ไม่ว่าง' WHEN TableST= 3 THEN 'จอง' END AS Status, ZoneName "
                     + $"FROM CD_Table "
-                    + $"LEFT JOIN CD_Zone ON CD_Table.ZoneId = CD_Zone.ZoneId "
-                    + $"WHERE CD_Table.BranchId = '{branchid}'";
+                    + $"LEFT JOIN CD_Zone ON CD_Table.ZoneId = CD_Zone.ZoneId ";
+
+            if (branchid != null)
+                sqlWhrer += $"CD_Table.BranchId = '{branchid}' ";
+
+            if (sqlWhrer != null)
+                sql += "WHERE " + sqlWhrer;
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {

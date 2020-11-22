@@ -168,12 +168,19 @@ namespace REST.ApiControllers
             return List;
         }
 
-        public List<ViewMB_Member> ViewMember(string branchId)
+        public List<ViewMB_Member> ViewMember(string branchid)
         {
             var List = new List<ViewMB_Member>();
+            string sqlWhrer = null;
             var sql = $"SELECT MemberId, CASE WHEN Type = 1 THEN 'ทั่วไป' WHEN Type = 2 THEN 'สมาชิก' END AS TypeName, Title + ' ' + FirstName + ' ' + LastName AS Name "
-                    + $"FROM MB_Member "
-                    + $"WHERE BranchId = '{branchId}'";
+                    + $"FROM MB_Member ";
+
+            if (branchid != null)
+                sqlWhrer += $"BranchId = '{branchid}' ";
+
+            if (sqlWhrer != null)
+                sql += "WHERE " + sqlWhrer;
+
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandText = sql;

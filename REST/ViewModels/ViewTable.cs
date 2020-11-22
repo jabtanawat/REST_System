@@ -8,7 +8,6 @@ namespace REST.ViewModels
 {
     public class ViewTable
     {
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string ZoneId { get; set; }
         public string ZoneName { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
@@ -20,5 +19,8 @@ namespace REST.ViewModels
         public string Description { get; set; }
         public int TableST { get; set; }
         public string Status { get; set; }
+        // -------------------------------------------------------
+        public int Bch { get; set; } // 1 = ใช้ได้ทุกสาขา, 2 = เลือกสาขา
+        public string BchName { get; set; }
     }
 }

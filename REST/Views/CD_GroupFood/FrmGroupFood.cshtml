@@ -86,7 +86,8 @@
                                                 </div>
                                             </div>
                                             <div class="col-auto">
-                                                <select asp-for="BranchId" class="form-control form-control-sm" id="txtBranch">
+                                                <select asp-for="BchName" class="form-control form-control-sm" id="txtBchName">
+                                                    <option value="" selected>--เลือกสาขา--</option>
                                                     @{
                                                         foreach (var row in ViewBag.Branch)
                                                         {
@@ -130,7 +131,7 @@
 
         function branchCheck() {
             const R1 = $('#R1').prop("checked")
-            const Branch = $('#txtBranch')
+            const Branch = $('#txtBchName')
             if (R1 == true) {
                 Branch.prop('disabled', true)
             } else {
@@ -149,6 +150,14 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
+
+                    if ($('#R2').prop("checked") == true) {
+                        if ($('#txtBchName').val() == '') {
+                            Swal.fire({ text: "กรุณากรอกข้อมูล สาขา", icon: 'warning' })
+                            return;
+                        }
+                    }
+
                     document.FrmGroupFood.action = '@Url.Action("FrmGroupFood")'
                     document.FrmGroupFood.submit();
                 }

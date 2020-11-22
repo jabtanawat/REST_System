@@ -30,7 +30,6 @@ namespace REST.Controllers
 
         public IActionResult Index()
         {
-            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             ViewBag.DT_GroupFood = _db.CD_GroupFood.ToList();
             return View();
         }
@@ -113,7 +112,7 @@ namespace REST.Controllers
                 {
                     case Comp.FormMode.ADD:
 
-                        var IsNull = _db.CD_GroupFood.Where(x => x.GroupFoodId == info.GroupFoodId && x.BranchId == branchid).ToList();
+                        var IsNull = _db.CD_GroupFood.Where(x => x.GroupFoodId == info.GroupFoodId).ToList();
                         if (IsNull.Count > 0)
                         {
                             Alert("", "รหัสนี้มีอยู่แล้ว !", Enums.NotificationType.warning);
@@ -124,16 +123,9 @@ namespace REST.Controllers
                             item.GroupFoodName = info.GroupFoodName;
                             item.Description = info.Description;
                             /* DATA */
-                            if (info.Bch == 1)
-                            {
-                                item.Bch = info.Bch;
-                                item.BranchId = branchid;
-                            }                                
-                            else
-                            {
-                                item.Bch = info.Bch;
-                                item.BranchId = info.BranchId;
-                            }                                
+                            item.Bch = info.Bch;
+                            item.BchName = info.BchName;
+                            item.BranchId = branchid;
                             item.CreateUser = User.Identity.Name;
                             item.CreateDate = Share.FormatDate(DateTime.Now).Date;
                             item.UpdateUser = User.Identity.Name;
@@ -151,10 +143,8 @@ namespace REST.Controllers
                         item.GroupFoodName = info.GroupFoodName;
                         item.Description = info.Description;
                         /* DATA */
-                        if (info.Bch == 1)
-                            item.BranchId = branchid;
-                        else
-                            item.BranchId = info.BranchId;
+                        item.Bch = info.Bch;
+                        item.BchName = info.BchName;
                         item.UpdateUser = User.Identity.Name;
                         item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
@@ -192,6 +182,7 @@ namespace REST.Controllers
                     item.Number = info.Number;
                     item.AutoRun = info.AutoRun;
                     /* DATA */
+                    item.BchName = info.BchName;
                     item.UpdateUser = User.Identity.Name;
                     item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
@@ -207,6 +198,7 @@ namespace REST.Controllers
                     item.SetDate = null;
                     item.AutoDate = false;
                     /* DATA */
+                    item.BchName = info.BchName;
                     item.BranchId = branchid;
                     item.CreateUser = User.Identity.Name;
                     item.CreateDate = Share.FormatDate(DateTime.Now).Date;
@@ -250,11 +242,15 @@ namespace REST.Controllers
             var CD_GroupFood = _db.CD_GroupFood.FirstOrDefault(x => x.GroupFoodId == id && x.BranchId == branchid);
             item.GroupFoodId = CD_GroupFood.GroupFoodId;
             item.GroupFoodName = CD_GroupFood.GroupFoodName;
-            item.Description = CD_GroupFood.Description;
-            var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id && x.BranchId == branchid);
+            item.Description = CD_GroupFood.Description;      
+            
+            var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id);
             item.Front = Running.Front;
             item.Number = Running.Number;
             item.AutoRun = Running.AutoRun;
+            // --- Data
+            item.Bch = CD_GroupFood.Bch;
+            item.BchName = CD_GroupFood.BchName;
 
             return item;
         }        

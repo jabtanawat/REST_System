@@ -30,7 +30,7 @@ namespace REST.Controllers
         public IActionResult Index()
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            ViewBag.DT_Dish = _db.CD_Dish.Where(x => x.BranchId == branchid).ToList();
+            ViewBag.DT_Dish = _db.CD_Dish.ToList();
             return View();
         }
 

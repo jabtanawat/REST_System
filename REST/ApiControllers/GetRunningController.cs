@@ -34,7 +34,11 @@ namespace REST.ApiControllers
 
             if (id != null)
             {
-                var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id && x.BranchId == branchid);
+                var Running = new CD_Running();
+                if(branchid != null)
+                    Running = _db.CD_Running.FirstOrDefault(x => x.Name == id && x.BranchId == branchid);
+                else
+                    Running = _db.CD_Running.FirstOrDefault(x => x.Name == id);
 
                 if (Running.AutoRun == true)
                 {
@@ -65,7 +69,10 @@ namespace REST.ApiControllers
         public void SetRunning(string Name, string DocRunning, string branchid)
         {
             var Running = new CD_Running();
-            Running = _db.CD_Running.FirstOrDefault(x => x.Name == Name && x.BranchId == branchid);
+            if(branchid != null)
+                Running = _db.CD_Running.FirstOrDefault(x => x.Name == Name && x.BranchId == branchid);
+            else
+                Running = _db.CD_Running.FirstOrDefault(x => x.Name == Name);
 
             if (Running.AutoRun == true)
             {
@@ -88,7 +95,7 @@ namespace REST.ApiControllers
         public JsonResult ARunning(string id)
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            var item = Running(id, branchid);
+            var item = Running(id, null);
             return Json(item);
         }
     }

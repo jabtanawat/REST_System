@@ -33,13 +33,12 @@ namespace REST.Controllers
         public IActionResult Index()
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
-            ViewBag.DT_Zone = _db.CD_Zone.Where(x => x.BranchId == branchid).ToList();
+            ViewBag.DT_Zone = _db.CD_Zone.ToList();
             return View();
         }
 
         public IActionResult FrmZone(string mode, string id = null)
         {
-            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             if (mode == "Add")
             {
                 _mode = Comp.FormMode.ADD;
@@ -50,7 +49,7 @@ namespace REST.Controllers
             {
                 _mode = Comp.FormMode.EDIT;
                 FrmMode();
-                var item = LoadData(id, branchid);
+                var item = LoadData(id);
                 return View(item);
             }
         }
@@ -87,21 +86,22 @@ namespace REST.Controllers
             try
             {
                 // check zoneid = table 
-                var isnull = _db.CD_Table.Where(x => x.ZoneId == info.ZoneId && x.BranchId == branchid).ToList();
-                if (isnull.Count > 0)
+                var IsNull = _db.CD_Table.Where(x => x.ZoneId == info.ZoneId).ToList();
+
+                if (IsNull.Count > 0)
                 {
                     Alert("", "ไม่สามารถลบข้อมูลได้", Enums.NotificationType.warning);
-                    return RedirectToAction("FrmUnit", new { mode = "Edit", id = info.ZoneId });
+                    return RedirectToAction("FrmZone", new { mode = "Edit", id = info.ZoneId });
                 }
                 else
                 {
                     // Delete Zone
-                    var item1 = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == info.ZoneId && x.BranchId == branchid);
+                    var item1 = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == info.ZoneId);
                     _db.CD_Zone.Remove(item1);
                     _db.SaveChanges();
 
                     // Delete Running
-                    var item2 = _db.CD_Running.FirstOrDefault(x => x.Name == info.ZoneId && x.BranchId == branchid);
+                    var item2 = _db.CD_Running.FirstOrDefault(x => x.Name == info.ZoneId);
                     _db.CD_Running.Remove(item2);
                     _db.SaveChanges();
 
@@ -125,10 +125,12 @@ namespace REST.Controllers
                 {
                     case Comp.FormMode.ADD:
 
-                        var IsNull = _db.CD_Zone.Where(x => x.ZoneId == info.ZoneId && x.BranchId == branchid).ToList();
+                        var IsNull = _db.CD_Zone.Where(x => x.ZoneId == info.ZoneId).ToList();
+
                         if (IsNull.Count > 0)
                         {
                             Alert("", "รหัสนี้มีอยู่แล้ว !", Enums.NotificationType.warning);
+                            return false;
                         }
                         else
                         {
@@ -136,6 +138,8 @@ namespace REST.Controllers
                             item.ZoneName = info.ZoneName;
                             item.Description = info.Description;
                             /* DATA */
+                            item.Bch = info.Bch;
+                            item.BranchId = info.BchName;
                             item.BranchId = branchid;
                             item.CreateUser = User.Identity.Name;
                             item.CreateDate = Share.FormatDate(DateTime.Now).Date;
@@ -144,16 +148,19 @@ namespace REST.Controllers
 
                             _db.CD_Zone.Add(item);
                             _db.SaveChanges();
+                            
                         }
 
                         break;
 
                     case Comp.FormMode.EDIT:
 
-                        item = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == info.ZoneId && x.BranchId == branchid);
+                        item = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == info.ZoneId);
                         item.ZoneName = info.ZoneName;
                         item.Description = info.Description;
                         /* DATA */
+                        item.Bch = info.Bch;
+                        item.BchName = info.BchName;
                         item.BranchId = branchid;
                         item.UpdateUser = User.Identity.Name;
                         item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
@@ -161,7 +168,7 @@ namespace REST.Controllers
                         _db.CD_Zone.Update(item);
                         _db.SaveChanges();
 
-                        break;
+                        break;                    
                 }
 
                 // Save Running
@@ -183,6 +190,7 @@ namespace REST.Controllers
             var item = new CD_Running();
             try
             {
+
                 var IsNull = _db.CD_Running.Where(x => x.Name == info.ZoneId && x.BranchId == branchid).ToList();
                 if (IsNull.Count > 0)
                 {
@@ -192,6 +200,8 @@ namespace REST.Controllers
                     item.Number = info.Number;
                     item.AutoRun = info.AutoRun;
                     /* DATA */
+                    item.BchName = info.BchName;
+                    item.BranchId = branchid;
                     item.UpdateUser = User.Identity.Name;
                     item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
@@ -207,6 +217,7 @@ namespace REST.Controllers
                     item.SetDate = null;
                     item.AutoDate = false;
                     /* DATA */
+                    item.BchName = info.BchName;
                     item.BranchId = branchid;
                     item.CreateUser = User.Identity.Name;
                     item.CreateDate = Share.FormatDate(DateTime.Now).Date;
@@ -232,27 +243,33 @@ namespace REST.Controllers
                 ViewData["Disible-delete"] = "disabled";
                 ViewData["Disible-save"] = "";
                 ViewData["Readonly"] = "";
+                ViewBag.Branch = _db.MG_Branch.ToList();
             }
             else
             {
                 ViewData["Disible-delete"] = "";
                 ViewData["Disible-save"] = "disabled";
                 ViewData["Readonly"] = "readonly";
+                ViewBag.Branch = _db.MG_Branch.ToList();
             }
         }
 
-        public ViewZone LoadData(string id, string branchid)
+        public ViewZone LoadData(string id)
         {
             var item = new ViewZone();
 
-            var CD_Zone = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == id && x.BranchId == branchid);
+            var CD_Zone = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == id);
             item.ZoneId = CD_Zone.ZoneId;
             item.ZoneName = CD_Zone.ZoneName;
-            item.Description = CD_Zone.Description;
-            var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id && x.BranchId == branchid);            
+            item.Description = CD_Zone.Description;     
+            
+            var Running = _db.CD_Running.FirstOrDefault(x => x.Name == id);            
             item.Front = Running.Front;
             item.Number = Running.Number;
             item.AutoRun = Running.AutoRun;
+            // --- Data
+            item.Bch = CD_Zone.Bch;
+            item.BchName = CD_Zone.BchName;
 
             return item;
         }        

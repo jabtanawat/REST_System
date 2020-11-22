@@ -19,6 +19,9 @@ namespace REST.Models
         public int TableST { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string ZoneId { get; set; }
+        // -------------------------------------------------------
+        public int Bch { get; set; } // 1 = ใช้ได้ทุกสาขา, 2 = เลือกสาขา
+        public string BchName { get; set; }
         public string BranchId { get; set; }
         public string CreateUser { get; set; }
         public DateTime CreateDate { get; set; }

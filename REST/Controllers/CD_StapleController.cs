@@ -33,7 +33,7 @@ namespace REST.Controllers
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             var _staple = new GetCD_StapleController(_db);
-            ViewBag.DT_Staple = _staple.StapleAll(branchid);
+            ViewBag.DT_Staple = _staple.StapleAll(null);
             return View();
         }
 

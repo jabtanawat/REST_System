@@ -27,7 +27,7 @@
                                     <label class="col-form-label col-form-label-sm">โซนที่นั่ง :</label>
                                     @if (ViewData["Readonly"].ToString() != "")
                                     {
-                                        <select asp-for="ZoneId" class="form-control form-control-sm" onchange="CheckZone(this.value);" disabled>
+                                        <select asp-for="ZoneId" id="txtZoneId" class="form-control form-control-sm" onchange="CheckZone(this.value);" disabled>
                                             <option value="" selected>-- กรุณาเลือกโซนที่นั่ง --</option>
                                             @foreach (var row in ViewBag.SL_Zone)
                                             {
@@ -37,7 +37,7 @@
                                     }
                                     else
                                     {
-                                        <select asp-for="ZoneId" class="form-control form-control-sm" onchange="CheckZone(this.value);">
+                                        <select asp-for="ZoneId" id="txtZoneId" class="form-control form-control-sm" onchange="CheckZone(this.value);">
                                             <option value="" selected>-- กรุณาเลือกโซนที่นั่ง --</option>
                                             @foreach (var row in ViewBag.SL_Zone)
                                             {
@@ -69,21 +69,53 @@
                                     <input type="number" class="form-control form-control-sm text-right" asp-for="Personal" placeholder="0">
                                     <span asp-validation-for="Personal" class="text-danger col-form-label-sm"></span>
                                 </div>
-                                <div class="form-group">
+                                @*<div class="form-group">
                                     <label class="col-form-label col-form-label-sm">สถานะ :</label>
                                     <select asp-for="TableST" class="form-control form-control-sm">
                                         <option value="1" selected>ว่าง</option>
                                         <option value="2">ไม่ว่าง</option>
                                         <option value="3">จอง</option>
                                     </select>
-                                </div>
+                                </div>*@
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">รายละเอียด :</label>
                                     <textarea class="form-control form-control-sm" asp-for="Description" rows="3"></textarea>
                                     <span asp-validation-for="Description" class="text-danger col-form-label-sm"></span>
                                 </div>
+                                <!-- กำหนดสาขา -->
+                                <div class="row">
+                                    <div class="col-md-7 mb-3">
+                                        <div class="form-check">
+                                            <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R1" value="1" onchange="branchCheck()" checked>
+                                            <label class="form-check-label col-form-label-sm" for="R1">
+                                                ใช้ได้ทุกสาขา
+                                            </label>
+                                        </div>
+                                        <div class="form-row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="form-check">
+                                                    <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R2" value="2" onchange="branchCheck()">
+                                                    <label class="form-check-label col-form-label-sm" for="R2">
+                                                        สาขา
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <select asp-for="BchName" class="form-control form-control-sm" id="txtBchName">
+                                                    <option value="" selected>--เลือกสาขา--</option>
+                                                    @{
+                                                        foreach (var row in ViewBag.Branch)
+                                                        {
+                                                            <option value="@row.BranchId">@row.BranchName</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </div>                        
                     </form>
                 </section>
                 <!-- Footer -->
@@ -108,7 +140,19 @@
                 railBorderRadius: 0,
                 railVisible: true
             });
+
+            branchCheck()
         });
+
+        function branchCheck() {
+            const R1 = $('#R1')
+            const Branch = $('#txtBchName')
+            if (R1.prop("checked") == true) {
+                Branch.prop('disabled', true)
+            } else {
+                Branch.prop('disabled', false)
+            }
+        }
 
         function CheckZone(ZoneId) {
             $.get("@Url.Action("GetRunning", "api")" + "/ARunning", { id: ZoneId },
@@ -135,6 +179,19 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
+
+                    if ($('#txtZoneId').val() == '') {
+                        Swal.fire({ text: "กรุณากรอกข้อมูล โซนที่นั่ง", icon: 'warning' })
+                        return;
+                    }
+
+                    if ($('#R2').prop("checked") == true) {
+                        if ($('#txtBchName').val() == '') {
+                            Swal.fire({ text: "กรุณากรอกข้อมูล สาขา", icon: 'warning' })
+                            return;
+                        }
+                    }
+
                     document.FrmTable.action = '@Url.Action("FrmTable")'
                     document.FrmTable.submit();
                 }

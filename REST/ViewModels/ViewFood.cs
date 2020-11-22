@@ -10,11 +10,8 @@ namespace REST.ViewModels
 {
     public class ViewFood
     {
-        [Required]
         public string FoodId { get; set; }
-        [Required]
         public string FoodName { get; set; }
-        [Required]
         public string Price { get; set; }
         public string GroupFoodId { get; set; }
         public string GroupFoodName { get; set; }
@@ -24,8 +21,9 @@ namespace REST.ViewModels
         [NotMapped]
         public IFormFile ImageFile { get; set; }
         public string Sub { get; set; }
-
         public List<ViewFoodSub> FoodSub { get; set; }
+        public int Bch { get; set; }
+        public string BchName { get; set; }
 
     }
 }

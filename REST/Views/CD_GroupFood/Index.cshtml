@@ -15,7 +15,7 @@
                 <!-- Header -->
                 <section>
                     <div class="d-flex mb-2">
-                        <div class="ml-2 mr-2">
+                        <div class="mr-2">
                             <a href="@Url.Action("FrmGroupFood", "CD_GroupFood", new { mode = "Add"})" class="btn btn-sm btn-success"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
                     </div>
@@ -28,7 +28,6 @@
                             <tr>
                                 <th class="text-center" style="width:20%;"> รหัส </th>
                                 <th class="text-center"> ชื่อ </th>
-                                <th class="text-center" style="width:5%;"> สาขา </th>
                                 <th class="text-center" style="width:5%;"> <i class="fas fa-info"></i> </th>
                             </tr>
                         </thead>
@@ -38,7 +37,6 @@
                                 <tr>
                                     <td>@row.GroupFoodId</td>
                                     <td>@row.GroupFoodName</td>
-                                    <td class="text-center">@row.BranchId</td>
                                     <td class="text-center"><a href="@Url.Action("FrmGroupFood", "CD_GroupFood", new { mode = "Edit", id = row.GroupFoodId})" class="text-info"><i class="fas fa-edit"></i></a></td>
                                 </tr>
                             }

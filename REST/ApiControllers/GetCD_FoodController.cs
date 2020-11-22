@@ -27,11 +27,18 @@ namespace REST.ApiControllers
         public List<ViewFood> FoodAll(string branchid)
         {
             var List = new List<ViewFood>();
-            var sql = $"SELECT FoodId, FoodName, DishName, Price, GroupFoodName "
+            string sqlWhrer = null;
+            string sql = $"SELECT FoodId, FoodName, DishName, Price, GroupFoodName "
                     + $"FROM CD_Food "
                     + $"LEFT JOIN CD_GroupFood ON CD_Food.GroupFoodId = CD_GroupFood.GroupFoodId "
-                    + $"LEFT JOIN CD_Dish ON CD_Food.DishId = CD_Dish.DishId "
-                    + $"WHERE CD_Food.BranchId = '{branchid}'";
+                    + $"LEFT JOIN CD_Dish ON CD_Food.DishId = CD_Dish.DishId ";
+
+            if (branchid != null)
+                sqlWhrer += $"CD_Food.BranchId = '{branchid}' ";
+
+            if (sqlWhrer != null)
+                sql += "WHERE " + sqlWhrer;
+
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandText = sql;
@@ -62,13 +69,23 @@ namespace REST.ApiControllers
         public List<ViewFoodSub> FoodSubId(string id, string branchid)
         {
             var List = new List<ViewFoodSub>();
-            var sql = $"SELECT CD_FoodSub.StapleId, CD_Staple.StapleName, CD_FoodSub.Amount, CD_FoodSub.UnitId, CD_Unit.UnitName "
+            string sqlWhrer = null;
+            string sql = $"SELECT CD_FoodSub.StapleId, CD_Staple.StapleName, CD_FoodSub.Amount, CD_FoodSub.UnitId, CD_Unit.UnitName "
                     + $"FROM CD_FoodSub "
                     + $"LEFT JOIN CD_Staple ON CD_FoodSub.UnitId = CD_Staple.StapleId "
-                    + $"LEFT JOIN CD_Unit ON CD_FoodSub.UnitId = CD_Unit.UnitId "
-                    + $"WHERE CD_FoodSub.BranchId = '{branchid}'";
-                    if (id != null)
-                        sql += $"AND CD_FoodSub.FoodId = '{id}'";
+                    + $"LEFT JOIN CD_Unit ON CD_FoodSub.UnitId = CD_Unit.UnitId ";
+
+            if (branchid != null)
+                sqlWhrer += $"CD_FoodSub.BranchId = '{branchid}' ";
+
+            if (sqlWhrer != null)
+                sql += "WHERE " + sqlWhrer;
+
+            if (id != null)
+                if (sqlWhrer != null)
+                    sql += $"CD_FoodSub.FoodId = '{id}' ";
+                else
+                    sql += $"AND CD_FoodSub.FoodId = '{id}' ";
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
