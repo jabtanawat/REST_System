@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace REST.Models
 {
-    public class CD_Dish
+    public class CD_Drink
     {
         [Key]
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string DishId { get; set; }
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string DishName { get; set; }
-        public string Description { get; set; }
+        public string DrinkId { get; set; }
+        public string DrinkName { get; set; }
+        public decimal Price { get; set; }
+        public string ImageName { get; set; }
+        public string GroupFoodId { get; set; }
+
         // -------------------------------------------------------
         public int Bch { get; set; } // 1 = ใช้ได้ทุกสาขา, 2 = เลือกสาขา
         public string BchName { get; set; }

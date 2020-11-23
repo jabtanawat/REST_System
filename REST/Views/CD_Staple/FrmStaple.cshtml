@@ -1,4 +1,4 @@
-﻿@model CD_Staple
+﻿@model ViewCD_Staple;
 @{
     ViewData["Title"] = "Store Back";
     ViewData["System"] = "วัตถุดิบ";
@@ -22,40 +22,97 @@
                 <section class="FrmPanel">
                     <form name="FrmStaple" method="post">
                         <div class="row">
-                            <div class="col-xl-5 col-lg-6 col-md-8 col-12  mx-auto">
-                                <div class="form-group">
-                                    <label class="col-form-label col-form-label-sm">รหัส :</label>
-                                    @if (ViewData["Readonly"].ToString() != "")
-                                    {
-                                        <input type="text" class="form-control form-control-sm" asp-for="StapleId" readonly>
-                                    }
-                                    else
-                                    {
-                                        <input type="text" class="form-control form-control-sm" asp-for="StapleId">
-                                    }
-                                    <span asp-validation-for="StapleId" class="text-danger col-form-label-sm"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-form-label col-form-label-sm">ชื่อ :</label>
-                                    <input type="text" class="form-control form-control-sm" asp-for="StapleName">
-                                    <span asp-validation-for="StapleName" class="text-danger col-form-label-sm"></span>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-md-7 mb-3">
-                                        <label class="col-form-label col-form-label-sm">จำนวน :</label>
-                                        <input asp-for="Amount" type="number" class="form-control form-control-sm text-right" placeholder="0.00">
-                                        <span asp-validation-for="Amount" class="text-danger col-form-label-sm"></span>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <label class="col-form-label col-form-label-sm">หน่วยนับ :</label>
-                                        <select asp-for="UnitId" class="form-control form-control-sm">
-                                            <option value="" selected>-- กรุณาเลือก --</option>
-                                            @foreach (var row in ViewBag.SL_Unit)
+                            <div class="col-xl-9 mx-auto">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label col-form-label-sm">รหัส :</label>
+                                            @if (ViewData["Readonly"].ToString() != "")
                                             {
-                                                <option value="@row.UnitId">@row.UnitName</option>
+                                                <input type="text" class="form-control form-control-sm" asp-for="StapleId" readonly>
                                             }
-                                        </select>
-                                        <span asp-validation-for="UnitId" class="text-danger col-form-label-sm"></span>
+                                            else
+                                            {
+                                                <input type="text" class="form-control form-control-sm" asp-for="StapleId">
+                                            }                                            
+                                            <span asp-validation-for="StapleId" class="text-danger col-form-label-sm"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label col-form-label-sm">ชื่อ :</label>
+                                            <input type="text" class="form-control form-control-sm" asp-for="StapleName">
+                                            <span asp-validation-for="StapleName" class="text-danger col-form-label-sm"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label col-form-label-sm">ปริมาณต่ำสุด :</label>
+                                            <input type="text" class="form-control form-control-sm numberonly text-right" asp-for="QtyLow" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label col-form-label-sm">ปริมาณคงเหลือ :</label>
+                                            <input type="text" class="form-control form-control-sm numberonly text-right bg-warning-light" asp-for="QtyBalance" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-form-label col-form-label-sm">หน่วยนับ :</label>
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1">1 = </span>
+                                                </div>
+                                                <input type="text" class="form-control form-control-sm" asp-for="Unit">
+                                            </div>
+                                            <span asp-validation-for="Unit" class="text-danger col-form-label-sm"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label form-label-sm">ประเภทภาษี :</label>
+                                        <div class="form-group">
+                                            <div class="form-check form-check-inline">
+                                                <input asp-for="Tax" type="radio" id="T1" name="Tax" value="1" class="form-check-input" checked>
+                                                <label class="form-check-label col-form-label col-form-label-sm" for="T1">ภาษี</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input asp-for="Tax" type="radio" id="T2" name="Tax" value="2" class="form-check-input">
+                                                <label class="form-check-label col-form-label col-form-label-sm " for="T2">ไม่คิดภาษี</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- กำหนดสาขา -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R1" value="1" onchange="branchCheck()" checked>
+                                            <label class="form-check-label col-form-label-sm" for="R1">
+                                                ใช้ได้ทุกสาขา
+                                            </label>
+                                        </div>
+                                        <div class="form-row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="form-check">
+                                                    <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R2" value="2" onchange="branchCheck()">
+                                                    <label class="form-check-label col-form-label-sm" for="R2">
+                                                        สาขา
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <select asp-for="BchName" class="form-control form-control-sm" id="txtBchName">
+                                                    <option value="" selected>--เลือกสาขา--</option>
+                                                    @{
+                                                        foreach (var row in ViewBag.Branch)
+                                                        {
+                                                            <option value="@row.BranchId">@row.BranchName</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -69,16 +126,66 @@
                         <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
                     </div>
                 </section>
+
+                <!-- Table -->
+                <section>
+                    <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;ประวัติการซื้อ</p>
+                    <table class="table table-md table-bordered">                        
+                        <thead class="thead-black">
+                            <tr>
+                                <th class="text-center" style="width:5%"><i class="fas fa-sort"></i></th>
+                                <th class="text-center">ชื่อ</th>
+                                <th class="text-center" style="width:20%">จำนวน</th>
+                                <th class="text-center" style="width:20%">หน่วยนับ</th>
+                                <th class="text-center" style="width:5%"><i class="fas fa-info"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="text-center text-danger">ไม่มีรายการ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
             </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <script src="~/Plugins/Numeral/numeral.js"></script>
     <script>
         $(document).ready(function () {
             $(".item_click_Staple").addClass("active");
+
+            branchCheck()
         });
+
+        function branchCheck() {
+            const R1 = $('#R1')
+            const Branch = $('#txtBchName')
+            if (R1.prop("checked") == true) {
+                Branch.prop('disabled', true)
+            } else {
+                Branch.prop('disabled', false)
+            }
+        }
+
+        $(document).on('keypress ', '.numberonly', function () {
+            const e = event.keyCode
+            if (e >= 48 && e <= 57 || e === 8 || e === 13 || e === 46) {
+                event.returnValue = true
+            } else {
+                Swal.fire({ text: "สามารถกดได้แค่ตัวเลข", icon: 'warning' })
+                event.returnValue = false
+            }
+        })
+
+        $(document).on('blur ', '.numberonly', function () {
+            const number = $(this).val()
+            $(this).val(numeral(number).format('0,0.00'))
+        })
 
         document.querySelector("[btn-save]").addEventListener('click', () => {
              Swal.fire({
@@ -91,6 +198,14 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
+
+                    if ($('#R2').prop("checked") == true) {
+                        if ($('#txtBchName').val() == '') {
+                            Swal.fire({ text: "กรุณากรอกข้อมูล สาขา", icon: 'warning' })
+                            return;
+                        }
+                    }
+
                     document.FrmStaple.action = '@Url.Action("FrmStaple")'
                     document.FrmStaple.submit();
                 }

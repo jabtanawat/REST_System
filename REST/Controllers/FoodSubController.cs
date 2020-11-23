@@ -43,7 +43,7 @@ namespace REST.Controllers
                     Staple = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == BranchId);
 
                     var Unit = new CD_Unit();
-                    Unit = _db.CD_Unit.FirstOrDefault(x => x.UnitId == Staple.UnitId && x.BranchId == Staple.BranchId);                    
+                    Unit = _db.CD_Unit.FirstOrDefault(x => x.UnitId == Staple.Unit && x.BranchId == Staple.BranchId);                    
 
                     if (HttpContext.Session.GetString("Session_StapleList") != null)
                     {

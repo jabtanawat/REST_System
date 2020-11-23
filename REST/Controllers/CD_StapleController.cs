@@ -31,9 +31,7 @@ namespace REST.Controllers
 
         public IActionResult Index()
         {
-            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
-            var _staple = new GetCD_StapleController(_db);
-            ViewBag.DT_Staple = _staple.StapleAll(null);
+            ViewBag.Staple = _db.CD_Staple.ToList();
             return View();
         }
 
@@ -50,13 +48,13 @@ namespace REST.Controllers
             {
                 _mode = Comp.FormMode.EDIT;
                 FrmMode();
-                var item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == branchid);
+                var item = LoadData(id);
                 return View(item);
             }
         }
 
         [HttpPost]
-        public IActionResult FrmStaple(CD_Staple info)
+        public IActionResult FrmStaple(ViewCD_Staple info)
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             if (ModelState.IsValid)
@@ -87,7 +85,7 @@ namespace REST.Controllers
             try
             {
                 // Delete Staple
-                var item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == info.StapleId && x.BranchId == branchid);
+                var item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == info.StapleId);
                 _db.CD_Staple.Remove(item);
                 _db.SaveChanges();
 
@@ -101,7 +99,7 @@ namespace REST.Controllers
             }
         }
 
-        public Boolean SaveData(CD_Staple info, string branchid)
+        public Boolean SaveData(ViewCD_Staple info, string branchid)
         {
             var item = new CD_Staple();
             try
@@ -110,18 +108,23 @@ namespace REST.Controllers
                 {
                     case Comp.FormMode.ADD:
 
-                        var IsNull = _db.CD_Staple.Where(x => x.StapleId == info.StapleId && x.BranchId == branchid).ToList();
+                        var IsNull = _db.CD_Staple.Where(x => x.StapleId == info.StapleId).ToList();
                         if (IsNull.Count > 0)
                         {
                             Alert("", "รหัสนี้มีอยู่แล้ว !", Enums.NotificationType.warning);
+                            return false;
                         }
                         else
                         {
                             item.StapleId = info.StapleId;
                             item.StapleName = info.StapleName;
-                            item.Amount = info.Amount;
-                            item.UnitId = info.UnitId;
+                            item.QtyLow = Share.FormatDecimal(info.QtyLow);
+                            item.QtyBalance = Share.FormatDecimal(info.QtyBalance);
+                            item.Unit = info.Unit;
+                            item.Tax = info.Tax;
                             /* DATA */
+                            item.Bch = info.Bch;
+                            item.BchName = info.BchName;
                             item.BranchId = branchid;
                             item.CreateUser = User.Identity.Name;
                             item.CreateDate = Share.FormatDate(DateTime.Now).Date;
@@ -138,10 +141,13 @@ namespace REST.Controllers
 
                         item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == info.StapleId && x.BranchId == branchid);
                         item.StapleName = info.StapleName;
-                        item.Amount = info.Amount;
-                        item.UnitId = info.UnitId;
+                        item.QtyLow = Share.FormatDecimal(info.QtyLow);
+                        item.QtyBalance = Share.FormatDecimal(info.QtyBalance);
+                        item.Unit = info.Unit;
+                        item.Tax = info.Tax;
                         /* DATA */
-                        item.BranchId = branchid;
+                        item.Bch = info.Bch;
+                        item.BchName = info.BchName;
                         item.UpdateUser = User.Identity.Name;
                         item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
@@ -168,15 +174,32 @@ namespace REST.Controllers
                 ViewData["Disible-delete"] = "disabled";
                 ViewData["Disible-save"] = "";
                 ViewData["Readonly"] = "";
-                ViewBag.SL_Unit = _db.CD_Unit.Where(x => x.BranchId == branchid).ToList();
+                ViewBag.Branch = _db.MG_Branch.ToList();
             }
             else
             {
                 ViewData["Disible-delete"] = "";
                 ViewData["Disible-save"] = "disabled";
                 ViewData["Readonly"] = "readonly";
-                ViewBag.SL_Unit = _db.CD_Unit.Where(x => x.BranchId == branchid).ToList();
+                ViewBag.Branch = _db.MG_Branch.ToList();
             }
-        }        
+        }
+
+        public ViewCD_Staple LoadData(string id)
+        {
+            var item = new ViewCD_Staple();
+
+            var CD_Staple = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id);
+            item.StapleId = CD_Staple.StapleId;
+            item.StapleName = CD_Staple.StapleName;
+            item.QtyLow = Share.Cnumber(Share.FormatDouble(CD_Staple.QtyLow), 2);
+            item.QtyBalance = Share.Cnumber(Share.FormatDouble(CD_Staple.QtyBalance), 2);
+            item.Tax = CD_Staple.Tax;
+            item.Unit = CD_Staple.Unit;
+            item.Bch = CD_Staple.Bch;
+            item.BchName = CD_Staple.BchName;
+
+            return item;
+        }
     }
 }

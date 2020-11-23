@@ -57,6 +57,10 @@ body {
     color: #FFF3CD;
 }
 
+.bg-warning-light {
+    background-color: #FFF3CD !important;
+}
+
 /* Button */
 
 .btn-blue {

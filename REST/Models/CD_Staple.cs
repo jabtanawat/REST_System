@@ -13,10 +13,14 @@ namespace REST.Models
         public string StapleId { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string StapleName { get; set; }
+        public int Tax { get; set; } // 1 = ภาษี, 2 = ไม่คิดภาษี
+        public decimal QtyLow { get; set; }
+        public decimal QtyBalance { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public decimal Amount { get; set; }
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string UnitId { get; set; }
+        public string Unit { get; set; }
+        // -------------------------------------------------------
+        public int Bch { get; set; } // 1 = ใช้ได้ทุกสาขา, 2 = เลือกสาขา
+        public string BchName { get; set; }
         public string BranchId { get; set; }
         public string CreateUser { get; set; }
         public DateTime CreateDate { get; set; }

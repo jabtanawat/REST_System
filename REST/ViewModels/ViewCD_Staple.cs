@@ -6,21 +6,19 @@ using System.Threading.Tasks;
 
 namespace REST.Models
 {
-    public class CD_Dish
+    public class ViewCD_Staple
     {
-        [Key]
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string DishId { get; set; }
+        public string StapleId { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string DishName { get; set; }
-        public string Description { get; set; }
+        public string StapleName { get; set; }
+        public int Tax { get; set; } // 1 = ภาษี, 2 = ไม่คิดภาษี
+        public string QtyLow { get; set; }
+        public string QtyBalance { get; set; }
+        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
+        public string Unit { get; set; }
         // -------------------------------------------------------
         public int Bch { get; set; } // 1 = ใช้ได้ทุกสาขา, 2 = เลือกสาขา
         public string BchName { get; set; }
-        public string BranchId { get; set; }
-        public string CreateUser { get; set; }
-        public DateTime CreateDate { get; set; }
-        public string UpdateUser { get; set; }
-        public DateTime UpdateDate { get; set; }
     }
 }

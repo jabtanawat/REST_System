@@ -15,7 +15,7 @@
                 <!-- Header -->
                 <section>
                     <div class="d-flex mb-2">
-                        <div class="ml-2 mr-2">
+                        <div class="mr-2">
                             <a href="@Url.Action("FrmStaple", "CD_Staple", new { mode = "Add"})" class="btn btn-sm btn-success"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
                     </div>
@@ -34,13 +34,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var row in ViewBag.DT_Staple)
+                            @foreach (var row in ViewBag.Staple)
                             {
                                 <tr>
                                     <td>@row.StapleId</td>
                                     <td>@row.StapleName</td>
-                                    <td class="text-right">@row.Amount</td>
-                                    <td class="text-center">@row.UnitName</td>
+                                    <td class="text-right">@row.QtyBalance</td>
+                                    <td class="text-center">@row.Unit</td>
                                     <td class="text-center"><a href="@Url.Action("FrmStaple", "CD_Staple", new { mode = "Edit", id = row.StapleId})" class="text-info"><i class="fas fa-edit"></i></a></td>
                                 </tr>
                             }

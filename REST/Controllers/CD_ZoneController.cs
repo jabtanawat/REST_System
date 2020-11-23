@@ -139,7 +139,7 @@ namespace REST.Controllers
                             item.Description = info.Description;
                             /* DATA */
                             item.Bch = info.Bch;
-                            item.BranchId = info.BchName;
+                            item.BchName = info.BchName;
                             item.BranchId = branchid;
                             item.CreateUser = User.Identity.Name;
                             item.CreateDate = Share.FormatDate(DateTime.Now).Date;
@@ -161,7 +161,6 @@ namespace REST.Controllers
                         /* DATA */
                         item.Bch = info.Bch;
                         item.BchName = info.BchName;
-                        item.BranchId = branchid;
                         item.UpdateUser = User.Identity.Name;
                         item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 

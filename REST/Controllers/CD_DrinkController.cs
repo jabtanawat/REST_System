@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient.Server;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using REST.ApiControllers;
 using REST.Data;
 using REST.Models;
 using REST.Service;
 using REST.ViewModels;
-using static REST.Service.Enums;
 
 namespace REST.Controllers
 {
     [Authorize]
-    public class CD_FoodController : BaseController
+    public class CD_DrinkController : BaseController
     {
         #region Connect db / Data System
 
@@ -29,7 +23,7 @@ namespace REST.Controllers
         public static string _mode = Comp.FormMode.ADD;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public CD_FoodController(DbConnection db, IWebHostEnvironment hostEnvironment)
+        public CD_DrinkController(DbConnection db, IWebHostEnvironment hostEnvironment)
         {
             _db = db;
             _hostEnvironment = hostEnvironment;
@@ -39,19 +33,17 @@ namespace REST.Controllers
 
         public IActionResult Index()
         {
-            var _food = new GetCD_FoodController(_db);
-            ViewBag.DT_Food = _food.FoodAll(null);
+            ViewBag.Drink = _db.CD_Drink.ToList();
             return View();
         }
 
-        public IActionResult FrmFood(string mode, string id = null)
+        public IActionResult FrmDrink(string mode, string id = null)
         {
-            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             if (mode == "Add")
             {
                 _mode = Comp.FormMode.ADD;
                 FrmMode();
-                var item = new ViewFood();
+                var item = new ViewCD_Drink();
                 item.Price = "0.00";
                 return View(item);
             }
@@ -59,74 +51,70 @@ namespace REST.Controllers
             {
                 _mode = Comp.FormMode.EDIT;
                 FrmMode();
-                var item = LoadData(id, branchid);
+                var item = LoadData(id);
                 return View(item);
             }
         }
 
         [HttpPost]
-        public IActionResult FrmSave(ViewFood info)
+        public IActionResult FrmDrink(ViewCD_Drink info)
         {
-            string status = "success";
-
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
-
-            if (SaveData(info, branchid))
+            if (ModelState.IsValid)
             {
-                toastrAlert("อาหาร", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
-                status = "success";
+                if (SaveData(info, branchid))
+                {
+                    toastrAlert("เครื่องดื่ม", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    FrmMode();
+                    return View();
+                }
             }
             else
             {
-                status = "error";
+                FrmMode();
+                Alert("", "ไม่สามารถบันทึกข้อมูลได้ !", Enums.NotificationType.error);
+                return View();
             }
-
-            return Json(new { data = status });
         }
 
         [HttpPost]
-        public IActionResult Delete(ViewFood info)
+        public IActionResult Delete(ViewCD_Drink info)
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             try
             {
-                // Delete Dish
-                var item = _db.CD_Food.FirstOrDefault(x => x.FoodId == info.FoodId && x.BranchId == branchid);
+                var item = _db.CD_Drink.FirstOrDefault(x => x.DrinkId == info.DrinkId);
 
                 if (item.ImageName != null)
                 {
-                    var imagePath = Path.Combine(_hostEnvironment.WebRootPath + "/Images/Food/", item.ImageName);
+                    var imagePath = Path.Combine(_hostEnvironment.WebRootPath + "/Images/Drink/", item.ImageName);
                     if (System.IO.File.Exists(imagePath))
                     {
                         System.IO.File.Delete(imagePath);
                     }
                 }
 
-                _db.CD_Food.Remove(item);
+                _db.CD_Drink.Remove(item);
                 _db.SaveChanges();
 
-                var isData = _db.CD_FoodSub.Where(x => x.FoodId == info.FoodId && x.BranchId == branchid).ToList();
-                if (isData.Count > 0)
-                {
-                    _db.CD_FoodSub.RemoveRange(isData);
-                    _db.SaveChanges();
-                }
-
-                toastrAlert("อาหาร", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
+                toastrAlert("เครื่องดื่ม", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
                 return RedirectToAction("Index");
             }
             catch (Exception)
             {
                 Alert("", "Error Data", Enums.NotificationType.warning);
-                return RedirectToAction("FrmFood", new { mode = "Edit", id = info.FoodId });
+                return RedirectToAction("FrmDrink", new { mode = "Edit", id = info.DrinkId });
             }
         }
 
-        public Boolean SaveData(ViewFood info, string branchid)
+        public Boolean SaveData(ViewCD_Drink info, string branchid)
         {
-            var item = new CD_Food();
+            var item = new CD_Drink();
             var _running = new GetRunningController(_db);
-            dynamic staple = JsonConvert.DeserializeObject(info.Sub);
             try
             {
                 switch (_mode)
@@ -134,9 +122,10 @@ namespace REST.Controllers
                     case Comp.FormMode.ADD:
 
                         // check data count food
-                        var IsNull = _db.CD_Food.Where(x => x.FoodId == info.FoodId).ToList();
+                        var IsNull = _db.CD_Drink.Where(x => x.DrinkId == info.DrinkId).ToList();
                         if (IsNull.Count > 0)
                         {
+                            Alert("", "รหัสนี้มีอยู่แล้ว !", Enums.NotificationType.warning);
                             return false;
                         }
                         else
@@ -149,20 +138,19 @@ namespace REST.Controllers
                                 string wwwRootPath = _hostEnvironment.WebRootPath;
                                 string fileName = Path.GetFileNameWithoutExtension(info.ImageFile.FileName);
                                 string extension = Path.GetExtension(info.ImageFile.FileName);
-                                info.ImageName = fileName = fileName.Replace(fileName, info.FoodId + "_Food") + extension;
-                                string path = Path.Combine(wwwRootPath + "/Images/Food/", fileName);
+                                info.ImageName = fileName = fileName.Replace(fileName, info.DrinkId + "_Drink") + extension;
+                                string path = Path.Combine(wwwRootPath + "/Images/Drink/", fileName);
                                 using (var fileStream = new FileStream(path, FileMode.Create))
                                 {
                                     info.ImageFile.CopyTo(fileStream);
                                 }
                             }
 
-                            item.FoodId = info.FoodId;
-                            item.FoodName = info.FoodName;
+                            item.DrinkId = info.DrinkId;
+                            item.DrinkName = info.DrinkName;
                             item.Price = Share.FormatDecimal(info.Price);
                             item.ImageName = info.ImageName;
                             item.GroupFoodId = info.GroupFoodId;
-                            item.DishId = info.DishId;
                             /* DATA */
                             item.Bch = info.Bch;
                             item.BchName = info.BchName;
@@ -172,47 +160,22 @@ namespace REST.Controllers
                             item.UpdateUser = User.Identity.Name;
                             item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                            _db.CD_Food.Add(item);
+                            _db.CD_Drink.Add(item);
                             _db.SaveChanges();                            
 
-                            // Save FoodSub
-                            if (staple.Count > 0)
-                            {
-
-                                /* Input Data */
-                                foreach (dynamic result in staple)
-                                {
-                                    string id = result.StapleId;
-                                    decimal qty = result.Amount;
-
-                                    var unit = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id);
-
-                                    var Item = new CD_FoodSub();
-                                    Item.FoodId = info.FoodId;
-                                    Item.StapleId = id;
-                                    Item.Amount = qty;
-                                    Item.UnitId = unit.Unit;
-                                    /* DATA */
-                                    Item.BranchId = branchid;
-
-                                    _db.CD_FoodSub.Add(Item);
-                                    _db.SaveChanges();
-                                }
-                            }
-
                             // Set Runnig
-                            _running.SetRunning(info.GroupFoodId, info.FoodId, null);
-                        }                        
+                            _running.SetRunning(info.GroupFoodId, info.DrinkId, null);
+                        }
 
                         break;
 
                     case Comp.FormMode.EDIT:
 
-                        item = _db.CD_Food.FirstOrDefault(x => x.FoodId == info.FoodId);
+                        item = _db.CD_Drink.FirstOrDefault(x => x.DrinkId == info.DrinkId);
 
                         if (info.ImageFile != null)
                         {
-                            var imagePath = Path.Combine(_hostEnvironment.WebRootPath + "/Images/Food/", item.ImageName);
+                            var imagePath = Path.Combine(_hostEnvironment.WebRootPath + "/Images/Drink/", item.ImageName);
                             if (System.IO.File.Exists(imagePath))
                             {
                                 System.IO.File.Delete(imagePath);
@@ -222,8 +185,8 @@ namespace REST.Controllers
                             string wwwRootPath = _hostEnvironment.WebRootPath;
                             string fileName = Path.GetFileNameWithoutExtension(info.ImageFile.FileName);
                             string extension = Path.GetExtension(info.ImageFile.FileName);
-                            info.ImageName = fileName = fileName.Replace(fileName, info.FoodId + "_Food") + extension;
-                            string path = Path.Combine(wwwRootPath + "/Images/Food/", fileName);
+                            info.ImageName = fileName = fileName.Replace(fileName, info.DrinkId + "_Drink") + extension;
+                            string path = Path.Combine(wwwRootPath + "/Images/Drink/", fileName);
                             using (var fileStream = new FileStream(path, FileMode.Create))
                             {
                                 info.ImageFile.CopyToAsync(fileStream);
@@ -232,10 +195,9 @@ namespace REST.Controllers
                         }
 
                         // Save Food                        
-                        item.FoodName = info.FoodName;
+                        item.DrinkName = info.DrinkName;
                         item.Price = Share.FormatDecimal(info.Price);
                         item.GroupFoodId = info.GroupFoodId;
-                        item.DishId = info.DishId;
                         /* DATA */
                         item.Bch = info.Bch;
                         item.BchName = info.BchName;
@@ -243,36 +205,8 @@ namespace REST.Controllers
                         item.UpdateUser = User.Identity.Name;
                         item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                        _db.CD_Food.Update(item);
-                        _db.SaveChanges();
-
-                        // Save FoodSub
-                        if (staple.Count > 0)
-                        {
-                            var delete = _db.CD_FoodSub.Where(x => x.FoodId == info.FoodId).ToList();
-                            _db.CD_FoodSub.RemoveRange(delete);
-                            _db.SaveChanges();                            
-
-                            /* Input Data */
-                            foreach (dynamic result in staple)
-                            {
-                                string id = result.StapleId;
-                                decimal qty = result.Amount;
-
-                                var unit = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id);
-
-                                var Item = new CD_FoodSub();
-                                Item.FoodId = info.FoodId;
-                                Item.StapleId = id;
-                                Item.Amount = qty;
-                                Item.UnitId = unit.Unit;
-                                /* DATA */
-                                Item.BranchId = branchid;
-
-                                _db.CD_FoodSub.Add(Item);
-                                _db.SaveChanges();
-                            }
-                        }
+                        _db.CD_Drink.Update(item);
+                        _db.SaveChanges();                   
 
                         break;
                 }
@@ -284,7 +218,7 @@ namespace REST.Controllers
                 Alert("", "Error Data !", Enums.NotificationType.error);
                 return false;
             }
-        }        
+        }
 
         public void FrmMode()
         {
@@ -309,7 +243,6 @@ namespace REST.Controllers
 
                 }
                 ViewBag.GroupFood = List;
-                ViewBag.Dish = _db.CD_Dish.Where(x => x.BranchId == branchid).ToList();
             }
             else
             {
@@ -331,26 +264,21 @@ namespace REST.Controllers
 
                 }
                 ViewBag.GroupFood = List;
-                ViewBag.Dish = _db.CD_Dish.Where(x => x.BranchId == branchid).ToList();
             }
         }
 
-        public ViewFood LoadData(string id, string branchid)
+        public ViewCD_Drink LoadData(string id)
         {
-            var item = new ViewFood();
+            var item = new ViewCD_Drink();
 
-            var CD_Food = _db.CD_Food.FirstOrDefault(x => x.FoodId == id);
-            item.FoodId = CD_Food.FoodId;
-            item.FoodName = CD_Food.FoodName;
-            item.Price = Share.Cnumber(Share.FormatDouble(CD_Food.Price),2);
-            item.ImageName = CD_Food.ImageName;
-            item.GroupFoodId = CD_Food.GroupFoodId;
-            item.DishId = CD_Food.DishId;
-            item.Bch = CD_Food.Bch;
-            item.BchName = CD_Food.BchName;
-
-            var _food = new GetCD_FoodController(_db);
-            item.FoodSub = _food.FoodSubId(id, null);
+            var CD_Drink = _db.CD_Drink.FirstOrDefault(x => x.DrinkId == id);
+            item.DrinkId = CD_Drink.DrinkId;
+            item.DrinkName = CD_Drink.DrinkName;
+            item.Price = Share.Cnumber(Share.FormatDouble(CD_Drink.Price), 2);
+            item.ImageName = CD_Drink.ImageName;
+            item.GroupFoodId = CD_Drink.GroupFoodId;
+            item.Bch = CD_Drink.Bch;
+            item.BchName = CD_Drink.BchName;
 
             return item;
         }

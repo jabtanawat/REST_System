@@ -16,12 +16,14 @@ namespace REST.Data
 
         // ***Common CD
         public DbSet<CD_Dish> CD_Dish { get; set; }
+        public DbSet<CD_Drink> CD_Drink { get; set; }
         public DbSet<CD_Food> CD_Food { get; set; }
         public DbSet<CD_FoodSub> CD_FoodSub { get; set; }
         public DbSet<CD_GroupFood> CD_GroupFood { get; set; }
         public DbSet<CD_Running> CD_Running { get; set; }
         public DbSet<CD_Staple> CD_Staple { get; set; }
         public DbSet<CD_Zone> CD_Zone { get; set; }
+        public DbSet<CD_Position> CD_Position{ get; set; }
         public DbSet<CD_Table> CD_Table { get; set; }
         public DbSet<CD_Title> CD_Title { get; set; }
         public DbSet<CD_Unit> CD_Unit { get; set; }
@@ -40,6 +42,7 @@ namespace REST.Data
 
         // ***Member MB
         public DbSet<MB_Member> MB_Member { get; set; }
+        public DbSet<MB_Emproyee> MB_Emproyee { get; set; }
 
         // ***Manage MG
         public DbSet<MG_Branch> MG_Branch { get; set; }
@@ -49,6 +52,7 @@ namespace REST.Data
         {
             // ***ทะเบียน CD
             modelBuilder.Entity<CD_Dish>().HasKey(x => new { x.DishId, x.BranchId });
+            modelBuilder.Entity<CD_Drink>().HasKey(x => new { x.DrinkId, x.BranchId });
             modelBuilder.Entity<CD_Food>().HasKey(x => new { x.FoodId, x.BranchId });
             modelBuilder.Entity<CD_FoodSub>().HasKey(x => new { x.FoodId, x.StapleId, x.BranchId });
             modelBuilder.Entity<CD_GroupFood>().HasKey(x => new { x.GroupFoodId, x.BranchId });
@@ -56,6 +60,7 @@ namespace REST.Data
             modelBuilder.Entity<CD_Staple>().HasKey(x => new { x.StapleId, x.BranchId });
             modelBuilder.Entity<CD_Zone>().HasKey(x => new { x.ZoneId, x.BranchId });
             modelBuilder.Entity<CD_Table>().HasKey(x => new { x.TableId, x.BranchId });
+            modelBuilder.Entity<CD_Position>().HasKey(x => new { x.PositionId, x.BranchId });
             modelBuilder.Entity<CD_Title>().HasKey(x => new { x.TitleId, x.BranchId });
             modelBuilder.Entity<CD_Unit>().HasKey(x => new { x.UnitId, x.BranchId });
             modelBuilder.Entity<CD_UserLogin>().HasKey(x => new { x.UserId, x.BranchId });
@@ -73,6 +78,7 @@ namespace REST.Data
 
             // ***Member MB
             modelBuilder.Entity<MB_Member>().HasKey(x => new { x.MemberId, x.BranchId });
+            modelBuilder.Entity<MB_Emproyee>().HasKey(x => new { x.EmproyeeId, x.BranchId });
 
             // ***บริหาร MG
             modelBuilder.Entity<MG_Branch>().HasKey(x => new { x.BranchId });

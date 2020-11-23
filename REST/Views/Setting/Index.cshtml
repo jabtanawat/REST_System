@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Store Back";
+    ViewData["System"] = "Setting";
+    Layout = "_StoreBack";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-11 mx-auto">
+                <div class="row">
+                    <div class="col-md-8 mx-auto">
+                        <div class="form-group row">
+                            <label class="col-sm-4 col-form-label col-form-label-sm text-sm-right">อัตราภาษี :</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control form-control-sm">
+                            </div>
+                            <label class="col-sm-3 col-form-label col-form-label-sm">%</label>
+                        </div>
+                         <div class="form-group row">
+                            <label class="col-sm-4 col-form-label col-form-label-sm text-sm-right">กำหนดอุปกรณ์ต่อพ่วง :</label>
+                            <div class="col-sm-8">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" id="Check1" class="form-check-input mt-2" />
+                                    <label for="Check1" class="form-check-label col-form-label-sm">ใช้เครื่องพิมพ์ Mini Pinter</label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        @*<div class="form-group">
+                            <label class="col-form-label col-form-label-sm">อัตราภาษี :</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control numberonly text-right" aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <span class="input-group-text" id="basic-addon2">%</span>
+                                </div>
+                            </div>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Plugins/Numeral/numeral.js"></script>
+    <script>
+        $(document).on('keypress ', '.numberonly', function () {
+            const e = event.keyCode
+            if (e >= 48 && e <= 57 || e === 8 || e === 13 || e === 46) {
+                event.returnValue = true
+            } else {
+                Swal.fire({ text: "สามารถกดได้แค่ตัวเลข", icon: 'warning' })
+                event.returnValue = false
+            }
+        })
+
+        $(document).on('blur ', '.numberonly', function () {
+            const number = $(this).val()
+            $(this).val(numeral(number).format('0,0.00'))
+        })
+    </script>
+}

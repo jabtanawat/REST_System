@@ -57,14 +57,22 @@
                                 </a>
                             </div>
                             <div class="text_header mt-2">
-                                <a asp-controller="Member" asp-action="Index" class="nav-link link_header">ระบบสมาชิก</a>
+                                <a asp-controller="Member" asp-action="Index" class="nav-link link_header">ระบบบุคลากร</a>
                             </div>
                         </div>
                     </div>
                     <hr />
                     <ul class="navbar-nav">
+                        <li class="nav-item item_click_Emproyee">
+                            <a asp-controller="MB_Emproyee" asp-action="Index" class="nav-link px-2">
+                                <i class="fas fa-user-tie nav_icon"></i>
+                                <span class="nav_text">ทะเบียนพนักงาน</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
                         <li class="nav-item item_click_Profile">
-                            <a asp-controller="MB_Profile" asp-action="Index" class="nav-link px-2">                                
+                            <a asp-controller="MB_Profile" asp-action="Index" class="nav-link px-2">
                                 <i class="far fa-id-card nav_icon"></i>
                                 <span class="nav_text">ทะเบียนสมาชิก</span>
                             </a>

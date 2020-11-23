@@ -245,9 +245,9 @@ namespace REST.Controllers
 
                         var Item = new CD_Staple();
                         Item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == BranchId);
-                        var a = Item.Amount - qty;
+                        var a = Item.QtyBalance - qty;
 
-                        Item.Amount = a;
+                        Item.QtyBalance = a;
                         /* DATA */
                         Item.UpdateUser = User.Identity.Name;
                         Item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
@@ -310,12 +310,12 @@ namespace REST.Controllers
 
                     /* Data Before */
                     var before = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == BranchId);
-                    var a = before.Amount + qty;
+                    var a = before.QtyBalance + qty;
 
                     var Item = new CD_Staple();
                     Item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == BranchId);
 
-                    Item.Amount = a;
+                    Item.QtyBalance = a;
                     /* DATA */
                     Item.UpdateUser = User.Identity.Name;
                     Item.UpdateDate = Share.FormatDate(DateTime.Now).Date;

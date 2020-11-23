@@ -32,19 +32,19 @@
                             <div class="form-group row">
                                 <div class="col-md-7 mb-3">
                                     <label>จำนวน :</label>
-                                    <input asp-for="Amount" type="number" class="form-control floatNumber text-right" placeholder="0.00" value="0.00">
-                                    <span asp-validation-for="Amount" class="text-danger"></span>
+                                    <input asp-for="QtyBalance" type="number" class="form-control floatNumber text-right" placeholder="0.00" value="0.00">
+                                    <span asp-validation-for="QtyBalance" class="text-danger"></span>
                                 </div>
                                 <div class="col-md-5">
                                     <label>หน่วยนับ :</label>
-                                    <select asp-for="UnitId" class="custom-select">
+                                    <select asp-for="Unit" class="custom-select">
                                         <option value="" selected>-- กรุณาเลือก --</option>
                                         @foreach (var row in ViewBag.SL_Unit)
                                         {
                                             <option value="@row.UnitId">@row.UnitName</option>
                                         }
                                     </select>
-                                    <span asp-validation-for="UnitId" class="text-danger"></span>
+                                    <span asp-validation-for="Unit" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
