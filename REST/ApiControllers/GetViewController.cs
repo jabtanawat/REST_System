@@ -12,7 +12,7 @@ using REST.ViewModels;
 
 namespace REST.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class GetViewController : BaseController
     {
@@ -202,6 +202,20 @@ namespace REST.ApiControllers
             }
 
             return List;
+        }
+
+        // -------------------------------------------
+        // -------------------------------------------
+        // ---                                     ---
+        // ---                ACTION               ---
+        // ---                                     ---
+        // -------------------------------------------
+        // -------------------------------------------
+
+        public JsonResult AZone(string id)
+        {
+            var item = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == id);
+            return Json(item);
         }
     }
 }

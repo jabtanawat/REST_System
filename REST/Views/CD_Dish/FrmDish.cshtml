@@ -44,10 +44,10 @@
                                     <label class="col-form-label col-form-label-sm">รายละเอียด :</label>
                                     <textarea class="form-control form-control-sm" asp-for="Description" rows="3"></textarea>
                                     <span asp-validation-for="Description" class="text-danger col-form-label-sm"></span>
-                                </div>                            
+                                </div>
                                 <!-- กำหนดสาขา -->
-                                <div class="row">
-                                    <div class="col-md-7 mb-3">
+                                <div class="card border-0 bg-info-light">
+                                    <div class="card-body">
                                         <div class="form-check">
                                             <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R1" value="1" onchange="branchCheck()" checked>
                                             <label class="form-check-label col-form-label-sm" for="R1">
@@ -74,7 +74,7 @@
                                                     }
                                                 </select>
                                             </div>
-                                        </div>                                     
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -129,34 +129,38 @@
 
                         <!-- กำหนดสาขา -->
                         <div class="row">
-                            <div class="col-md-7 mb-3">
-                                <div class="form-check">
-                                    <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R1" value="1" onchange="branchCheck()" checked>
-                                    <label class="form-check-label col-form-label-sm" for="R1">
-                                        ใช้ได้ทุกสาขา
-                                    </label>
-                                </div>
-                                <div class="form-row align-items-center">
-                                    <div class="col-auto">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="card border-0 bg-info-light">
+                                    <div class="card-body">
                                         <div class="form-check">
-                                            <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R2" value="2" onchange="branchCheck()">
-                                            <label class="form-check-label col-form-label-sm" for="R2">
-                                                สาขา
+                                            <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R1" value="1" onchange="branchCheck()" checked>
+                                            <label class="form-check-label col-form-label-sm" for="R1">
+                                                ใช้ได้ทุกสาขา
                                             </label>
                                         </div>
+                                        <div class="form-row align-items-center">
+                                            <div class="col-auto">
+                                                <div class="form-check">
+                                                    <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R2" value="2" onchange="branchCheck()">
+                                                    <label class="form-check-label col-form-label-sm" for="R2">
+                                                        สาขา
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-auto">
+                                                <select asp-for="BchName" class="form-control form-control-sm" id="txtBchName">
+                                                    <option value="" selected>--เลือกสาขา--</option>
+                                                    @{
+                                                        foreach (var row in ViewBag.Branch)
+                                                        {
+                                                            <option value="@row.BranchId">@row.BranchName</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-auto">
-                                        <select asp-for="BchName" class="form-control form-control-sm" id="txtBchName">
-                                            <option value="" selected>--เลือกสาขา--</option>
-                                            @{
-                                                foreach (var row in ViewBag.Branch)
-                                                {
-                                                    <option value="@row.BranchId">@row.BranchName</option>
-                                                }
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
+                                </div>                                
                             </div>
                         </div>
 

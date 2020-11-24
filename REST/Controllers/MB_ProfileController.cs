@@ -40,38 +40,15 @@ namespace REST.Controllers
             if (mode == "Add")
             {
                 _mode = Comp.FormMode.ADD;
-                // Running
-                var _Get = new GetRunningController(_db);
-                string DocRunning = _Get.Running("Member", branchid);
-                ViewData["mode"] = _mode;
-                ViewData["Disible-delete"] = "disabled";
-                ViewData["Disible-save"] = "";                
-                if (DocRunning != null)
-                {
-                    ViewData["Readonly"] = "readonly";
-                    ViewData["DocRunning"] = DocRunning;
-                }
-                else
-                {
-                    ViewData["Readonly"] = "";
-                    ViewData["DocRunning"] = "";
-                }                             
-                ViewData["DateNow"] = DateTime.Now.ToString("dd/MM/yyyy");
-                ViewBag.CD_Title = _db.CD_Title.Where(x => x.BranchId == branchid).ToList();
+                FrmMode();
                 return View();
             }
             else
             {
                 _mode = Comp.FormMode.EDIT;
-                ViewData["mode"] = _mode;
-                ViewData["Disible"] = "";
-                ViewData["Disible-save"] = "disabled";
-                ViewData["Readonly"] = "readonly";                
+                FrmMode();
                 var Item = _db.MB_Member.FirstOrDefault(x => x.MemberId == id && x.BranchId == branchid);
                 var data = info(Item);
-                ViewData["DocRunning"] = data.MemberId;
-                ViewData["DateNow"] = data.DateRegister;
-                ViewBag.CD_Title = _db.CD_Title.Where(x => x.BranchId == branchid).ToList();
                 return View(data);
             }
         }
@@ -243,6 +220,7 @@ namespace REST.Controllers
                     ViewData["DocRunning"] = "";
                 }
                 ViewData["DateNow"] = DateTime.Now.ToString("dd/MM/yyyy");
+                ViewBag.Branch = _db.MG_Branch.ToList();
                 ViewBag.CD_Title = _db.CD_Title.Where(x => x.BranchId == branchid).ToList();
             }
             else
@@ -251,6 +229,7 @@ namespace REST.Controllers
                 ViewData["Disible"] = "";
                 ViewData["Disible-save"] = "disabled";
                 ViewData["Readonly"] = "readonly";
+                ViewBag.Branch = _db.MG_Branch.ToList();
                 ViewBag.CD_Title = _db.CD_Title.Where(x => x.BranchId == branchid).ToList();
             }
         }

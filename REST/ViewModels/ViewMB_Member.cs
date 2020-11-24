@@ -41,5 +41,8 @@ namespace REST.Models
         public string ZibCode { get; set; }
         public int Rebate { get; set; } // ส่วนลด
         public string Score { get; set; } // คะแนนสะสม
+
+        public int Bch { get; set; } // 1 = ใช้ทุกสาขา, 2 = เลือกสาขา
+        public string BchName { get; set; }
     }
 }

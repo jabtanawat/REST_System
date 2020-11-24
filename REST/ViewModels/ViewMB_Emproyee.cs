@@ -11,13 +11,14 @@ namespace REST.Models
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string EmproyeeId { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
+        public string PositionId { get; set; }
+        public string PositionName { get; set; }
+        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string DateRegister { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string IdCard { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string Title { get; set; }
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string TitleName { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string FirstName { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
@@ -26,6 +27,11 @@ namespace REST.Models
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string DateBirthday { get; set; }
         public int Status { get; set; } // 1 = โสด, 2 = สมรส
+
+        public int Bch { get; set; }
+        public string BchName { get; set; }
+
+
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string PhoneNumber { get; set; }
         public string Email { get; set; }

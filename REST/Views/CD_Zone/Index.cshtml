@@ -28,6 +28,7 @@
                             <tr>
                                 <th class="text-center" style="width:20%;"> รหัส </th>
                                 <th class="text-center"> ชื่อ </th>
+                                <th class="text-center" style="width:5%;"> สาขา </th>
                                 <th class="text-center" style="width:5%;"> <i class="fas fa-info"></i> </th>
                             </tr>
                         </thead>
@@ -37,6 +38,7 @@
                                 <tr>
                                     <td>@row.ZoneId</td>
                                     <td>@row.ZoneName</td>
+                                    <td>@row.BchName</td>
                                     <td class="text-center"><a href="@Url.Action("FrmZone", "CD_Zone", new { mode = "Edit", id = row.ZoneId})" class="text-info"><i class="fas fa-edit"></i></a></td>
                                 </tr>
                             }

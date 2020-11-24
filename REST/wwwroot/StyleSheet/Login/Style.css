@@ -1,4 +1,11 @@
-﻿.form-login .card {
+﻿body {
+    background-image: url('../../Images/System/bg.jpg');
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.form-login .card {
     position: absolute;
     top: 50%;
     left: 50%;

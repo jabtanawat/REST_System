@@ -70,38 +70,38 @@
                                     <span asp-validation-for="Personal" class="text-danger col-form-label-sm"></span>
                                 </div>
                                 @*<div class="form-group">
-                                    <label class="col-form-label col-form-label-sm">สถานะ :</label>
-                                    <select asp-for="TableST" class="form-control form-control-sm">
-                                        <option value="1" selected>ว่าง</option>
-                                        <option value="2">ไม่ว่าง</option>
-                                        <option value="3">จอง</option>
-                                    </select>
-                                </div>*@
+            <label class="col-form-label col-form-label-sm">สถานะ :</label>
+            <select asp-for="TableST" class="form-control form-control-sm">
+                <option value="1" selected>ว่าง</option>
+                <option value="2">ไม่ว่าง</option>
+                <option value="3">จอง</option>
+            </select>
+        </div>*@
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">รายละเอียด :</label>
                                     <textarea class="form-control form-control-sm" asp-for="Description" rows="3"></textarea>
                                     <span asp-validation-for="Description" class="text-danger col-form-label-sm"></span>
                                 </div>
                                 <!-- กำหนดสาขา -->
-                                <div class="row">
-                                    <div class="col-md-7 mb-3">
+                                <div class="card border-0 bg-info-light">
+                                    <div class="card-body">
                                         <div class="form-check">
-                                            <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R1" value="1" onchange="branchCheck()" checked>
-                                            <label class="form-check-label col-form-label-sm" for="R1">
+                                            <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="B1" value="1" onchange="branchCheck()" disabled>
+                                            <label class="form-check-label col-form-label-sm" for="B1">
                                                 ใช้ได้ทุกสาขา
                                             </label>
                                         </div>
                                         <div class="form-row align-items-center">
                                             <div class="col-auto">
                                                 <div class="form-check">
-                                                    <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="R2" value="2" onchange="branchCheck()">
-                                                    <label class="form-check-label col-form-label-sm" for="R2">
+                                                    <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="B2" value="2" onchange="branchCheck()" checked>
+                                                    <label class="form-check-label col-form-label-sm" for="B2">
                                                         สาขา
                                                     </label>
                                                 </div>
                                             </div>
                                             <div class="col-auto">
-                                                <select asp-for="BchName" class="form-control form-control-sm" id="txtBchName">
+                                                <select asp-for="BchName" class="form-control form-control-sm" id="txtBchName" onclick="None()" readonly>
                                                     <option value="" selected>--เลือกสาขา--</option>
                                                     @{
                                                         foreach (var row in ViewBag.Branch)
@@ -133,26 +133,8 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $(".item_click_Table").addClass("active");
-
-            $('[scroll]').slimScroll({
-                height: $(window).height() - $('.FrmHeader').height() - 150,
-                railBorderRadius: 0,
-                railVisible: true
-            });
-
-            branchCheck()
+            $(".item_click_Table").addClass("active")
         });
-
-        function branchCheck() {
-            const R1 = $('#R1')
-            const Branch = $('#txtBchName')
-            if (R1.prop("checked") == true) {
-                Branch.prop('disabled', true)
-            } else {
-                Branch.prop('disabled', false)
-            }
-        }
 
         function CheckZone(ZoneId) {
             $.get("@Url.Action("GetRunning", "api")" + "/ARunning", { id: ZoneId },
@@ -166,6 +148,18 @@
                     }
                 }
             )
+
+            $.get("@Url.Action("GetView", "api")" + "/AZone", { id: ZoneId },
+                function (data, status) {
+                    console.log(data.bchName)
+                    $('#txtBchName').val(data.bchName);
+                }
+            )
+        }
+
+        function None() {
+            Swal.fire({ text: "ไม่สามารถเลือกสาขาได้", icon: 'warning' })
+            return;
         }
 
         document.querySelector("[btn-save]").addEventListener('click', () => {
@@ -183,13 +177,6 @@
                     if ($('#txtZoneId').val() == '') {
                         Swal.fire({ text: "กรุณากรอกข้อมูล โซนที่นั่ง", icon: 'warning' })
                         return;
-                    }
-
-                    if ($('#R2').prop("checked") == true) {
-                        if ($('#txtBchName').val() == '') {
-                            Swal.fire({ text: "กรุณากรอกข้อมูล สาขา", icon: 'warning' })
-                            return;
-                        }
                     }
 
                     document.FrmTable.action = '@Url.Action("FrmTable")'

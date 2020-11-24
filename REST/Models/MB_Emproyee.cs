@@ -10,6 +10,7 @@ namespace REST.Models
     {
         [Key]
         public string EmproyeeId { get; set; }
+        public string PositionId { get; set; }
         public DateTime DateRegister { get; set; }
         public string IdCard { get; set; }
         public string Title { get; set; }

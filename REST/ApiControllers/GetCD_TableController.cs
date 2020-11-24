@@ -27,7 +27,7 @@ namespace REST.ApiControllers
         {
             var List = new List<ViewTable>();
             string sqlWhrer = null;
-            var sql = $"SELECT TableId, TableName, Personal, TableST, CASE WHEN TableST = 1 THEN 'ว่าง' WHEN TableST = 2 THEN 'ไม่ว่าง' WHEN TableST= 3 THEN 'จอง' END AS Status, ZoneName "
+            var sql = $"SELECT TableId, TableName, Personal, TableST, CASE WHEN TableST = 1 THEN 'ว่าง' WHEN TableST = 2 THEN 'ไม่ว่าง' WHEN TableST= 3 THEN 'จอง' END AS Status, ZoneName, CD_Table.BchName "
                     + $"FROM CD_Table "
                     + $"LEFT JOIN CD_Zone ON CD_Table.ZoneId = CD_Zone.ZoneId ";
 
@@ -58,6 +58,8 @@ namespace REST.ApiControllers
                             Item.Status = data.GetString(4);
                         if (!data.IsDBNull(5))
                             Item.ZoneName = data.GetString(5);
+                        if (!data.IsDBNull(6))
+                            Item.BchName = data.GetString(6);
                         List.Add(Item);
                     }
                 }

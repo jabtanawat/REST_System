@@ -27,15 +27,24 @@
                 <section>
                     <form name="FrmEmproyee" method="post">
                         <!-- profile -->
-                        <section class="content-profile">
-                            <p class="font-weight-bold"><i class="fas fa-user"></i>&nbsp;ข้อมูล</p>
+                        <section>
+                            <div class="alert alert-primary py-2 mb-0" role="alert">
+                                <i class="fas fa-user"></i>&nbsp;&nbsp;ข้อมูล
+                            </div>
                             <div class="row">
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label form-label-sm">รหัสสมาชิก :</label>
+                                        <label class="col-form-label form-label-sm">รหัสพนักงาน :</label>
                                         @if (ViewData["Readonly"].ToString() != "")
                                         {
-                                            <input asp-for="EmproyeeId" type="text" class="form-control form-control-sm" readonly>
+                                            if (ViewData["DocRunning"].ToString() != "")
+                                            {
+                                                <input asp-for="EmproyeeId" type="text" value="@ViewData["DocRunning"].ToString()" class="form-control form-control-sm" readonly>
+                                            }
+                                            else
+                                            {
+                                                <input asp-for="EmproyeeId" type="text" class="form-control form-control-sm" readonly>
+                                            }
                                         }
                                         else
                                         {
@@ -47,10 +56,19 @@
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label form-label-sm">วันที่สมัคร :</label>
-                                        <input asp-for="DateRegister" type="text" class="form-control form-control-sm datepickernow" placeholder="dd/mm/yyyy">
+                                        @if (@ViewData["DateNow"].ToString() != "")
+                                        {
+                                            <input asp-for="DateRegister" value="@ViewData["DateNow"].ToString()" type="text" class="form-control form-control-sm datepicker" placeholder="dd/mm/yyyy">
+                                        }
+                                        else
+                                        {
+                                            <input asp-for="DateRegister" type="text" class="form-control form-control-sm datepicker" placeholder="dd/mm/yyyy">
+                                        }                                        
                                         <span asp-validation-for="DateRegister" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label form-label-sm">เลขที่บัตรประชาชน :</label>
@@ -80,16 +98,18 @@
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-6">
-                                    <label asp-for="Status" class="col-form-label form-label-sm">สถานะ :</label>
                                     <div class="form-group">
-                                        <div class="form-check form-check-inline">
-                                            <input asp-for="Status" type="radio" id="R1" name="Status" value="1" class="form-check-input" checked>
-                                            <label class="form-check-label col-form-label col-form-label-sm" for="R1">โสด</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input asp-for="Status" type="radio" id="R2" name="Status" value="2" class="form-check-input">
-                                            <label class="form-check-label col-form-label col-form-label-sm " for="R2">สมรส</label>
-                                        </div>
+                                        <label class="col-form-label form-label-sm">ตำแหน่งงาน :</label>
+                                        <select asp-for="PositionId" class="form-control form-control-sm">
+                                            <option value="" selected>--เลือกตำแหน่งงาน--</option>
+                                            @{
+                                                foreach (var row in ViewBag.Position)
+                                                {
+                                                    <option value="@row.PositionId">@row.PositionName</option>
+                                                }
+                                            }
+                                        </select>
+                                        <span asp-validation-for="PositionId" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-6">
@@ -113,12 +133,64 @@
                                         <span asp-validation-for="Email" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <label asp-for="Status" class="col-form-label form-label-sm">สถานะ :</label>
+                                    <div class="form-group">
+                                        <div class="form-check form-check-inline">
+                                            <input asp-for="Status" type="radio" id="R1" name="Status" value="1" class="form-check-input" checked>
+                                            <label class="form-check-label col-form-label col-form-label-sm" for="R1">โสด</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input asp-for="Status" type="radio" id="R2" name="Status" value="2" class="form-check-input">
+                                            <label class="form-check-label col-form-label col-form-label-sm " for="R2">สมรส</label>
+                                        </div>
+                                    </div>
+                                </div>                                
                             </div>
                         </section>
-
+                        <!-- กำหนดสาขา -->
+                        <section class="mb-3">
+                            <div class="row">
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <div class="card border-0 bg-info-light">
+                                        <div class="card-body">
+                                            <div class="form-check">
+                                                <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="B1" value="1" onchange="branchCheck()" checked>
+                                                <label class="form-check-label col-form-label-sm" for="B1">
+                                                    ใช้ได้ทุกสาขา
+                                                </label>
+                                            </div>
+                                            <div class="form-row align-items-center">
+                                                <div class="col-auto">
+                                                    <div class="form-check">
+                                                        <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="B2" value="2" onchange="branchCheck()">
+                                                        <label class="form-check-label col-form-label-sm" for="B2">
+                                                            สาขา
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <select asp-for="BchName" class="form-control form-control-sm" id="txtBchName">
+                                                        <option value="" selected>--เลือกสาขา--</option>
+                                                        @{
+                                                            foreach (var row in ViewBag.Branch)
+                                                            {
+                                                                <option value="@row.BranchId">@row.BranchName</option>
+                                                            }
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>                                    
+                        </section>
                         <!-- Address -->
-                        <section class="content-address">
-                            <p class="font-weight-bold"><i class="fas fa-map-marked-alt"></i>&nbsp;ที่อยู่</p>
+                        <section>
+                            <div class="alert alert-primary py-2 mb-0" role="alert">
+                                <i class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;ที่อยู่
+                            </div>
                             <div class="row">
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
@@ -180,7 +252,13 @@
                         </section>
                     </form>
                 </section>
-
+                <!-- Footer -->
+                <section>
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="#" class="btn btn-sm btn-blue mr-3" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
+                        <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
+                    </div>
+                </section>
             </div>
         </div>
 
@@ -194,6 +272,8 @@
     <script>
         $(document).ready(function () {
             $(".item_click_Emproyee").addClass("active");
+
+            branchCheck()
 
             $('.datepickernow').datepicker({
                 language: 'th-th',
@@ -214,7 +294,17 @@
             });
         });
 
-        @*document.querySelector("[btn-save]").addEventListener('click', () => {
+        function branchCheck() {
+            const B1 = $('#B1')
+            const Branch = $('#txtBchName')
+            if (B1.prop("checked") == true) {
+                Branch.prop('disabled', true)
+            } else {
+                Branch.prop('disabled', false)
+            }
+        }
+
+        document.querySelector("[btn-save]").addEventListener('click', () => {
              Swal.fire({
                 text: "ต้องการบันทึกข้อมูลหรือไม่ ?",
                 icon: 'warning',
@@ -225,8 +315,16 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    document.FrmMember.action = '@Url.Action("FrmProfile")'
-                    document.FrmMember.submit();
+
+                    if ($('#B2').prop("checked") == true) {
+                        if ($('#txtBchName').val() == '') {
+                            Swal.fire({ text: "กรุณากรอกข้อมูล สาขา", icon: 'warning' })
+                            return;
+                        }
+                    }
+
+                    document.FrmEmproyee.action = '@Url.Action("FrmEmproyee")'
+                    document.FrmEmproyee.submit();
                 }
             })
         })
@@ -242,10 +340,10 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    document.FrmMember.action = '@Url.Action("Delete")'
-                    document.FrmMember.submit();
+                    document.FrmEmproyee.action = '@Url.Action("Delete")'
+                    document.FrmEmproyee.submit();
                 }
             })
-        })*@
+        })
     </script>
 }

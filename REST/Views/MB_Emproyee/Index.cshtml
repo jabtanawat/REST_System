@@ -37,7 +37,8 @@
                             {
                                 <tr>
                                     <td>@row.EmproyeeId</td>
-                                    <td colspan="2">@row.Title</td>
+                                    <td>@row.Name</td>
+                                    <td>@row.PositionName</td>
                                     <td class="text-center"><a href="@Url.Action("FrmEmproyee", "MB_Emproyee", new { mode = "Edit", id = row.EmproyeeId})" class="text-info"><i class="fas fa-edit"></i></a></td>
                                 </tr>
                             }
