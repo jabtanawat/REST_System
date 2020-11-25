@@ -79,6 +79,10 @@ namespace REST.Controllers
                 _db.MG_Branch.Remove(item);
                 _db.SaveChanges();
 
+                var Running = _db.CD_Running.Where(x => x.BranchId == info.BranchId).ToList();
+                _db.CD_Running.RemoveRange(Running);
+                _db.SaveChanges();
+
                 toastrAlert("สาขา", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
                 return RedirectToAction("Index");
             }
@@ -107,6 +111,15 @@ namespace REST.Controllers
                         {
                             item.BranchId = info.BranchId;
                             item.BranchName = info.BranchName;
+                            item.St = info.St;
+                            item.AddrNo = info.AddrNo;
+                            item.Moo = info.Moo;
+                            item.Road = info.Road;
+                            item.Soi = info.Soi;
+                            item.Locality = info.Locality;
+                            item.District = info.District;
+                            item.Province = info.Province;
+                            item.ZibCode = info.ZibCode;
                             /* DATA */
                             item.CreateUser = User.Identity.Name;
                             item.CreateDate = Share.FormatDate(DateTime.Now).Date;
@@ -115,6 +128,9 @@ namespace REST.Controllers
 
                             _db.MG_Branch.Add(item);
                             _db.SaveChanges();
+
+                            // เพิ่ม Running ประจำสาขา
+                            AddRunning(info);
                         }
 
                         break;
@@ -123,6 +139,15 @@ namespace REST.Controllers
 
                         item = _db.MG_Branch.FirstOrDefault(x => x.BranchId == info.BranchId);
                         item.BranchName = info.BranchName;
+                        item.St = info.St;
+                        item.AddrNo = info.AddrNo;
+                        item.Moo = info.Moo;
+                        item.Road = info.Road;
+                        item.Soi = info.Soi;
+                        item.Locality = info.Locality;
+                        item.District = info.District;
+                        item.Province = info.Province;
+                        item.ZibCode = info.ZibCode;
                         /* DATA */
                         item.UpdateUser = User.Identity.Name;
                         item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
@@ -138,6 +163,104 @@ namespace REST.Controllers
             catch (Exception)
             {
                 Alert("", "Error Data !", Enums.NotificationType.error);
+                return false;
+            }
+        }
+
+        public Boolean AddRunning(MG_Branch info)
+        {
+            var item = new CD_Running();
+            try
+            {
+                item.Name = "Emproyee";
+                item.Front = "EM";
+                item.Number = "0000";
+                item.AutoRun = true;
+                item.SetDate = null;
+                item.AutoDate = false;
+                /* DATA */
+                item.BchName = null;
+                item.BranchId = info.BranchId;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                _db.CD_Running.Add(item);
+                _db.SaveChanges();
+
+                item.Name = "Member";
+                item.Front = "MB";
+                item.Number = "0000";
+                item.AutoRun = true;
+                item.SetDate = null;
+                item.AutoDate = false;
+                /* DATA */
+                item.BchName = null;
+                item.BranchId = info.BranchId;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                _db.CD_Running.Add(item);
+                _db.SaveChanges();
+
+                item.Name = "Payment";
+                item.Front = "PY";
+                item.Number = "0000";
+                item.AutoRun = true;
+                item.SetDate = null;
+                item.AutoDate = false;
+                /* DATA */
+                item.BchName = null;
+                item.BranchId = info.BranchId;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                _db.CD_Running.Add(item);
+                _db.SaveChanges();
+
+                item.Name = "Order";
+                item.Front = "OR";
+                item.Number = "0000";
+                item.AutoRun = true;
+                item.SetDate = null;
+                item.AutoDate = false;
+                /* DATA */
+                item.BchName = null;
+                item.BranchId = info.BranchId;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                _db.CD_Running.Add(item);
+                _db.SaveChanges();
+
+                item.Name = "Store";
+                item.Front = "ST";
+                item.Number = "0000";
+                item.AutoRun = true;
+                item.SetDate = null;
+                item.AutoDate = false;
+                /* DATA */
+                item.BchName = null;
+                item.BranchId = info.BranchId;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                _db.CD_Running.Add(item);
+                _db.SaveChanges();
+
+                return true;
+            }
+            catch (Exception)
+            {
                 return false;
             }
         }

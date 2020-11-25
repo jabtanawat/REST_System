@@ -17,54 +17,128 @@ namespace REST.Controllers
     [Authorize]
     public class RunningController : BaseController
     {
-        #region db
+        #region Connect db
         private readonly DbConnection _db;
 
         public RunningController(DbConnection db)
         {
             _db = db;
         }
-
         #endregion 
+
         public IActionResult Index()
         {
-            var LOrder = GetRunning("Order");
-            var IOrder = new ViewRunning();
-            foreach (var row in LOrder)
-            {
-                IOrder.Name = row.Name;
-                IOrder.Number = row.Number;
-            }
-            ViewBag.RunningOrder = IOrder;
+            LoadForm();
+            return View();            
+        }
 
-            var LPayment = GetRunning("Payment");
-            var IPayment = new ViewRunning();
-            foreach (var row in LPayment)
-            {
-                IPayment.Name = row.Name;
-                IPayment.Number = row.Number;
-            }
-            ViewBag.RunningPayment = IPayment;
+        public IActionResult FrmRunning(string name, string branchid)
+        {
+            var item = new ViewRunning();
+            var infoBranch = _db.MG_Branch.FirstOrDefault(x => x.BranchId == branchid);
+            var infoRunning = _db.CD_Running.FirstOrDefault(x => x.Name == name && x.BranchId == branchid);
+            item.BranchId = infoBranch.BranchId;
+            item.BranchName = infoBranch.BranchName;
+            item.Name = infoRunning.Name;
+            if (infoRunning.Name == "Emproyee")
+                item.NameTh = "พนักงาน";
+            else if (infoRunning.Name == "Member")
+                item.NameTh = "สมาชิก";
+            item.Front = infoRunning.Front;
+            item.Number = infoRunning.Number;
+            item.AutoRun = infoRunning.AutoRun;
+            item.SetDate = infoRunning.SetDate;
+            item.AutoDate = infoRunning.AutoDate;
+            return View(item);
+        }
 
-            var LStore = GetRunning("Store");
-            var IStore = new ViewRunning();
-            foreach (var row in LStore)
+        [HttpPost]
+        public IActionResult FrmRunning(ViewRunning info)
+        {
+            if (ModelState.IsValid)
             {
-                IStore.Name = row.Name;
-                IStore.Number = row.Number;
+                if (SaveData(info))
+                {
+                    toastrAlert("เลข Running", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    return View();
+                }
             }
-            ViewBag.RunningStore = IStore;
+            else
+            {
+                Alert("", "ไม่สามารถบันทึกข้อมูลได้ !", Enums.NotificationType.error);
+                return View();
+            }
+        }
 
-            var LMember = GetRunning("Member");
+        public JsonResult AView(string id)
+        {
+            var List = new List<ViewRunning>();
+
+            var LEmproyee = _db.CD_Running.Where(x => x.Name == "Emproyee" && x.BranchId == id).ToList();
+            var IEmproyee = new ViewRunning();
+            foreach (var row in LEmproyee)
+            {
+                IEmproyee.Name = row.Name;
+                IEmproyee.NameTh = "พนักงาน";
+                IEmproyee.Front = row.Front;
+                IEmproyee.Number = row.Number;
+                IEmproyee.AutoRun = row.AutoRun;
+                List.Add(IEmproyee);
+            }
+
+            var LMember = _db.CD_Running.Where(x => x.Name == "Member" && x.BranchId == id).ToList();
             var IMember = new ViewRunning();
             foreach (var row in LMember)
             {
                 IMember.Name = row.Name;
+                IMember.NameTh = "สมาชิก";
+                IMember.Front = row.Front;
                 IMember.Number = row.Number;
+                IMember.AutoRun = row.AutoRun;
+                List.Add(IMember);
             }
-            ViewBag.RunningMember = IMember;
 
-            return View();
+            var LOrder = _db.CD_Running.Where(x => x.Name == "Order" && x.BranchId == id).ToList();
+            var IOrder = new ViewRunning();
+            foreach (var row in LOrder)
+            {
+                IOrder.Name = row.Name;
+                IOrder.NameTh = "ออเดอร์";
+                IOrder.Front = row.Front;
+                IOrder.Number = row.Number;
+                IOrder.AutoRun = row.AutoRun;
+                List.Add(IOrder);
+            }
+
+            var LPayment = _db.CD_Running.Where(x => x.Name == "Payment" && x.BranchId == id).ToList();
+            var IPayment = new ViewRunning();
+            foreach (var row in LPayment)
+            {
+                IPayment.Name = row.Name;
+                IPayment.NameTh = "ชำระเงิน";
+                IPayment.Front = row.Front;
+                IPayment.Number = row.Number;
+                IPayment.AutoRun = row.AutoRun;
+                List.Add(IPayment);
+            }
+
+            var LStore = _db.CD_Running.Where(x => x.Name == "Store" && x.BranchId == id).ToList();
+            var IStore = new ViewRunning();
+            foreach (var row in LStore)
+            {
+                IStore.Name = row.Name;
+                IStore.NameTh = "สั่งซื้อ";
+                IStore.Front = row.Front;
+                IStore.Number = row.Number;
+                IStore.AutoRun = row.AutoRun;
+                List.Add(IStore);
+            }
+
+            return Json(new { data = List }) ;
         }
 
         public IActionResult Edit(string id)
@@ -105,40 +179,36 @@ namespace REST.Controllers
             }
             else
             {
-                if (SaveData(Results, BranchId))
-                {
-                    AlertTop("บันทึกข้อมูลเรียบร้อย", NotificationType.success);
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    Alert("Error", "ไม่สามารถบันทึกข้อมูล Running ได้ !", NotificationType.error);
-                    return View();
-                }                
+                //if (SaveData(Results))
+                //{
+                //    AlertTop("บันทึกข้อมูลเรียบร้อย", NotificationType.success);
+                //    return RedirectToAction("Index");
+                //}
+                //else
+                //{
+                //    Alert("Error", "ไม่สามารถบันทึกข้อมูล Running ได้ !", NotificationType.error);
+                //    return View();
+                //}
+                return View();
             }
         }
 
-        public Boolean SaveData(CD_Running Results, string BranchId)
+        public Boolean SaveData(ViewRunning info)
         {
+            var item = new CD_Running();
             try
             {
-                var Item = new CD_Running();
-                Item.Name = Results.Name;
-                Item.Front = Results.Front;
-                Item.Number = Results.Number;
-                Item.AutoRun = Results.AutoRun;
-                Item.SetDate = Results.SetDate;
-                Item.AutoDate = Results.AutoRun;
-                Item.SetDate = Results.SetDate;
-                Item.AutoDate = Results.AutoDate;
+                item = _db.CD_Running.FirstOrDefault(x => x.Name == info.Name && x.BranchId == info.BranchId);
+                item.Front = info.Front;
+                item.Number = info.Number;
+                item.AutoRun = info.AutoRun;
+                item.SetDate = info.SetDate;
+                item.AutoDate = info.AutoRun;
                 /* DATA */
-                Item.BranchId = BranchId;
-                Item.CreateUser = User.Identity.Name;
-                Item.CreateDate = DateTime.Now;
-                Item.UpdateUser = User.Identity.Name;
-                Item.UpdateDate = DateTime.Now;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                _db.CD_Running.Add(Item);
+                _db.CD_Running.Update(item);
                 _db.SaveChanges();
 
                 return true;
@@ -239,6 +309,75 @@ namespace REST.Controllers
             }
 
             return Json(new { data = DocRunning });
+        }
+
+        public void LoadForm()
+        {
+            var List = new List<ViewRunning>();
+            var B = _db.MG_Branch.FirstOrDefault();
+
+            var LEmproyee = _db.CD_Running.Where(x => x.Name == "Emproyee" && x.BranchId == B.BranchId).ToList();
+            var IEmproyee = new ViewRunning();
+            foreach (var row in LEmproyee)
+            {
+                IEmproyee.Name = row.Name;
+                IEmproyee.NameTh = "พนักงาน";
+                IEmproyee.Front = row.Front;
+                IEmproyee.Number = row.Number;
+                IEmproyee.AutoRun = row.AutoRun;
+                List.Add(IEmproyee);
+            }
+
+            var LMember = _db.CD_Running.Where(x => x.Name == "Member" && x.BranchId == B.BranchId).ToList();
+            var IMember = new ViewRunning();
+            foreach (var row in LMember)
+            {
+                IMember.Name = row.Name;
+                IMember.NameTh = "สมาชิก";
+                IMember.Front = row.Front;
+                IMember.Number = row.Number;
+                IMember.AutoRun = row.AutoRun;
+                List.Add(IMember);
+            }
+
+            var LOrder = _db.CD_Running.Where(x => x.Name == "Order" && x.BranchId == B.BranchId).ToList();
+            var IOrder = new ViewRunning();
+            foreach (var row in LOrder)
+            {
+                IOrder.Name = row.Name;
+                IOrder.NameTh = "ออเดอร์";
+                IOrder.Front = row.Front;
+                IOrder.Number = row.Number;
+                IOrder.AutoRun = row.AutoRun;
+                List.Add(IOrder);
+            }
+
+            var LPayment = _db.CD_Running.Where(x => x.Name == "Payment" && x.BranchId == B.BranchId).ToList();
+            var IPayment = new ViewRunning();
+            foreach (var row in LPayment)
+            {
+                IPayment.Name = row.Name;
+                IPayment.NameTh = "ชำระเงิน";
+                IPayment.Front = row.Front;
+                IPayment.Number = row.Number;
+                IPayment.AutoRun = row.AutoRun;
+                List.Add(IPayment);
+            }
+
+            var LStore = _db.CD_Running.Where(x => x.Name == "Store" && x.BranchId == B.BranchId).ToList();
+            var IStore = new ViewRunning();
+            foreach (var row in LStore)
+            {
+                IStore.Name = row.Name;
+                IStore.NameTh = "สั่งซื้อ";
+                IStore.Front = row.Front;
+                IStore.Number = row.Number;
+                IStore.AutoRun = row.AutoRun;
+                List.Add(IStore);
+            }
+
+            ViewBag.Branch = _db.MG_Branch.ToList();
+            ViewBag.Running = List;
         }
     }
 }

@@ -47,6 +47,9 @@ namespace REST.Data
         // ***Manage MG
         public DbSet<MG_Branch> MG_Branch { get; set; }
 
+        // ***Setting
+        public DbSet<Setting> Setting { get; set; }
+
         // ***Setting pramary key
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -82,6 +85,9 @@ namespace REST.Data
 
             // ***บริหาร MG
             modelBuilder.Entity<MG_Branch>().HasKey(x => new { x.BranchId });
+
+            // ***Setting
+            modelBuilder.Entity<Setting>().HasKey(x => new { x.id });
         }
     }
 }

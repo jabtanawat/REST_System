@@ -70,22 +70,21 @@ namespace REST.ApiControllers
         {
             var List = new List<ViewFoodSub>();
             string sqlWhrer = null;
-            string sql = $"SELECT CD_FoodSub.StapleId, CD_Staple.StapleName, CD_FoodSub.Amount, CD_FoodSub.UnitId, CD_Unit.UnitName "
+            string sql = $"SELECT CD_FoodSub.StapleId, CD_Staple.StapleName, CD_FoodSub.Amount, CD_Staple.Unit "
                     + $"FROM CD_FoodSub "
-                    + $"LEFT JOIN CD_Staple ON CD_FoodSub.UnitId = CD_Staple.StapleId "
-                    + $"LEFT JOIN CD_Unit ON CD_FoodSub.UnitId = CD_Unit.UnitId ";
+                    + $"LEFT JOIN CD_Staple ON CD_FoodSub.StapleId = CD_Staple.StapleId ";
 
             if (branchid != null)
                 sqlWhrer += $"CD_FoodSub.BranchId = '{branchid}' ";
 
-            if (sqlWhrer != null)
-                sql += "WHERE " + sqlWhrer;
-
             if (id != null)
                 if (sqlWhrer != null)
-                    sql += $"CD_FoodSub.FoodId = '{id}' ";
+                    sqlWhrer += $"AND CD_FoodSub.FoodId = '{id}' ";
                 else
-                    sql += $"AND CD_FoodSub.FoodId = '{id}' ";
+                    sqlWhrer += $"CD_FoodSub.FoodId = '{id}' ";
+
+            if (sqlWhrer != null)
+                sql += "WHERE " + sqlWhrer;
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
@@ -103,9 +102,7 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(2))
                             Item.Amount = data.GetDecimal(2);
                         if (!data.IsDBNull(3))
-                            Item.UnitId = data.GetString(3);
-                        if (!data.IsDBNull(4))
-                            Item.UnitName = data.GetString(4);
+                            Item.UnitName = data.GetString(3);
                         List.Add(Item);
                     }
                 }

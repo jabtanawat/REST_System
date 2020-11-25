@@ -21,7 +21,7 @@
                 <!-- Form -->
                 <section class="FrmPanel">
                     <form name="FrmBranch" method="post">
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-lg-5 col-md-12 col-12  mx-auto">
                                 <div class="form-group">
                                     <label class="col-form-label col-form-label-sm">รหัส :</label>
@@ -40,8 +40,78 @@
                                     <input type="text" class="form-control form-control-sm" asp-for="BranchName">
                                     <span asp-validation-for="BranchName" class="text-danger col-form-label-sm"></span>
                                 </div>
+                                <div class="form-check">
+                                    <input asp-for="St" class="form-check-input mt-2" type="checkbox" id="defaultCheck1">
+                                    <label class="form-check-label col-form-label-sm" for="defaultCheck1">
+                                        สาขาหลัก
+                                    </label>
+                                </div>
                             </div>
                         </div>
+                        <!-- Address -->
+                        <section>
+                            <div class="alert alert-primary py-2 mb-0" role="alert">
+                                <i class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;ที่อยู่
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label form-label-sm">เลขที่ :</label>
+                                        <input asp-for="AddrNo" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="AddrNo" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label form-label-sm">หมู่ :</label>
+                                        <input asp-for="Moo" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="Moo" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label form-label-sm">ถนน :</label>
+                                        <input asp-for="Road" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="Road" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label form-label-sm">ซอย :</label>
+                                        <input asp-for="Soi" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="Soi" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label form-label-sm">ตำบล / แขวง :</label>
+                                        <input asp-for="Locality" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="Locality" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label form-label-sm">อำเภอ / เขต :</label>
+                                        <input asp-for="District" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="District" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label form-label-sm">จังหวัด :</label>
+                                        <input asp-for="Province" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="Province" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-lg-4 col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-form-label form-label-sm">รหัสไปรษณีย์ :</label>
+                                        <input asp-for="ZibCode" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="ZibCode" class="text-danger col-form-label-sm"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                     </form>
                 </section>
                 <!-- Footer -->

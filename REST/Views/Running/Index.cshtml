@@ -1,13 +1,16 @@
-﻿@{
+﻿@model REST.ViewModels.ViewRunning;
+@{
     ViewData["Title"] = "Store Back";
     ViewData["System"] = "Running";
     Layout = "_StoreBack";
+    var Running = ViewBag.Running;
 
-    var R_Order = ViewBag.RunningOrder;
-    var R_Payment = ViewBag.RunningPayment;
-    var R_Store = ViewBag.RunningStore;
-    var R_Member = ViewBag.RunningMember;
+    //var R_Order = ViewBag.RunningOrder;
+    //var R_Payment = ViewBag.RunningPayment;
+    //var R_Store = ViewBag.RunningStore;
+    //var R_Member = ViewBag.RunningMember;
 }
+
 
 @section Styles {
     
@@ -16,8 +19,72 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 col-12 mx-auto">
-                <div class="row form-group">
+            <div class="col-xl-11 mx-auto">
+                <div class="row">
+                    <div class="col-md-5 mx-auto">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label col-form-label-sm text-sm-right">สาขา :</label>
+                            <div class="col-sm-9">
+                                <select id="txtBranchId" class="form-control form-control-sm" onchange="load(this.value)">
+                                    @{
+                                        foreach (var row in ViewBag.Branch)
+                                        {
+                                            <option value="@row.BranchId">@row.BranchName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>                       
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-10 mx-auto">
+                        <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;ข้อมูล Running</p>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr hidden>
+                                    <th class="text-center">ชื่อเอกสาร</th>
+                                    <th class="text-center">อักษรนำหน้า</th>
+                                    <th class="text-center">เลข Running</th>
+                                    <th class="text-center">AutoRun</th>
+                                    <th class="text-center"><i class="fas fa-info-circle"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tPanel">
+                                @{
+                                    if (Running != null && Running.Count > 0)
+                                    {
+                                        foreach (var row in Running)
+                                        {
+                                            <tr>
+                                                <td>@row.NameTh</td>
+                                                <td>@row.Front</td>
+                                                <td>@row.Number</td>
+                                                <td class="text-center">
+                                                    <input type="checkbox" class="form-check-input ml-n1" checked="@row.AutoRun" />
+                                                </td>
+                                                <td class="text-center" style="width:5%;"><a href="#" onclick="Edit('@row.Name');" class="text-info"><i class="fas fa-pencil-alt"></i></a></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center text-danger" colspan="5">ไม่มีรายการ</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+
+
+
+                @*<div class="row form-group">
                     <div class="col-4 text-right">
                         <label class="col-form-label col-form-label-sm">รายการสั่งอาหาร</label>
                     </div>
@@ -60,7 +127,7 @@
                     <div class="col-4 text-left">
                         <a asp-controller="Running" asp-action="Edit" asp-route-id="@R_Member.Name" class="btn btn-sm btn-info btn-sm shadow-sm"><i class="fas fa-edit"></i></a>
                     </div>
-                </div>
+                </div>*@
             </div>
         </div>        
     </div>
@@ -71,5 +138,49 @@
         $(document).ready(function () {
             $(".item_click_Running").addClass("active");
         })
+
+        function load(id) {
+            $.get("@Url.Action("AView", "Running")", { id: id },
+                function (data, status) {
+                    const Panel = $('#tPanel')
+                    Panel.empty()
+                    $.each(data, function (index, val) {
+                        if (val.length > 0) {
+                            val.forEach(function (value) {
+
+                                var t = `<tr>`
+                                    + `<td>${value.nameTh}</td>`
+                                    + `<td>${value.front}</td>`
+                                    + `<td>${value.number}</td>`
+                                    + `<td class="text-center">`;
+                                if (value.autoRun == true) {
+                                    t += `<input type="checkbox" class="form-check-input ml-n1" checked />`
+                                } else {
+                                    t += `<input type="checkbox" class="form-check-input ml-n1" />`
+                                }
+
+                                    t += `</td>`
+                                    + `<td class="text-center" style="width:5%;"><a href="#" onclick="Edit('${value.name}')" class="text-info"><i class="fas fa-pencil-alt"></i></a></td>`
+                                    + `</tr>`;
+
+                                Panel.append(t)
+                            })
+                        } else {
+                            var t = `<tr>`
+                                + `<td class="text-center text-danger" colspan="5">ไม่มีรายการ</td>`
+                                + `</tr>`;
+
+                            Panel.append(t)
+                        }
+
+                    })
+                }
+            )
+        }
+
+        function Edit(name) {
+            const branchid = $('#txtBranchId').val()
+            window.location.href = '@Url.Action("FrmRunning", "Running")?name=' + name + '&branchid=' + branchid
+        }
     </script>
 }

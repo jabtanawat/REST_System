@@ -61,12 +61,22 @@ namespace REST.ApiControllers
         public ViewStaple StapleId(string id, string branchid)
         {
             var item = new ViewStaple();
-            var sql = $"SELECT StapleId, StapleName, Amount, UnitName "
-                    + $"FROM CD_Staple "
-                    + $"LEFT JOIN CD_Unit ON CD_Staple.UnitId = CD_Unit.UnitId "
-                    + $"WHERE CD_Staple.BranchId = '{branchid}'";
-                    if (id != null)
-                        sql += $"AND StapleId = '{id}'";
+            string sqlWhrer = null;
+            string sql = $"SELECT StapleId, StapleName, QtyBalance, Unit "
+                    + $"FROM CD_Staple ";
+
+            if (branchid != null)
+                sqlWhrer += $"BranchId = '{branchid}' ";
+
+            if (id != null)
+                if (sqlWhrer != null)
+                    sqlWhrer += $"AND StapleId = '{id}' ";
+                else
+                    sqlWhrer += $"StapleId = '{id}' ";
+
+            if (sqlWhrer != null)
+                sql += "WHERE " + sqlWhrer;
+
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
                 command.CommandText = sql;
