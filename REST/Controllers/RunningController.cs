@@ -102,6 +102,18 @@ namespace REST.Controllers
                 List.Add(IMember);
             }
 
+            var LSupplier = _db.CD_Running.Where(x => x.Name == "Supplier" && x.BranchId == id).ToList();
+            var ISupplier = new ViewRunning();
+            foreach (var row in LSupplier)
+            {
+                ISupplier.Name = row.Name;
+                ISupplier.NameTh = "ผู้จัดจำหน่าย";
+                ISupplier.Front = row.Front;
+                ISupplier.Number = row.Number;
+                ISupplier.AutoRun = row.AutoRun;
+                List.Add(ISupplier);
+            }
+
             var LOrder = _db.CD_Running.Where(x => x.Name == "Order" && x.BranchId == id).ToList();
             var IOrder = new ViewRunning();
             foreach (var row in LOrder)
@@ -338,6 +350,18 @@ namespace REST.Controllers
                 IMember.Number = row.Number;
                 IMember.AutoRun = row.AutoRun;
                 List.Add(IMember);
+            }
+
+            var LSupplier = _db.CD_Running.Where(x => x.Name == "Supplier" && x.BranchId == B.BranchId).ToList();
+            var ISupplier = new ViewRunning();
+            foreach (var row in LSupplier)
+            {
+                ISupplier.Name = row.Name;
+                ISupplier.NameTh = "ผู้จัดจำหน่าย";
+                ISupplier.Front = row.Front;
+                ISupplier.Number = row.Number;
+                ISupplier.AutoRun = row.AutoRun;
+                List.Add(ISupplier);
             }
 
             var LOrder = _db.CD_Running.Where(x => x.Name == "Order" && x.BranchId == B.BranchId).ToList();

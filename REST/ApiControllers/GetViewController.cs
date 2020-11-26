@@ -179,7 +179,7 @@ namespace REST.ApiControllers
                 sqlWhrer += $"BranchId = '{branchid}' ";
 
             if (sqlWhrer != null)
-                sql += "WHERE " + sqlWhrer;
+                sql += $"WHERE " + sqlWhrer;
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {

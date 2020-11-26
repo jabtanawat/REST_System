@@ -1,10 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Store Back";
-    ViewData["System"] = "เครื่องดื่ม";
-    Layout = "_StoreBack";
+    ViewData["Title"] = "Supplier";
+    ViewData["System"] = "Supplier";
+    Layout = "_Member";
 }
 
-@section Styles {
+@section Styles{
     <link rel="stylesheet" href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" />
 }
 
@@ -16,7 +16,7 @@
                 <section>
                     <div class="d-flex mb-2">
                         <div class="mr-2">
-                            <a href="@Url.Action("FrmDrink", "CD_Drink", new { mode = "Add"})" class="btn btn-sm btn-success"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmSupplier", "MB_Supplier", new { mode = "Add"})" class="btn btn-sm btn-success"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
                     </div>
                     <hr />
@@ -27,21 +27,19 @@
                         <thead class="thead-black">
                             <tr>
                                 <th class="text-center" style="width:20%;"> รหัส </th>
-                                <th class="text-center"> ชื่อ </th>
-                                <th class="text-center" style="width:10%;"> ราคา </th>
-                                <th class="text-center" style="width:15%;"> กลุ่มอาหาร </th>
+                                <th class="text-center"> ชื่อ - นามสกุล </th>
+                                @*<th class="text-center" style="width:20%;"> ตำแหน่งงาน </th>*@
                                 <th class="text-center" style="width:5%;"> <i class="fas fa-info"></i> </th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var row in ViewBag.Drink)
+                            @foreach (var row in ViewBag.Supplier)
                             {
                                 <tr>
-                                    <td>@row.DrinkId</td>
-                                    <td>@row.DrinkName</td>
-                                    <td class="text-right">@row.Price</td>
-                                    <td class="text-center">@row.GroupFoodName</td>
-                                    <td class="text-center"><a href="@Url.Action("FrmDrink", "CD_Drink", new { mode = "Edit", id = row.DrinkId})" class="text-info"><i class="fas fa-edit"></i></a></td>
+                                    <td>@row.SupplierId</td>
+                                    <td>@row.Title @row.FirstName @row.LastName</td>
+                                    @*<td>@row.PositionName</td>*@
+                                    <td class="text-center"><a href="@Url.Action("FrmSupplier", "MB_Supplier", new { mode = "Edit", id = row.SupplierId})" class="text-info"><i class="fas fa-edit"></i></a></td>
                                 </tr>
                             }
                         </tbody>
@@ -57,12 +55,12 @@
     <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script>
         $(document).ready(function () {
+            $(".item_click_Supplier").addClass("active");
+
             $('#DT_Table').DataTable({
                 "info": false,
                 "ordering": false
             });
-
-            $(".item_click_Drink").addClass("active");
         });
     </script>
 }

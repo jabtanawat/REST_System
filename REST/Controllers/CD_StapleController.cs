@@ -119,7 +119,6 @@ namespace REST.Controllers
                             item.StapleId = info.StapleId;
                             item.StapleName = info.StapleName;
                             item.QtyLow = Share.FormatDecimal(info.QtyLow);
-                            item.QtyBalance = Share.FormatDecimal(info.QtyBalance);
                             item.Unit = info.Unit;
                             item.Tax = info.Tax;
                             /* DATA */
@@ -142,7 +141,6 @@ namespace REST.Controllers
                         item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == info.StapleId && x.BranchId == branchid);
                         item.StapleName = info.StapleName;
                         item.QtyLow = Share.FormatDecimal(info.QtyLow);
-                        item.QtyBalance = Share.FormatDecimal(info.QtyBalance);
                         item.Unit = info.Unit;
                         item.Tax = info.Tax;
                         /* DATA */
@@ -193,7 +191,6 @@ namespace REST.Controllers
             item.StapleId = CD_Staple.StapleId;
             item.StapleName = CD_Staple.StapleName;
             item.QtyLow = Share.Cnumber(Share.FormatDouble(CD_Staple.QtyLow), 2);
-            item.QtyBalance = Share.Cnumber(Share.FormatDouble(CD_Staple.QtyBalance), 2);
             item.Tax = CD_Staple.Tax;
             item.Unit = CD_Staple.Unit;
             item.Bch = CD_Staple.Bch;

@@ -1,8 +1,8 @@
 ﻿@using REST.Service;
-@model ViewMB_Member;
+@model ViewMB_Supplier;
 @{
-    ViewData["Title"] = "Member Profile";
-    ViewData["System"] = "ทะเบียนสมาชิก";
+    ViewData["Title"] = "Personnel";
+    ViewData["System"] = "Supplier";
     Layout = "_Member";
 }
 
@@ -12,67 +12,45 @@
 
 <div class="card">
     <div class="card-body">
-
         <div class="row">
             <div class="col-xl-11 mx-auto">
                 <!-- Header -->
-                <section>
+                <section class="FrmHeader">
                     <div class="d-flex mb-2">
                         <div class="mr-auto">
-                            <a href="@Url.Action("FrmEmproyee", "MB_Emproyee", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmSupplier", "MB_Supplier", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
                     </div>
                     <hr />
                 </section>
-
-                @*<section class="Frm-Header">
-                    <div class="d-flex justify-content-end mb-2">
-                        <a href="@Url.Action("FrmProfile", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่มใหม่</a>
-                        <a href="#" class="btn btn-sm btn-danger mr-3 @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
-                        <a href="#" class="btn btn-sm btn-blue" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
-                    </div>
-                    <hr />
-                </section>*@
-
-                <!-- Content -->
+                <!-- Form -->
                 <section>
-                    <form name="FrmMember" method="post">
+                    <form name="FrmSupplier" method="post">
                         <!-- profile -->
-                        <section class="mb-3">
+                        <section>
                             <div class="alert alert-primary py-2 mb-0" role="alert">
                                 <i class="fas fa-user"></i>&nbsp;&nbsp;ข้อมูล
                             </div>
                             <div class="row">
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label form-label-sm">รหัสสมาชิก :</label>
+                                        <label class="col-form-label form-label-sm">รหัส Supplier :</label>
                                         @if (ViewData["Readonly"].ToString() != "")
                                         {
                                             if (ViewData["DocRunning"].ToString() != "")
                                             {
-                                                <input asp-for="MemberId" type="text" value="@ViewData["DocRunning"].ToString()" class="form-control form-control-sm" readonly>
+                                                <input asp-for="SupplierId" type="text" value="@ViewData["DocRunning"].ToString()" class="form-control form-control-sm" readonly>
                                             }
                                             else
                                             {
-                                                <input asp-for="MemberId" type="text" class="form-control form-control-sm" readonly>
+                                                <input asp-for="SupplierId" type="text" class="form-control form-control-sm" readonly>
                                             }
-
                                         }
                                         else
                                         {
-                                            <input asp-for="MemberId" type="text" class="form-control form-control-sm">
+                                            <input asp-for="SupplierId" type="text" class="form-control form-control-sm">
                                         }
-                                        <span asp-validation-for="MemberId" class="text-danger col-form-label-sm"></span>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label form-label-sm">ประเภท :</label>
-                                        <select asp-for="Type" class="form-control form-control-sm" id="txtType">
-                                            <option value="1">ทั่วไป</option>
-                                            <option value="2">สมาชิก</option>
-                                        </select>
-                                        <span asp-validation-for="Type" class="text-danger col-form-label-sm"></span>
+                                        <span asp-validation-for="SupplierId" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-6">
@@ -91,9 +69,9 @@
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label form-label-sm">วันที่หมดอายุ :</label>
-                                        <input asp-for="DateExp" type="text" class="form-control form-control-sm datepicker" placeholder="dd/mm/yyyy">
-                                        <span asp-validation-for="DateExp" class="text-danger col-form-label-sm"></span>
+                                        <label class="col-form-label form-label-sm">เลขประจำตัวผู้เสียภาษี :</label>
+                                        <input asp-for="TaxNumber" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="TaxNumber" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
                             </div>
@@ -128,31 +106,16 @@
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label form-label-sm">วันเกิด :</label>
-                                        <input asp-for="DateBirthday" type="text" class="form-control form-control-sm datepicker" placeholder="dd/mm/yyyy">
-                                        <span asp-validation-for="DateBirthday" class="text-danger col-form-label-sm"></span>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                    <label asp-for="Status" class="col-form-label form-label-sm">สถานะ :</label>
-                                    <div class="form-group">
-                                        <div class="form-check form-check-inline">
-                                            @*@Html.RadioButtonFor(Model => Model.Status, "1", new { @class = "form-check-input", @id = "R1", @checked = "true" })*@
-                                            <input asp-for="Status" type="radio" id="R1" name="Status" value="1" class="form-check-input" checked>
-                                            <label class="form-check-label col-form-label col-form-label-sm" for="R1">โสด</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            @*@Html.RadioButtonFor(Model => Model.Status, "2", new { @class = "form-check-input", @id = "R2" })*@
-                                            <input asp-for="Status" type="radio" id="R2" name="Status" value="2" class="form-check-input">
-                                            <label class="form-check-label col-form-label col-form-label-sm " for="R2">สมรส</label>
-                                        </div>
+                                        <label class="col-form-label form-label-sm">โทรศัพท์ (1) :</label>
+                                        <input asp-for="PhoneNumber1" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="PhoneNumber1" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label form-label-sm">เบอร์โทร :</label>
-                                        <input asp-for="PhoneNumber" type="text" class="form-control form-control-sm">
-                                        <span asp-validation-for="PhoneNumber" class="text-danger col-form-label-sm"></span>
+                                        <label class="col-form-label form-label-sm">โทรศัพท์ (2) :</label>
+                                        <input asp-for="PhoneNumber2" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="PhoneNumber2" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
                                 <div class="col-xl-3 col-lg-4 col-md-6">
@@ -164,30 +127,6 @@
                                 </div>
                             </div>
                         </section>
-
-                        <!-- Interest -->
-                        <section>
-                            <div class="alert alert-success py-2 mb-0" role="alert">
-                                <i class="fas fa-poll"></i>&nbsp;&nbsp;โปรโมชั่น
-                            </div>
-                            <div class="row">
-                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label form-label-sm">ส่วนลด :</label>
-                                        <input asp-for="Rebate" type="number" class="form-control form-control-sm text-right" id="txtRebate" placeholder="0">
-                                        <span asp-validation-for="Rebate" class="text-danger col-form-label-sm"></span>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label form-label-sm">คะแนนสะสม :</label>
-                                        <input asp-for="Score" type="text" class="form-control form-control-sm text-right" value="0.00" placeholder="0.00" readonly>
-                                        <span asp-validation-for="Score" class="text-danger col-form-label-sm"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
                         <!-- กำหนดสาขา -->
                         <section class="mb-3">
                             <div class="row">
@@ -203,14 +142,14 @@
                                             <div class="form-row align-items-center">
                                                 <div class="col-auto">
                                                     <div class="form-check">
-                                                        <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="B2" value="2" onchange="branchCheck()" disabled>
+                                                        <input asp-for="Bch" class="form-check-input mt-2" type="radio" name="Bch" id="B2" value="2" onchange="branchCheck()">
                                                         <label class="form-check-label col-form-label-sm" for="B2">
                                                             สาขา
                                                         </label>
                                                     </div>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <select asp-for="BchName" class="form-control form-control-sm" id="txtBchName" disabled>
+                                                    <select asp-for="BchName" class="form-control form-control-sm" id="txtBchName">
                                                         <option value="" selected>--เลือกสาขา--</option>
                                                         @{
                                                             foreach (var row in ViewBag.Branch)
@@ -222,13 +161,12 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
-                            </div>
+                            </div>                                    
                         </section>
-
                         <!-- Address -->
-                        <section class="content-address">
+                        <section>
                             <div class="alert alert-primary py-2 mb-0" role="alert">
                                 <i class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;ที่อยู่
                             </div>
@@ -291,17 +229,15 @@
                                 </div>
                             </div>
                         </section>
-
-                        <!-- Footer -->
-                        <section>
-                            <div class="d-flex justify-content-center mt-3">
-                                <a href="#" class="btn btn-sm btn-blue mr-3" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
-                                <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
-                            </div>
-                        </section>
                     </form>
                 </section>
-
+                <!-- Footer -->
+                <section>
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="#" class="btn btn-sm btn-blue mr-3" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
+                        <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
+                    </div>
+                </section>
             </div>
         </div>
 
@@ -313,11 +249,10 @@
     <script src="~/Plugins/Datepicker/bootstrap-datepicker-thai.js"></script>
     <script src="~/Plugins/Datepicker/locales/bootstrap-datepicker.th.js"></script>
     <script>
-
         $(document).ready(function () {
-            $(".item_click_Profile").addClass("active");
+            $(".item_click_Supplier").addClass("active");
 
-            txtRebate()
+            branchCheck()
 
             $('.datepicker').datepicker({
                 language: 'th-th',
@@ -329,23 +264,15 @@
             });
         });
 
-        function txtRebate() {
-            const type = document.getElementById("txtType").value
-            if (type == 1) {
-                $('#txtRebate').prop('readonly', true);
+        function branchCheck() {
+            const B1 = $('#B1')
+            const Branch = $('#txtBchName')
+            if (B1.prop("checked") == true) {
+                Branch.prop('disabled', true)
             } else {
-                $('#txtRebate').prop('readonly', false);
+                Branch.prop('disabled', false)
             }
         }
-
-        document.getElementById("txtType").addEventListener('change', () => {
-            const type = document.getElementById("txtType").value
-            if (type == 1) {
-                $('#txtRebate').prop('readonly', true);
-            } else {
-                $('#txtRebate').prop('readonly', false);
-            }
-        })
 
         document.querySelector("[btn-save]").addEventListener('click', () => {
              Swal.fire({
@@ -358,8 +285,16 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    document.FrmMember.action = '@Url.Action("FrmProfile")'
-                    document.FrmMember.submit();
+
+                    if ($('#B2').prop("checked") == true) {
+                        if ($('#txtBchName').val() == '') {
+                            Swal.fire({ text: "กรุณากรอกข้อมูล สาขา", icon: 'warning' })
+                            return;
+                        }
+                    }
+
+                    document.FrmSupplier.action = '@Url.Action("FrmSupplier")'
+                    document.FrmSupplier.submit();
                 }
             })
         })
@@ -375,8 +310,8 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    document.FrmMember.action = '@Url.Action("Delete")'
-                    document.FrmMember.submit();
+                    document.FrmSupplier.action = '@Url.Action("Delete")'
+                    document.FrmSupplier.submit();
                 }
             })
         })

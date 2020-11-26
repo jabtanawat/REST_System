@@ -47,7 +47,7 @@ namespace REST.Controllers
             {
                 _mode = Comp.FormMode.EDIT;
                 FrmMode();
-                var Item = _db.MB_Member.FirstOrDefault(x => x.MemberId == id && x.BranchId == branchid);
+                var Item = _db.MB_Member.FirstOrDefault(x => x.MemberId == id);
                 var data = info(Item);
                 return View(data);
             }
@@ -104,6 +104,7 @@ namespace REST.Controllers
                             Item.MemberId = Doc;
                             Item.Type = Info.Type;
                             Item.DateRegister = Share.FormatDate(Info.DateRegister).Date;
+                            Item.DateExp = Share.FormatDate(Info.DateExp).Date;
                             Item.IdCard = Info.IdCard;
                             Item.Title = Info.Title;
                             Item.FirstName = Info.FirstName;
@@ -120,8 +121,10 @@ namespace REST.Controllers
                             Item.District = Info.District;
                             Item.Province = Info.Province;
                             Item.ZibCode = Info.ZibCode;
-                            Item.Rebate = Info.Rebate;                            
+                            Item.Rebate = Info.Rebate;
                             /* DATA */
+                            Item.Bch = Info.Bch;
+                            Item.BchName = Info.BchName;
                             Item.BranchId = branchid;
                             Item.CreateUser = User.Identity.Name;
                             Item.CreateDate = Share.FormatDate(DateTime.Now).Date;
@@ -158,7 +161,8 @@ namespace REST.Controllers
                         Item.ZibCode = Info.ZibCode;
                         Item.Rebate = Info.Rebate;
                         /* DATA */
-                        Item.BranchId = branchid;
+                        Item.Bch = Info.Bch;
+                        Item.BchName = Info.BchName;
                         Item.UpdateUser = User.Identity.Name;
                         Item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
@@ -184,7 +188,7 @@ namespace REST.Controllers
             string branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
             try
             {
-                var Item = _db.MB_Member.FirstOrDefault(x => x.MemberId == Info.MemberId && x.BranchId == branchid);
+                var Item = _db.MB_Member.FirstOrDefault(x => x.MemberId == Info.MemberId);
                 _db.MB_Member.Remove(Item);
                 _db.SaveChanges();
 
@@ -221,7 +225,6 @@ namespace REST.Controllers
                 }
                 ViewData["DateNow"] = DateTime.Now.ToString("dd/MM/yyyy");
                 ViewBag.Branch = _db.MG_Branch.ToList();
-                ViewBag.CD_Title = _db.CD_Title.Where(x => x.BranchId == branchid).ToList();
             }
             else
             {
@@ -229,8 +232,9 @@ namespace REST.Controllers
                 ViewData["Disible"] = "";
                 ViewData["Disible-save"] = "disabled";
                 ViewData["Readonly"] = "readonly";
+                ViewData["DocRunning"] = "";
+                ViewData["DateNow"] = "";
                 ViewBag.Branch = _db.MG_Branch.ToList();
-                ViewBag.CD_Title = _db.CD_Title.Where(x => x.BranchId == branchid).ToList();
             }
         }
 
@@ -241,6 +245,7 @@ namespace REST.Controllers
             item.MemberId = info.MemberId;
             item.Type = info.Type;
             item.DateRegister = info.DateRegister.ToString("dd/MM/yyyy");
+            item.DateExp = info.DateExp.ToString("dd/MM/yyyy");
             item.IdCard = info.IdCard;
             item.Title = info.Title;
             item.FirstName = info.FirstName;
@@ -259,6 +264,9 @@ namespace REST.Controllers
             item.ZibCode = info.ZibCode;
             item.Rebate = info.Rebate;
             item.Score = Share.Cnumber(Share.FormatDouble(info.Score), 2);
+
+            item.Bch = info.Bch;
+            item.BchName = info.BchName;
 
             return item;
         }

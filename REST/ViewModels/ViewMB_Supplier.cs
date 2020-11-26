@@ -6,33 +6,29 @@ using System.Threading.Tasks;
 
 namespace REST.Models
 {
-    public class ViewMB_Member
+    public class ViewMB_Supplier
     {
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string MemberId { get; set; }
-        public int Type { get; set; }
-        public string TypeName { get; set; }
+        public string SupplierId { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string DateRegister { get; set; }
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string DateExp { get; set; }
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
+        public string TaxNumber { get; set; }
         public string IdCard { get; set; }
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string Title { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string TitleName { get; set; }
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string FirstName { get; set; }
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string LastName { get; set; }
         public string Name { get; set; } // ชื่อเต็ม
+
+        public int Bch { get; set; }
+        public string BchName { get; set; }
+
+
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string DateBirthday { get; set; }
-        public int Status { get; set; } // 1 = โสด, 2 = สมรส
-        [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
-        public string PhoneNumber { get; set; }
+        public string PhoneNumber1 { get; set; }
+        public string PhoneNumber2 { get; set; }
         public string Email { get; set; }
+
         public string AddrNo { get; set; }
         public string Moo { get; set; }
         public string Road { get; set; }
@@ -41,10 +37,5 @@ namespace REST.Models
         public string District { get; set; } // อำเภอ
         public string Province { get; set; }
         public string ZibCode { get; set; }
-        public int Rebate { get; set; } // ส่วนลด
-        public string Score { get; set; } // คะแนนสะสม
-
-        public int Bch { get; set; } // 1 = ใช้ทุกสาขา, 2 = เลือกสาขา
-        public string BchName { get; set; }
     }
 }

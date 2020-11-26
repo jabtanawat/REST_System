@@ -1,31 +1,188 @@
-﻿@using REST.Service;
+﻿@model REST.ViewModels.ViewST_Trans;
 @{
     ViewData["Title"] = "Store";
-    Layout = "_LayoutStockDashboard";
-    var DateNow = Share.FormatDate(DateTime.Now).ToString("dd/MM/yyyy");
+    ViewData["System"] = "บันทึกรายการสั่งซื้อ";
+    Layout = "_Stock";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" />
-    <link rel="stylesheet" href="~/Plugins/Jquery-ui-1.12.1/jquery-ui.css" />
-    <link rel="stylesheet" href="~/StyleSheet/Store/Index.css" />
-
+    <link href="~/Plugins/Datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 }
 
 <div class="card">
     <div class="card-body">
-        <div class="HeaderDocument">
-            <div class="row">
-                <div class="col-xl-10 mx-auto">
-                    <div class="d-flex bd-highlight">
-                        <div class="flex-grow-1"><h6 class="font-weight-bold"><span><i class="fas fa-circle-notch mr-2"></i>บันทึกรายการสั่งซื้อ/รับเข้า</span></h6></div>
-                        <div class="ml-2 bd-highlight"><a href="@Url.Action("Index", "Store")" class="btn btn-table-sm btn-success"><i class="fas fa-folder-plus mr-2"></i>เพิ่มใหม่</a></div>
-                        <div class="ml-2 bd-highlight"><button type="button" class="btn btn-table-sm btn-primary" data-toggle="ajax-modal" data-target="#MadalStaple" data-url="@Url.Action("_StTrans", "Modal")"><i class="fas fa-search mr-2"></i>ค้นหา</button></div>
+        <div class="row">
+            <div class="col-xl-11 mx-auto">
+                <!-- Header -->
+                <section>
+                    <div class="d-flex mb-2">
+                        <div class="mr-auto">
+                            <a href="@Url.Action("FrmStore", "ST_Store", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                        </div>
                     </div>
                     <hr />
-                </div>
+                </section>
+                <!-- Header Form -->
+                <section>
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">เลขที่เอกสาร :</label>
+                                <div class="col-sm-7">
+                                    @if (ViewData["Readonly"].ToString() != "")
+                                    {
+                                        if (ViewData["DocRunning"].ToString() != "")
+                                        {                                            
+                                            <input asp-for="Document" id="txtDocument" type="text" value="@ViewData["DocRunning"].ToString()" class="form-control form-control-sm" readonly />
+                                        }
+                                        else
+                                        {
+                                            <input asp-for="Document" id="txtDocument" type="text" class="form-control form-control-sm" readonly />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="Document" id="txtDocument" type="text" class="form-control form-control-sm" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">วันที่เอกสาร :</label>
+                                <div class="col-sm-7">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
+                                        </div>
+                                        <input asp-for="DateDocument" id="txtDateDocument" type="text" class="form-control datepicker" placeholder="dd/mm/yyyy">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">วันที่ใบกำกับภาษี :</label>
+                                <div class="col-sm-7">
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
+                                        </div>
+                                        <input asp-for="DateTax" id="txtDateTax" type="text" class="form-control datepicker" placeholder="dd/mm/yyyy">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">เลขที่ใบกำกับภาษี :</label>
+                                <div class="col-sm-7">
+                                    <input asp-for="TaxNumber" id="txtTaxNumber" type="text" class="form-control form-control-sm" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ผู้จัดจำหน่าย :</label>
+                                <div class="col-sm-7">
+                                    <div class="input-group input-group-sm">
+                                        <input asp-for="SupplierId" id="txtSupplierId" type="hidden" />
+                                        <input asp-for="SupplierName" id="txtSupplierName" type="text" class="form-control">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-info" type="button"><i class="fas fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">เลขที่อ้างอิง :</label>
+                                <div class="col-sm-7">
+                                    <input asp-for="Reference" id="txtReference" type="text" class="form-control form-control-sm" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Table Form -->
+                <section>
+                    <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;รายการสั่งซื้อ</p>
+                    <table class="table table-md table-bordered" id="tableStaple">
+                        <caption><a href="#" class="text-primary" data-toggle="ajax-modal" data-target="#popupStaple" data-url="@Url.Action("_popupStaple", "Modal")">เพิ่มรายการ</a></caption>
+                        <thead class="thead-black">
+                            <tr>
+                                <th class="text-center" style="width:15%;">รหัส</th>
+                                <th class="text-center">ชื่อ</th>
+                                <th class="text-center" style="width:15%;">จำนวน</th>
+                                <th class="text-center" style="width:15%;">ราคา/หน่วย</th>
+                                <th class="text-center" style="width:15%;">ราคารวม</th>
+                                <th class="text-center" style="width:5%;"><i class="fas fa-ellipsis-h"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyt">
+                            @if (Model.TranSub != null && Model.TranSub.Count() > 0)
+                            {
+                                var x = 0;
+                                foreach (var row in Model.TranSub)
+                                {
+                                    x++;
+                            <tr>
+                                <td hidden>@row.StapleId</td>
+                                <td class="text-center">@x</td>
+                                <td>@row.StapleName</td>
+                                <td>
+                                    <input type="text" class="form-table-control form-table-control-sm text-right numberonly" value="@row.Amount">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-table-control form-table-control-sm text-right numberonly" value="@row.Price">
+                                </td>
+                                <td>
+                                    <input type="text" class="form-table-control form-table-control-sm text-right numberonly" value="@row.Total">
+                                </td>
+                                <td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>
+                            </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr id="NoResults">
+                                    <td class="text-center text-danger" colspan="6">ไม่มีรายการ</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </section>
+                <!-- Footer -->
+                <section>
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="#" class="btn btn-sm btn-blue mr-3" @ViewData["Disible-save"] btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
+                        <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
+                    </div>
+                </section>
             </div>
+        </div>
+
+
+        <div class="HeaderDocument">
             <div class="row">
+                @*<div class="col-xl-11 mx-auto">
+                        <div class="d-flex bd-highlight">
+                            <div class="flex-grow-1"><h6 class="font-weight-bold"><span><i class="fas fa-circle-notch mr-2"></i>บันทึกรายการสั่งซื้อ/รับเข้า</span></h6></div>
+                            <div class="ml-2 bd-highlight"><a href="@Url.Action("Index", "Store")" class="btn btn-table-sm btn-success"><i class="fas fa-folder-plus mr-2"></i>เพิ่มใหม่</a></div>
+                            <div class="ml-2 bd-highlight"><button type="button" class="btn btn-table-sm btn-primary" data-toggle="ajax-modal" data-target="#MadalStaple" data-url="@Url.Action("_StTrans", "Modal")"><i class="fas fa-search mr-2"></i>ค้นหา</button></div>
+                        </div>
+                        <hr />
+                    </div>*@
+            </div>
+            <!--<div class="row">
                 <div class="col-xl-5 col-lg-6 col-md-7 mx-auto">
                     <div class="row">
                         <div class="col-sm">
@@ -40,9 +197,9 @@
                                 <div class="input-group input-group-sm">
                                     <div class="input-group-prepend">
                                         <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
-                                    </div>
-                                    @*<input type="text" class="form-control form-control-sm" id="txtDate">*@
-                                    <input type="text" class="form-control form-control-sm" id="txtDateMark" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask im-insert="false" value="@DateNow">
+                                    </div>-->
+            @*<input type="text" class="form-control form-control-sm" id="txtDate">*@
+            <!--<input type="text" class="form-control form-control-sm" id="txtDateMark" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask im-insert="false" value="">
                                 </div>
                             </div>
                         </div>
@@ -56,45 +213,44 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
-        <div class="row">
-            <div class="col-xl-10 mx-auto">
-                <div class="headerTable mb-2">
-                    <hr />
-                    <h6 class="font-weight-bold d-inline mr-3"><span><i class="fas fa-table mr-2"></i>รายการสั่งซื้อ/รับเข้า</span></h6>
-                    <button type="button" class="btn btn-sm btn-info d-inline" data-toggle="ajax-modal" data-target="#MadalStaple" data-url="@Url.Action("_ModalStaple", "Modal")"><i class="fas fa-plus-circle"></i>&nbsp;เพิ่ม</button>
-                </div>
-                <div class="TableDocument">
+        @*<div class="row">
+                <div class="col-xl-10 mx-auto">
+                    <div class="headerTable mb-2">
+                        <h6 class="font-weight-bold d-inline mr-3"><span><i class="fas fa-table mr-2"></i>รายการสั่งซื้อ/รับเข้า</span></h6>
+                        <button type="button" class="btn btn-sm btn-info d-inline" data-toggle="ajax-modal" data-target="#MadalStaple" data-url="@Url.Action("_ModalStaple", "Modal")"><i class="fas fa-plus-circle"></i>&nbsp;เพิ่ม</button>
+                    </div>
+                    <div class="TableDocument">
 
-                    <table class="table sticky table-md table-bordered table-hover">
-                        <thead style="background-color:#F8FAFD;">
-                            <tr>
-                                <th class="text-center" style="width:15%;">รหัส</th>
-                                <th class="text-center">ชื่อ</th>
-                                <th class="text-center" style="width:15%;">จำนวน</th>
-                                <th class="text-center" style="width:15%;">ราคา/หน่วย</th>
-                                <th class="text-center" style="width:15%;">ราคารวม</th>
-                                <th class="text-center" style="width:3%;"><i class="fas fa-ellipsis-h"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody id="TB">
-                            <tr id="NoData">
-                                <td class="text-center" colspan="6">ไม่มีข้อมูล</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <table class="table sticky table-md table-bordered table-hover">
+                            <thead style="background-color:#F8FAFD;">
+                                <tr>
+                                    <th class="text-center" style="width:15%;">รหัส</th>
+                                    <th class="text-center">ชื่อ</th>
+                                    <th class="text-center" style="width:15%;">จำนวน</th>
+                                    <th class="text-center" style="width:15%;">ราคา/หน่วย</th>
+                                    <th class="text-center" style="width:15%;">ราคารวม</th>
+                                    <th class="text-center" style="width:3%;"><i class="fas fa-ellipsis-h"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody id="TB">
+                                <tr id="NoData">
+                                    <td class="text-center" colspan="6">ไม่มีข้อมูล</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="FooterDocument">
-            <div class="row mt-3">
-                <div class="col-xl-10 mx-auto text-right">
-                    <button class="btn btn-sm btn-blue" onclick="Save()"><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</button>
+            </div>*@
+        @*<div class="FooterDocument">
+                <div class="row mt-3">
+                    <div class="col-xl-10 mx-auto text-right">
+                        <button class="btn btn-sm btn-blue" onclick="Save()"><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</button>
+                    </div>
                 </div>
-            </div>
-        </div>
+            </div>*@
     </div>
 </div>
 
@@ -102,16 +258,22 @@
 
 
 @section Scripts {
-    <script src="~/Plugins/DataTables/datatables.min.js"></script>
-    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/Plugins/Jquery-ui-1.12.1/jquery-ui.js"></script>
+    <script src="~/Plugins/Datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="~/Plugins/Datepicker/bootstrap-datepicker-thai.js"></script>
+    <script src="~/Plugins/Datepicker/locales/bootstrap-datepicker.th.js"></script>
     <script src="~/Plugins/Numeral/numeral.js"></script>
-    <script src="~/Plugins/Inputmask/jquery.inputmask.min.js"></script>
     <script>
-
         $(document).ready(function () {
-
             $(".item_click_Store").addClass("active");
+
+            $('.datepicker').datepicker({
+                language: 'th-th',
+                format: 'dd/mm/yyyy',
+                todayHighlight: true,
+                todayBtn: true,
+                todayBtn: 'linked',
+                autoclose: true
+            });
 
             //$('#txtDate').datepicker({
             //    dateFormat: "dd/mm/yy",
@@ -175,7 +337,7 @@
                     $('#MadalStTrans').modal('hide')
                 }
             })
-        }        
+        }
 
         function Running(id) {
             $.ajax({
@@ -237,7 +399,7 @@
 
                 }
             });
-        }      
+        }
 
         $('body').on('click', '#remove', function () {
             $(this).parents('tr').remove();

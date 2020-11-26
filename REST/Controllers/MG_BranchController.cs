@@ -206,6 +206,23 @@ namespace REST.Controllers
                 _db.CD_Running.Add(item);
                 _db.SaveChanges();
 
+                item.Name = "Supplier";
+                item.Front = "SP";
+                item.Number = "0000";
+                item.AutoRun = true;
+                item.SetDate = null;
+                item.AutoDate = false;
+                /* DATA */
+                item.BchName = null;
+                item.BranchId = info.BranchId;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                _db.CD_Running.Add(item);
+                _db.SaveChanges();
+
                 item.Name = "Payment";
                 item.Front = "PY";
                 item.Number = "0000";

@@ -20,25 +20,79 @@ using System.Data;
 namespace REST.Controllers
 {
     [Authorize]
-    public class StoreController : BaseController
+    public class ST_StoreController : BaseController
     {
         #region Connect db / Data System
-
         private readonly DbConnection _db;
         public static string _mode = Comp.FormMode.ADD;
 
-        public StoreController(DbConnection db)
+        public ST_StoreController(DbConnection db)
         {
             _db = db;
         }
-
         #endregion 
 
         public IActionResult Index()
         {
-            _mode = Comp.FormMode.ADD;
             return View();
         }
+
+        public IActionResult FrmStore(string mode, string id = null)
+        {
+            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
+            if (mode == "Add")
+            {
+                _mode = Comp.FormMode.ADD;
+                FrmMode();
+                var item = new ViewST_Trans();
+
+                item.DateDocument = DateTime.Now.ToString("dd/MM/yyyy");
+                return View(item);
+            }
+            else
+            {
+                _mode = Comp.FormMode.EDIT;
+                FrmMode();
+                //var item = LoadData(id, branchid);
+                return View();
+            }
+        }
+
+        public void FrmMode()
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            if (_mode == Comp.FormMode.ADD)
+            {
+                ViewData["Disible-delete"] = "disabled";
+                ViewData["Disible-save"] = "";
+                ViewData["Readonly"] = "";
+                // Running
+                var _Get = new GetRunningController(_db);
+                string DocRunning = _Get.Running("Store", branchid);
+                if (DocRunning != null)
+                {
+                    ViewData["Readonly"] = "readonly";
+                    ViewData["DocRunning"] = DocRunning;
+                }
+                else
+                {
+                    ViewData["Readonly"] = "";
+                    ViewData["DocRunning"] = "";
+                }
+            }
+            else
+            {
+                ViewData["Disible-delete"] = "";
+                ViewData["Disible-save"] = "disabled";
+                ViewData["Readonly"] = "readonly";
+                ViewData["DocRunning"] = "";
+            }
+        }
+
+
+
+
+
 
         public IActionResult ShowData(string id)
         {
@@ -47,9 +101,9 @@ namespace REST.Controllers
             var Trans = _db.ST_Trans.Where(x => x.Documents == id && x.BranchId == BranchId).FirstOrDefault();
             var Item = new ViewST_Trans();
             var GetView = new GetViewController(_db);
-            Item.Documents = Trans.Documents;
-            Item.Dates = Share.FormatDate(Trans.Dates).ToString("dd/MM/yyyy");
-            Item.Description = Trans.Description;
+            //Item.Documents = Trans.Documents;
+            //Item.Dates = Share.FormatDate(Trans.Dates).ToString("dd/MM/yyyy");
+            //Item.Description = Trans.Description;
             Item.TranSub = GetView.ViewST_TranSub(id, BranchId);
             return Json(new { data = Item });
         }
@@ -245,9 +299,9 @@ namespace REST.Controllers
 
                         var Item = new CD_Staple();
                         Item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == BranchId);
-                        var a = Item.QtyBalance - qty;
+                        //var a = Item.QtyBalance - qty;
 
-                        Item.QtyBalance = a;
+                        //Item.QtyBalance = a;
                         /* DATA */
                         Item.UpdateUser = User.Identity.Name;
                         Item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
@@ -310,12 +364,12 @@ namespace REST.Controllers
 
                     /* Data Before */
                     var before = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == BranchId);
-                    var a = before.QtyBalance + qty;
+                    //var a = before.QtyBalance + qty;
 
                     var Item = new CD_Staple();
                     Item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == BranchId);
 
-                    Item.QtyBalance = a;
+                    //Item.QtyBalance = a;
                     /* DATA */
                     Item.UpdateUser = User.Identity.Name;
                     Item.UpdateDate = Share.FormatDate(DateTime.Now).Date;

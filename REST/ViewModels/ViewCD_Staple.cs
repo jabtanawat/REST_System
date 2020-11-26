@@ -14,7 +14,6 @@ namespace REST.Models
         public string StapleName { get; set; }
         public int Tax { get; set; } // 1 = ภาษี, 2 = ไม่คิดภาษี
         public string QtyLow { get; set; }
-        public string QtyBalance { get; set; }
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]
         public string Unit { get; set; }
         // -------------------------------------------------------

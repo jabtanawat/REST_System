@@ -82,7 +82,7 @@ namespace REST.Controllers
                 var Item = new CD_Staple();
                 Item = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == BranchId);
 
-                Item.QtyBalance = ABalance;
+                //Item.QtyBalance = ABalance;
                 /* DATA */
                 Item.UpdateUser = User.Identity.Name;
                 Item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
