@@ -101,7 +101,7 @@ namespace REST.Controllers
                             if (Doc == null)
                                 Doc = Info.MemberId;
 
-                            Item.MemberId = Doc;
+                            Item.MemberId =  Doc;
                             Item.Type = Info.Type;
                             Item.DateRegister = Share.FormatDate(Info.DateRegister).Date;
                             Item.DateExp = Share.FormatDate(Info.DateExp).Date;

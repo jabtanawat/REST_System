@@ -6,6 +6,7 @@
 }
 
 @section Styles {
+    <link rel="stylesheet" href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" />
     <link href="~/Plugins/Datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 }
 
@@ -33,7 +34,7 @@
                                     @if (ViewData["Readonly"].ToString() != "")
                                     {
                                         if (ViewData["DocRunning"].ToString() != "")
-                                        {                                            
+                                        {
                                             <input asp-for="Document" id="txtDocument" type="text" value="@ViewData["DocRunning"].ToString()" class="form-control form-control-sm" readonly />
                                         }
                                         else
@@ -96,7 +97,8 @@
                                         <input asp-for="SupplierId" id="txtSupplierId" type="hidden" />
                                         <input asp-for="SupplierName" id="txtSupplierName" type="text" class="form-control">
                                         <div class="input-group-append">
-                                            <button class="btn btn-info" type="button"><i class="fas fa-search"></i></button>
+                                            <button class="btn btn-danger" type="button" onclick="clearSupplier()"><i class="fas fa-redo-alt"></i></button>
+                                            <a class="btn btn-info" data-toggle="ajax-modal" data-target="#popupStaple" data-url="@Url.Action("_popupSupplier", "Modal")"><i class="fas fa-search"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -115,50 +117,74 @@
                 <!-- Table Form -->
                 <section>
                     <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;รายการสั่งซื้อ</p>
-                    <table class="table table-md table-bordered" id="tableStaple">
-                        <caption><a href="#" class="text-primary" data-toggle="ajax-modal" data-target="#popupStaple" data-url="@Url.Action("_popupStaple", "Modal")">เพิ่มรายการ</a></caption>
-                        <thead class="thead-black">
-                            <tr>
-                                <th class="text-center" style="width:15%;">รหัส</th>
-                                <th class="text-center">ชื่อ</th>
-                                <th class="text-center" style="width:15%;">จำนวน</th>
-                                <th class="text-center" style="width:15%;">ราคา/หน่วย</th>
-                                <th class="text-center" style="width:15%;">ราคารวม</th>
-                                <th class="text-center" style="width:5%;"><i class="fas fa-ellipsis-h"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody id="bodyt">
-                            @if (Model.TranSub != null && Model.TranSub.Count() > 0)
-                            {
-                                var x = 0;
-                                foreach (var row in Model.TranSub)
-                                {
-                                    x++;
-                            <tr>
-                                <td hidden>@row.StapleId</td>
-                                <td class="text-center">@x</td>
-                                <td>@row.StapleName</td>
-                                <td>
-                                    <input type="text" class="form-table-control form-table-control-sm text-right numberonly" value="@row.Amount">
-                                </td>
-                                <td>
-                                    <input type="text" class="form-table-control form-table-control-sm text-right numberonly" value="@row.Price">
-                                </td>
-                                <td>
-                                    <input type="text" class="form-table-control form-table-control-sm text-right numberonly" value="@row.Total">
-                                </td>
-                                <td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>
-                            </tr>
-                                }
-                            }
-                            else
-                            {
-                                <tr id="NoResults">
-                                    <td class="text-center text-danger" colspan="6">ไม่มีรายการ</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
+                    <div class="card border-0">
+                        <div class="card-body table-responsive p-0" scroll>
+                            <table class="table table-md table-bordered table-head-fixed" id="tableStaple">
+                                <caption><a href="#" class="text-primary" data-toggle="ajax-modal" data-target="#popupStaple" data-url="@Url.Action("_popupStaple", "Modal")">เพิ่มรายการ</a></caption>
+                                <thead class="thead-black">
+                                    <tr>
+                                        <th class="text-center" style="width:15%;">รหัส</th>
+                                        <th class="text-center">ชื่อ</th>
+                                        <th class="text-center" style="width:15%;">จำนวน</th>
+                                        <th class="text-center" style="width:15%;">ราคา/หน่วย</th>
+                                        <th class="text-center" style="width:15%;">ราคารวม</th>
+                                        <th class="text-center" style="width:5%;"><i class="fas fa-ellipsis-h"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bodyt">
+                                    @if (Model.TranSub != null && Model.TranSub.Count() > 0)
+                                    {
+                                        var x = 0;
+                                        foreach (var row in Model.TranSub)
+                                        {
+                                            x++;
+                                            string A = "A" + x;
+                                            string P = "P" + x;
+                                            string T = "T" + x;
+                                            <tr>
+                                                <td>@row.StapleId</td>
+                                                <td>@row.StapleName</td>
+                                                <td>
+                                                    <input id="@A" type="text" value="@row.Amount" class="form-table-control form-table-control-sm text-right numberonly Amount">
+                                                </td>
+                                                <td>
+                                                    <input id="@P" type="text" value="@row.Price" class="form-table-control form-table-control-sm text-right numberonly Price">
+                                                </td>
+                                                <td>
+                                                    <input id="@T" type="text" value="@row.Total" class="form-table-control form-table-control-sm text-right numberonly Total">
+                                                </td>
+                                                <td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr id="NoResults">
+                                            <td class="text-center text-danger" colspan="6">ไม่มีรายการ</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                <!-- Footer Form -->
+                <section>
+                    <div class="row justify-content-end">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ยอดรวมสุทธิ :</label>
+                                <div class="col-sm-7">
+                                    <div class="input-group input-group-sm">
+                                        <input asp-for="SumBalance" id="txtSumBalance" type="text" class="form-control text-right" placeholder="0.00">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">บาท</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </section>
                 <!-- Footer -->
                 <section>
@@ -168,89 +194,7 @@
                     </div>
                 </section>
             </div>
-        </div>
-
-
-        <div class="HeaderDocument">
-            <div class="row">
-                @*<div class="col-xl-11 mx-auto">
-                        <div class="d-flex bd-highlight">
-                            <div class="flex-grow-1"><h6 class="font-weight-bold"><span><i class="fas fa-circle-notch mr-2"></i>บันทึกรายการสั่งซื้อ/รับเข้า</span></h6></div>
-                            <div class="ml-2 bd-highlight"><a href="@Url.Action("Index", "Store")" class="btn btn-table-sm btn-success"><i class="fas fa-folder-plus mr-2"></i>เพิ่มใหม่</a></div>
-                            <div class="ml-2 bd-highlight"><button type="button" class="btn btn-table-sm btn-primary" data-toggle="ajax-modal" data-target="#MadalStaple" data-url="@Url.Action("_StTrans", "Modal")"><i class="fas fa-search mr-2"></i>ค้นหา</button></div>
-                        </div>
-                        <hr />
-                    </div>*@
-            </div>
-            <!--<div class="row">
-                <div class="col-xl-5 col-lg-6 col-md-7 mx-auto">
-                    <div class="row">
-                        <div class="col-sm">
-                            <div class="form-group">
-                                <label class="col-form-label col-form-label-sm font-weight-bold">เลขที่เอกสาร</label>
-                                <input type="text" class="form-control form-control-sm" id="txtDocument">
-                            </div>
-                        </div>
-                        <div class="col-sm">
-                            <div class="form-group">
-                                <label class="col-form-label col-form-label-sm font-weight-bold">วันที่เอกสาร</label>
-                                <div class="input-group input-group-sm">
-                                    <div class="input-group-prepend">
-                                        <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
-                                    </div>-->
-            @*<input type="text" class="form-control form-control-sm" id="txtDate">*@
-            <!--<input type="text" class="form-control form-control-sm" id="txtDateMark" data-inputmask-alias="datetime" data-inputmask-inputformat="dd/mm/yyyy" data-mask im-insert="false" value="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm">
-                            <div class="form-group">
-                                <label class="col-form-label col-form-label-sm font-weight-bold">รายละเอียด</label>
-                                <textarea class="form-control form-control-sm" rows="2" id="txtDescription"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>-->
-        </div>
-        @*<div class="row">
-                <div class="col-xl-10 mx-auto">
-                    <div class="headerTable mb-2">
-                        <h6 class="font-weight-bold d-inline mr-3"><span><i class="fas fa-table mr-2"></i>รายการสั่งซื้อ/รับเข้า</span></h6>
-                        <button type="button" class="btn btn-sm btn-info d-inline" data-toggle="ajax-modal" data-target="#MadalStaple" data-url="@Url.Action("_ModalStaple", "Modal")"><i class="fas fa-plus-circle"></i>&nbsp;เพิ่ม</button>
-                    </div>
-                    <div class="TableDocument">
-
-                        <table class="table sticky table-md table-bordered table-hover">
-                            <thead style="background-color:#F8FAFD;">
-                                <tr>
-                                    <th class="text-center" style="width:15%;">รหัส</th>
-                                    <th class="text-center">ชื่อ</th>
-                                    <th class="text-center" style="width:15%;">จำนวน</th>
-                                    <th class="text-center" style="width:15%;">ราคา/หน่วย</th>
-                                    <th class="text-center" style="width:15%;">ราคารวม</th>
-                                    <th class="text-center" style="width:3%;"><i class="fas fa-ellipsis-h"></i></th>
-                                </tr>
-                            </thead>
-                            <tbody id="TB">
-                                <tr id="NoData">
-                                    <td class="text-center" colspan="6">ไม่มีข้อมูล</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-            </div>*@
-        @*<div class="FooterDocument">
-                <div class="row mt-3">
-                    <div class="col-xl-10 mx-auto text-right">
-                        <button class="btn btn-sm btn-blue" onclick="Save()"><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</button>
-                    </div>
-                </div>
-            </div>*@
+        </div>        
     </div>
 </div>
 
@@ -261,6 +205,8 @@
     <script src="~/Plugins/Datepicker/bootstrap-datepicker.min.js"></script>
     <script src="~/Plugins/Datepicker/bootstrap-datepicker-thai.js"></script>
     <script src="~/Plugins/Datepicker/locales/bootstrap-datepicker.th.js"></script>
+    <script src="~/Plugins/DataTables/datatables.min.js"></script>
+    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/Plugins/Numeral/numeral.js"></script>
     <script>
         $(document).ready(function () {
@@ -275,17 +221,28 @@
                 autoclose: true
             });
 
-            //$('#txtDate').datepicker({
-            //    dateFormat: "dd/mm/yy",
-            //}).datepicker('setDate', new Date());
-
-            // Scroll Bar Table Staple
-            screenScroll()
-
-            // Get Running
-            Running("Store")
-
+            $('[scroll]').slimScroll({
+                height: $(window).height() - 488,
+                railBorderRadius: 0,
+                railVisible: true,
+                distance: '-10px'
+            });
         });
+
+        $(document).on('keypress ', '.numberonly', function () {
+            const e = event.keyCode
+            if (e >= 48 && e <= 57 || e === 8 || e === 13 || e === 46) {
+                event.returnValue = true
+            } else {
+                Swal.fire({ text: "สามารถกดได้แค่ตัวเลข", icon: 'warning' })
+                event.returnValue = false
+            }
+        })
+
+        $(document).on('blur ', '.numberonly', function () {
+            const number = $(this).val()
+            $(this).val(numeral(number).format('0,0.00'))
+        })
 
         /* Check Param URL  */
         const paramUrls = new URLSearchParams(window.location.search)
@@ -293,22 +250,61 @@
 
         // Modal
         var PlaceHolderElement = $('#PlaceHolderHere')
-        $('button[data-toggle="ajax-modal"]').click(function (event) {
+        $('a[data-toggle="ajax-modal"]').click(function (event) {
             var url = $(this).data('url')
-            var decodedUrl = decodeURIComponent(url)
             $.get(url).done(function (data) {
                 PlaceHolderElement.html(data)
                 PlaceHolderElement.find('.modal').modal('show')
             })
         })
 
-        $('#txtDateMark').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-        $('[data-mask]').inputmask()
-
         let x = 1;
 
-        function Show(id) {
-            $.ajax({
+        function show(id) {
+
+            $('#NoResults').remove();
+
+            $.get("@Url.Action("GetCD_Staple", "api")" + "/AShowStaple", { id: id },
+                function (data, status) {
+                    // เช็คข้อมูลในตาราง
+                    var table = document.getElementById('tableStaple')
+                    for (let i = 0; i < table.rows.length; i++) {
+                        var id = (table.rows[i].cells[0].innerHTML)
+                        if (data.stapleId == id) {
+                            Swal.fire({ text: "วัตถุดิบนี้มีอยู่แล้ว", icon: 'warning' })
+                            return;
+                        }
+                    }
+
+                    var A = "A" + x;
+                    var P = "P" + x;
+                    var T = "T" + x;
+
+                    var rowItem = `<tr>`
+                        + `<td>${data.stapleId}</td>`
+                        + `<td>${data.stapleName}</td>`
+                        + `<td>`
+                        + `<input id="${A}" type="text" class="form-table-control form-table-control-sm text-right numberonly Amount" placeholder="0.00" >`
+                        + `</td>`
+                        + `<td>`
+                        + `<input id="${P}" type="text" class="form-table-control form-table-control-sm text-right numberonly Price" placeholder="0.00" >`
+                        + `</td>`
+                        + `<td>`
+                        + `<input id="${T}" type="text" readonly class="form-control-plaintext form-table-control form-table-control-sm text-right numberonly Total" placeholder="0.00" >`
+                        + `</td>`
+                        + `<td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>`
+                        + `</tr>`;
+                    $("#bodyt").append(rowItem)
+
+
+                    x++;
+                }
+            )
+
+            $('#popupStaple').modal('hide')
+
+
+            @*$.ajax({
                 type: 'POST',
                 url: '@Url.Action("ShowData", "Store")',
                 data: { id: id },
@@ -336,80 +332,189 @@
                     })
                     $('#MadalStTrans').modal('hide')
                 }
-            })
+            })*@
         }
 
-        function Running(id) {
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("Runnings", "Running")',
-                data: { id: id },
-                success: function (data) {
-                    $.each(data, function (index, val) {
-                        if (val != null) {
-                            $('#txtDocument').val(val);
-                            $('#txtDocument').prop('readonly', true);
-                        } else {
-                            $('#txtDocument').val(val);
-                            $('#txtDocument').prop('readonly', false);
-                        }
-                    })
-                }
-            })
-        }
+        $(document).on('blur', '.Amount', function () {
+            const id = $(this).attr("id")
+            const number = id.substring(1)
 
-        function Add(id) {
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("Add", "Store")',
-                data: { id: id},
-                success: function (data) {
-                    $.each(data, function (index, val) {
-                        $('#NoData').remove();
+            const Amount = parseFloat($(`#A${number}`).val().replace(/,/g, ''))
+            const Price = parseFloat($(`#P${number}`).val().replace(/,/g, ''))
+            const Total = Amount * Price
 
-                        var table = document.getElementById('TB')
+            $(`#T${number}`).val(numeral(Total).format('0,0.00'))
 
-                        for (let i = 0; i < table.rows.length; i++) {
-                            var row = 0;
-                            var id = (table.rows[i].cells[0].innerHTML)
-                            if (val.stapleId == id) {
-                                Swal.fire({
-                                    text: "สินค้านี้มีอยู่แล้ว",
-                                    icon: 'warning'
-                                })
-                                return;
-                            }
-                        }
+            // Sum
 
-                        var t = `<tr id="row${x}">`
-                            + `<td>${val.stapleId}</td>`
-                            + `<td>${val.stapleName}</td>`
-                            + `<td class="text-center"><input type="text" class="form-table-control form-table-control-sm text-right txt_Amount" id="A_${x}" onkeypress="NumberOnly()" value="${numeral(1).format('0,0.00')}" on></td>`
-                            + `<td class="text-right"><input type="text" class="form-table-control form-table-control-sm text-right txt_Price" id="P_${x}" onkeypress="NumberOnly()" value="${numeral(0).format('0,0.00')}"></td>`
-                            + `<td class="text-right"><input type="text" class="form-table-control form-table-control-sm text-right" id="Total_${x}" value="${numeral(0).format('0,0.00')}" readonly></td>`
-                            + `<td class="text-center"><a href="#" id="remove" class="btn btn-table-sm btn-danger-light text-white"><i class="fas fa-times"></i></a></td>`
-                            + '</tr>';
-                        $('#TB').append(t)
+            const table = document.getElementById('tableStaple')
+            var sum = 0;
 
-                        x++;
+            for (let i = 1; i < table.rows.length; i++) {
+                const A_Total = table.rows[i].cells[4].getElementsByTagName("input")[0].value
+                sum += parseFloat(A_Total.replace(/,/g, ''))
+            }
 
-                    });
+            $('#txtSumBalance').val(numeral(sum).format('0,0.00'))
+        })
 
-                    $('#MadalStaple').modal('hide')
+        $(document).on('blur', '.Price', function () {
+            const id = $(this).attr("id")
+            const number = id.substring(1)
 
-                }
-            });
-        }
+            const Amount = parseFloat($(`#A${number}`).val().replace(/,/g, ''))
+            const Price = parseFloat($(`#P${number}`).val().replace(/,/g, ''))
+            const Total = Amount * Price
+
+            $(`#T${number}`).val(numeral(Total).format('0,0.00'))
+
+            // Sum
+
+            const table = document.getElementById('tableStaple')
+            var sum = 0;
+
+            for (let i = 1; i < table.rows.length; i++) {
+                const A_Total = table.rows[i].cells[4].getElementsByTagName("input")[0].value
+                sum += parseFloat(A_Total.replace(/,/g, ''))
+            }
+
+            $('#txtSumBalance').val(numeral(sum).format('0,0.00'))
+        })
 
         $('body').on('click', '#remove', function () {
             $(this).parents('tr').remove();
-            var table = document.getElementById('TB')
-            if (table.rows.length == 0) {
+
+            var tbody = document.getElementById('bodyt')
+
+            if (tbody.rows.length == 0) {
                 var t = '<tr id="NoData">'
                     + '<td class="text-center" colspan="6">ไม่มีข้อมูล</td>'
                     + '</tr>';
                 $('#TB').append(t)
+
+                $('#txtSumBalance').val(numeral(0).format('0,0.00'))
+            } else {
+                // Sum
+
+                var sum = 0;
+                var table = document.getElementById('tableStaple')
+
+                for (let i = 1; i < table.rows.length; i++) {
+                    const A_Total = table.rows[i].cells[4].getElementsByTagName("input")[0].value
+                    sum += parseFloat(A_Total.replace(/,/g, ''))
+                }
+
+                $('#txtSumbalance').val(numeral(sum).format('0,0.00'))
             }
+        })
+
+        function showSupplier(id) {
+            $.get("@Url.Action("GetMB_Supplier", "api")" + "/AShowSupplier", { id: id },
+                function (data, status) {
+                    $('#txtSupplierId').val(data.supplierId)
+                    var Title = ""
+                    if (data.title != null) {
+                        Title = data.title
+                    }
+                    var FirstName = ""
+                    if (data.firstName != null) {
+                        FirstName = data.firstName
+                    }
+                    var LastName = ""
+                    if (data.lastName != null) {
+                        LastName = data.lastName
+                    }
+                    const name = Title + ' ' + FirstName + ' ' + LastName
+                    $('#txtSupplierName').val(name)
+                }
+            )
+
+            $('#popupSupplier').modal('hide')
+        }
+
+        function clearSupplier() {
+            $('#txtSupplierId').val('')
+            $('#txtSupplierName').val('')
+        }
+
+        document.querySelector("[btn-save]").addEventListener('click', () => {
+             Swal.fire({
+                text: "ต้องการบันทึกข้อมูลหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+
+                    if ($('#txtDocument').val() == '') {
+                        Swal.fire({ text: "กรุณากรอกเลขที่เอกสาร", icon: 'warning' })
+                        return;
+                    }
+
+                    if ($('#txtDateDocument').val() == '') {
+                        Swal.fire({ text: "กรุณากรอกวันที่เอกสาร", icon: 'warning' })
+                        return;
+                    }
+
+                    if ($('#txtSupplierId').val() == '') {
+                        Swal.fire({ text: "กรุณากรอกข้อมูล Supplier", icon: 'warning' })
+                        return;
+                    }
+
+                    if ($('#txtSumBalance').val() == '' || $('#txtSumBalance').val() == 0) {
+                        Swal.fire({ text: "กรุณาเลือกวัตถุดิบ", icon: 'warning' })
+                        return;
+                    }
+
+                    var tdata = [];
+
+                    // ตาราง
+                    var t = document.getElementById('bodyt')
+                    if (t.rows[0].cells[0].innerHTML != "ไม่มีรายการ") {
+                        if (t.rows.length > 0) {
+                            for (let i = 0; i < t.rows.length; i++) {
+                                var id = t.rows[i].cells[0].innerHTML
+                                var amount = t.rows[i].cells[2].getElementsByTagName("input")[0].value
+                                var price = t.rows[i].cells[3].getElementsByTagName("input")[0].value
+                                var total = t.rows[i].cells[4].getElementsByTagName("input")[0].value
+
+                                var obj = { StapleId: id, Amount: amount, Price: price, Total: total }
+                                tdata.push(obj)
+                            }
+                        }
+                    }
+
+                    var data = new FormData();
+                    data.append('Document', $('#txtDocument').val());
+                    data.append('DateDocument', $('#txtDateDocument').val());
+                    data.append('DateTax', $('#txtDateTax').val());
+                    data.append('TaxNumber', $('#txtTaxNumber').val());
+                    data.append('SupplierId', $('#txtSupplierId').val());
+                    data.append('Reference', $('#txtReference').val());
+                    data.append('SumBalance', $('#txtSumBalance').val());
+                    data.append('Sub', JSON.stringify(tdata));
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("FrmSave", "ST_Store")',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (data) {
+                            $.each(data, function (index, val) {
+                                if (val == "success") {
+                                    window.location.href = '@Url.Action("Index", "ST_Store")'
+                                } else {
+                                    Swal.fire({ text: "ไม่สามารถบันทึกข้อมูลได้", icon: 'warning'} )
+                                }
+                            })
+                        }
+                    });
+                }
+            })
         })
 
         function Save() {
@@ -500,61 +605,5 @@
                 }
             })
         }
-
-        $(document).on('blur', '.txt_Amount', function () {
-            let idRow = $(this).attr("id")
-            let id = idRow.split("_")[1];
-            let Amount = $(`#A_${id}`).val()
-            let Price = $(`#P_${id}`).val()
-
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("calculatorAnt2", "Base")',
-                data: { A: Amount, P: Price },
-                success: function (data) {
-                    $.each(data, function (index, val) {
-                        $(`#A_${id}`).val(numeral(Amount).format('0,0.00'));
-                        $(`#Total_${id}`).val(numeral(val).format('0,0.00'))
-                    })
-                }
-            })
-        })
-
-        $(document).on('blur', '.txt_Price', function () {
-            let idRow = $(this).attr("id")
-            let id = idRow.split("_")[1];
-            let Amount = $(`#A_${id}`).val()
-            let Price = $(`#P_${id}`).val()
-
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("calculatorAnt2", "Base")',
-                data: { A: Amount, P: Price },
-                success: function (data) {
-                    $.each(data, function (index, val) {
-                        $(`#P_${id}`).val(numeral(Price).format('0,0.00'));
-                        $(`#Total_${id}`).val(numeral(val).format('0,0.00'))
-                    })
-                }
-            })
-        })
-
-        function NumberOnly() {
-            const e = event.keyCode
-            if (e >= 48 && e <= 57 || e === 8 || e === 13 || e === 46) {
-                event.returnValue = true
-            } else {
-                Swal.fire({ text: "สามารถกดได้แค่ตัวเลข", icon: 'warning' })
-                event.returnValue = false
-            }
-        }
-
-        function screenScroll() {
-            var height_P = $(document).height() - $('.HeaderDocument').height() - $('.FooterDocument').height() - $('.headerTable').height() - 175
-            $('.TableDocument').slimScroll({
-                height: height_P
-            });
-        }
-
     </script>
 }

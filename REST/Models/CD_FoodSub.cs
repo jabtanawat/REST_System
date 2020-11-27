@@ -16,7 +16,7 @@ namespace REST.Models
         [Required]
         public decimal Amount { get; set; }
         [Required]
-        public string UnitId { get; set; }
+        public string Unit { get; set; }
         public string BranchId { get; set; }
     }
 }

@@ -1,8 +1,9 @@
 ﻿body {
-    background-image: url('../../Images/System/bg.jpg');
+    /*background-image: url('../../Images/System/bg.jpg');
     background-position: center top;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: fixed;*/
+    background-color: #3B3C40;
 }
 
 .form-login .card {

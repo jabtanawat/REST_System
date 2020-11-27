@@ -102,7 +102,7 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(2))
                             Item.Amount = data.GetDecimal(2);
                         if (!data.IsDBNull(3))
-                            Item.UnitName = data.GetString(3);
+                            Item.Unit = data.GetString(3);
                         List.Add(Item);
                     }
                 }

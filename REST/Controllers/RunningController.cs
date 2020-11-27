@@ -44,6 +44,14 @@ namespace REST.Controllers
                 item.NameTh = "พนักงาน";
             else if (infoRunning.Name == "Member")
                 item.NameTh = "สมาชิก";
+            else if (infoRunning.Name == "Supplier")
+                item.NameTh = "ผู้จัดจำหน่าย";
+            else if (infoRunning.Name == "Order")
+                item.NameTh = "ออเดอร์";
+            else if (infoRunning.Name == "Payment")
+                item.NameTh = "ชำระเงิน";
+            else if (infoRunning.Name == "Store")
+                item.NameTh = "สั่งซื้อ";
             item.Front = infoRunning.Front;
             item.Number = infoRunning.Number;
             item.AutoRun = infoRunning.AutoRun;
@@ -215,7 +223,7 @@ namespace REST.Controllers
                 item.Number = info.Number;
                 item.AutoRun = info.AutoRun;
                 item.SetDate = info.SetDate;
-                item.AutoDate = info.AutoRun;
+                item.AutoDate = info.AutoDate;
                 /* DATA */
                 item.UpdateUser = User.Identity.Name;
                 item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
@@ -328,7 +336,7 @@ namespace REST.Controllers
             var List = new List<ViewRunning>();
             var B = _db.MG_Branch.FirstOrDefault();
 
-            var LEmproyee = _db.CD_Running.Where(x => x.Name == "Emproyee" && x.BranchId == B.BranchId).ToList();
+            var LEmproyee = _db.CD_Running.Where(x => x.Name == "Emproyee").ToList();
             var IEmproyee = new ViewRunning();
             foreach (var row in LEmproyee)
             {
@@ -340,7 +348,7 @@ namespace REST.Controllers
                 List.Add(IEmproyee);
             }
 
-            var LMember = _db.CD_Running.Where(x => x.Name == "Member" && x.BranchId == B.BranchId).ToList();
+            var LMember = _db.CD_Running.Where(x => x.Name == "Member").ToList();
             var IMember = new ViewRunning();
             foreach (var row in LMember)
             {
@@ -352,7 +360,7 @@ namespace REST.Controllers
                 List.Add(IMember);
             }
 
-            var LSupplier = _db.CD_Running.Where(x => x.Name == "Supplier" && x.BranchId == B.BranchId).ToList();
+            var LSupplier = _db.CD_Running.Where(x => x.Name == "Supplier").ToList();
             var ISupplier = new ViewRunning();
             foreach (var row in LSupplier)
             {

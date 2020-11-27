@@ -58,12 +58,22 @@
                                         <label class="col-form-label form-label-sm">วันที่สมัคร :</label>
                                         @if (@ViewData["DateNow"].ToString() != "")
                                         {
-                                            <input asp-for="DateRegister" value="@ViewData["DateNow"].ToString()" type="text" class="form-control form-control-sm datepicker" placeholder="dd/mm/yyyy">
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-prepend">
+                                                    <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
+                                                </div>
+                                                <input asp-for="DateRegister" type="text" value="@ViewData["DateNow"].ToString()" class="form-control datepicker" placeholder="dd/mm/yyyy">
+                                            </div>
                                         }
                                         else
                                         {
-                                            <input asp-for="DateRegister" type="text" class="form-control form-control-sm datepicker" placeholder="dd/mm/yyyy">
-                                        }                                        
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-prepend">
+                                                    <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
+                                                </div>
+                                                <input asp-for="DateRegister" type="text" class="form-control datepicker" placeholder="dd/mm/yyyy">
+                                            </div>
+                                        }
                                         <span asp-validation-for="DateRegister" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
@@ -115,7 +125,12 @@
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label form-label-sm">วันเกิด :</label>
-                                        <input asp-for="DateBirthday" type="text" class="form-control form-control-sm datepicker" placeholder="dd/mm/yyyy">
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
+                                            </div>
+                                            <input asp-for="DateBirthday" type="text" class="form-control datepicker" placeholder="dd/mm/yyyy">
+                                        </div>
                                         <span asp-validation-for="DateBirthday" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>

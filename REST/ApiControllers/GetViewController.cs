@@ -70,7 +70,7 @@ namespace REST.ApiControllers
         public ViewStaple ViewStapleById(string id, string branchId)
         {
             var Item = new ViewStaple();
-            var sql = $"SELECT StapleId, StapleName, Amount, UnitName "
+            var sql = $"SELECT StapleId, StapleName, Amount, Unit "
                     + $"FROM CD_Staple "
                     + $"LEFT JOIN CD_Unit ON CD_Staple.UnitId = CD_Unit.UnitId "
                     + $"WHERE CD_Staple.BranchId = '{branchId}' AND CD_Staple.StapleId = '{id}'";
@@ -89,7 +89,7 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(2))
                             Item.Amount = data.GetDecimal(2);
                         if (!data.IsDBNull(3))
-                            Item.UnitName = data.GetString(3);
+                            Item.Unit = data.GetString(3);
                     }
                 }
             }
@@ -100,7 +100,7 @@ namespace REST.ApiControllers
         public List<ViewStaple> ViewStaple(string branchId)
         {
             var List = new List<ViewStaple>();
-            var sql = $"SELECT StapleId, StapleName, Amount, UnitName "
+            var sql = $"SELECT StapleId, StapleName, Amount, Unit "
                     + $"FROM CD_Staple "
                     + $"LEFT JOIN CD_Unit ON CD_Staple.UnitId = CD_Unit.UnitId "
                     + $"WHERE CD_Staple.BranchId = '{branchId}'";
@@ -120,7 +120,7 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(2))
                             Item.Amount = data.GetDecimal(2);
                         if (!data.IsDBNull(3))
-                            Item.UnitName = data.GetString(3);
+                            Item.Unit = data.GetString(3);
                         List.Add(Item);
                     }
                 }

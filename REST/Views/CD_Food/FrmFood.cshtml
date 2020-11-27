@@ -194,7 +194,7 @@
                                             <td>
                                                 <input type="text" class="form-table-control form-table-control-sm text-right numberonly" value="@row.Amount" >
                                             </td>
-                                            <td class="text-center">@row.UnitName</td>
+                                            <td class="text-center">@row.Unit</td>
                                             <td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>
                                         </tr>
                                     }
@@ -324,7 +324,7 @@
                         + `<td>`
                         + `<input type="text" class="form-table-control form-table-control-sm text-right numberonly" value="0.00" >`
                         + `</td>`
-                        + `<td class="text-center">${data.unitName}</td>`
+                        + `<td class="text-center">${data.unit}</td>`
                         + `<td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>`
                         + `</tr>`;
                     $(rowItem).appendTo($("#bodyt"));

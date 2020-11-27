@@ -15,6 +15,8 @@ namespace REST.ViewModels
         public string SupplierId { get; set; }
         public string SupplierName { get; set; }
         public string Reference { get; set; }
+        public string SumBalance { get; set; }
+        public string Sub { get; set; }
         public List<ViewST_TranSub> TranSub { get; set; }
     }
 }

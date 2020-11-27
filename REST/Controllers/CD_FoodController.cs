@@ -191,7 +191,7 @@ namespace REST.Controllers
                                     Item.FoodId = info.FoodId;
                                     Item.StapleId = id;
                                     Item.Amount = qty;
-                                    Item.UnitId = unit.Unit;
+                                    Item.Unit = unit.Unit;
                                     /* DATA */
                                     Item.BranchId = branchid;
 
@@ -265,7 +265,7 @@ namespace REST.Controllers
                                 Item.FoodId = info.FoodId;
                                 Item.StapleId = id;
                                 Item.Amount = qty;
-                                Item.UnitId = unit.Unit;
+                                Item.Unit = unit.Unit;
                                 /* DATA */
                                 Item.BranchId = branchid;
 

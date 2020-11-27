@@ -47,7 +47,7 @@ namespace REST.Controllers
             ViewBag.StapleId = Item.StapleId;
             ViewBag.StapleName = Item.StapleName;
             ViewBag.Amount = Item.Amount;
-            ViewBag.UnitName = Item.UnitName;
+            ViewBag.Unit = Item.Unit;
             return PartialView("_FrmStockStaple");
         }
 
@@ -101,6 +101,13 @@ namespace REST.Controllers
             var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             ViewBag.Staple = _db.CD_Staple.Where(x => x.BranchId == BranchId).ToList();
             return PartialView("_popupStaple");
+        }
+
+        public IActionResult _popupSupplier()
+        {
+            var _Get = new GetMB_SupplierController(_db);
+            ViewBag.Supplier = _Get.SupplierAll();
+            return PartialView("_popupSupplier");
         }
     }
 }

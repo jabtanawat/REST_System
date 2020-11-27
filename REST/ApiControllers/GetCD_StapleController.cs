@@ -27,7 +27,7 @@ namespace REST.ApiControllers
         {
             var List = new List<ViewStaple>();
             string sqlWhrer = null;
-            var sql = $"SELECT StapleId, StapleName, Amount, UnitName "
+            var sql = $"SELECT StapleId, StapleName, Amount, Unit "
                     + $"FROM CD_Staple "
                     + $"LEFT JOIN CD_Unit ON CD_Staple.UnitId = CD_Unit.UnitId ";
 
@@ -49,7 +49,7 @@ namespace REST.ApiControllers
                         Item.StapleId = data.GetString(0);
                         Item.StapleName = data.GetString(1);
                         Item.Amount = data.GetDecimal(2);
-                        Item.UnitName = data.GetString(3);
+                        Item.Unit = data.GetString(3);
                         List.Add(Item);
                     }
                 }
@@ -62,11 +62,14 @@ namespace REST.ApiControllers
         {
             var item = new ViewStaple();
             string sqlWhrer = null;
-            string sql = $"SELECT StapleId, StapleName, QtyBalance, Unit "
+            string sql = $"SELECT StapleId, StapleName, Unit "
                     + $"FROM CD_Staple ";
 
             if (branchid != null)
-                sqlWhrer += $"BranchId = '{branchid}' ";
+                if (sqlWhrer != null)
+                    sqlWhrer += $"AND BranchId = '{branchid}' ";
+                else
+                    sqlWhrer += $"BranchId = '{branchid}' ";         
 
             if (id != null)
                 if (sqlWhrer != null)
@@ -75,7 +78,7 @@ namespace REST.ApiControllers
                     sqlWhrer += $"StapleId = '{id}' ";
 
             if (sqlWhrer != null)
-                sql += "WHERE " + sqlWhrer;
+                sql += $"WHERE " + sqlWhrer;
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
@@ -87,8 +90,7 @@ namespace REST.ApiControllers
                     {
                         item.StapleId = data.GetString(0);
                         item.StapleName = data.GetString(1);
-                        item.Amount = data.GetDecimal(2);
-                        item.UnitName = data.GetString(3);
+                        item.Unit = data.GetString(2);
                     }
                 }
             }
@@ -97,15 +99,17 @@ namespace REST.ApiControllers
         }
 
         // -------------------------------------------
-        // --                                       --
-        // --             ACTION STAPLE             --
-        // --                                       --
+        // -------------------------------------------
+        // ---                                     ---
+        // ---            ACTION STAPLE            ---
+        // ---                                     ---
+        // -------------------------------------------
         // -------------------------------------------
 
         public JsonResult AShowStaple(string id)
         {
-            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            var item = StapleId(id, branchid);
+            //var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var item = StapleId(id, null);
             return Json(item);
         }
     }

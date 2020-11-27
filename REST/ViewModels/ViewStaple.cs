@@ -10,6 +10,6 @@ namespace REST.ViewModels
         public string StapleId { get; set; }
         public string StapleName { get; set; }
         public decimal Amount { get; set; }
-        public string UnitName { get; set; }
+        public string Unit { get; set; }
     }
 }

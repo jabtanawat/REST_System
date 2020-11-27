@@ -34,6 +34,8 @@ namespace REST.Controllers
 
         public IActionResult Index()
         {
+            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
+            ViewBag.Trans = 
             return View();
         }
 
@@ -55,6 +57,162 @@ namespace REST.Controllers
                 FrmMode();
                 //var item = LoadData(id, branchid);
                 return View();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult FrmSave(ViewST_Trans info)
+        {
+            string status = "success";
+
+            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
+
+            if (SaveData(info, branchid))
+            {
+                toastrAlert("บันทึกการสั่งซื้อ", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
+                status = "success";
+            }
+            else
+            {
+                status = "error";
+            }
+
+            return Json(new { data = status });
+        }
+
+        public Boolean SaveData(ViewST_Trans info, string branchid)
+        {
+            var item = new ST_Trans();
+            var _running = new GetRunningController(_db);
+            dynamic tranSub = JsonConvert.DeserializeObject(info.Sub);
+            try
+            {
+                switch (_mode)
+                {
+                    case Comp.FormMode.ADD:
+
+                        // check data count trans
+                        var IsNull = _db.ST_Trans.Where(x => x.Documents == info.Document && x.BranchId == branchid).ToList();
+                        if (IsNull.Count > 0)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            // Save Trans
+
+                            item.Documents = info.Document;
+                            item.DateDocument = Share.FormatDate(info.DateDocument).Date;
+                            item.DateTax = Share.FormatDate(info.DateTax).Date;
+                            item.TaxNumber = info.TaxNumber;
+                            item.SupplierId = info.SupplierId;
+                            item.Reference = info.Reference;
+                            item.SumBalance = Share.FormatDecimal(info.SumBalance);
+                            /* DATA */
+                            item.BranchId = branchid;
+                            item.CreateUser = User.Identity.Name;
+                            item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                            item.UpdateUser = User.Identity.Name;
+                            item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                            _db.ST_Trans.Add(item);
+                            _db.SaveChanges();
+
+                            // Save TranSub
+                            if (tranSub.Count > 0)
+                            {
+                                int i = 1;
+                                /* Input Data */
+                                foreach (dynamic result in tranSub)
+                                {
+                                    string id = result.StapleId;
+                                    decimal amount = result.Amount;
+                                    decimal price = result.Price;
+                                    decimal total = result.Total;
+
+                                    var sub = new ST_TranSub();
+                                    sub.Documents = info.Document;
+                                    sub.StapleId = id;
+                                    sub.Amount = amount;
+                                    sub.Price = price;
+                                    sub.Total = total;
+                                    sub.i = i;
+                                    /* DATA */
+                                    sub.BranchId = branchid;
+
+                                    _db.ST_TranSub.Add(sub);
+                                    _db.SaveChanges();
+
+                                    i++;
+                                }
+                            }
+
+                            // Set Runnig
+                            _running.SetRunning("Store", info.Document, branchid);
+                        }
+
+                        break;
+
+                    case Comp.FormMode.EDIT:
+
+                        item = _db.ST_Trans.FirstOrDefault(x => x.Documents == info.Document);
+
+                        // Save Trans                     
+                        item.DateTax = Share.FormatDate(info.DateTax).Date;
+                        item.TaxNumber = info.TaxNumber;
+                        item.SupplierId = info.SupplierId;
+                        item.Reference = info.Reference;
+                        item.SumBalance = Share.FormatDecimal(info.SumBalance);
+                        /* DATA */
+                        item.UpdateUser = User.Identity.Name;
+                        item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                        _db.ST_Trans.Update(item);
+                        _db.SaveChanges();
+
+                        // Save FoodSub
+                        if (tranSub.Count > 0)
+                        {
+                            var delete = _db.ST_TranSub.Where(x => x.Documents == info.Document).ToList();
+                            _db.ST_TranSub.RemoveRange(delete);
+                            _db.SaveChanges();
+
+                            int i = 1;
+
+                            /* Input Data */
+                            foreach (dynamic result in tranSub)
+                            {
+                                string id = result.StapleId;
+                                decimal amount = result.Amount;
+                                decimal price = result.Price;
+                                decimal total = result.Total;
+
+                                var sub = new ST_TranSub();
+                                sub.Documents = info.Document;
+                                sub.StapleId = id;
+                                sub.Amount = amount;
+                                sub.Price = price;
+                                sub.Total = total;
+                                sub.i = i;
+                                /* DATA */
+                                sub.BranchId = branchid;
+
+                                _db.ST_TranSub.Add(sub);
+                                _db.SaveChanges();
+
+                                i++;
+                            }
+                        }
+
+                        break;
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                Alert("", "Error Data !", Enums.NotificationType.error);
+                return false;
             }
         }
 
@@ -194,8 +352,8 @@ namespace REST.Controllers
 
                 var Item = new ST_Trans();
                 Item.Documents = Document;
-                Item.Dates = m;
-                Item.Description = Description;
+                //Item.Dates = m;
+                //Item.Description = Description;
                 /* DATA */
                 Item.BranchId = BranchId;
                 Item.CreateUser = User.Identity.Name;
@@ -248,8 +406,8 @@ namespace REST.Controllers
                 // Update Data
                 var Item = new ST_Trans();
                 Item = _db.ST_Trans.Where(x => x.BranchId == BranchId && x.Documents == id).FirstOrDefault();
-                Item.Dates = m;
-                Item.Description = Description;
+                //Item.Dates = m;
+                //Item.Description = Description;
                 /* DATA */
                 Item.BranchId = BranchId;
                 Item.UpdateUser = User.Identity.Name;

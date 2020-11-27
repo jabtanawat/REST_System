@@ -116,7 +116,7 @@ namespace REST.Controllers
                             if (Doc == null)
                                 Doc = info.EmproyeeId;
 
-                            item.EmproyeeId = Doc;
+                            item.EmproyeeId = info.BchName + Doc;
                             item.PositionId = info.PositionId;
                             item.DateRegister = Share.FormatDate(info.DateRegister).Date;
                             item.IdCard = info.IdCard;

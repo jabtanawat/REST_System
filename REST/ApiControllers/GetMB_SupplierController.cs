@@ -11,7 +11,7 @@ using REST.Models;
 
 namespace REST.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class GetMB_SupplierController : BaseController
     {
@@ -51,6 +51,21 @@ namespace REST.ApiControllers
                 }
             }
             return list;
+        }
+
+        // -------------------------------------------
+        // -------------------------------------------
+        // ---                                     ---
+        // ---           ACTION SUPPLIER           ---
+        // ---                                     ---
+        // -------------------------------------------
+        // -------------------------------------------
+
+        public JsonResult AShowSupplier(string id)
+        {
+            //var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var item = _db.MB_Supplier.FirstOrDefault(x => x.SupplierId == id);
+            return Json(item);
         }
     }
 }

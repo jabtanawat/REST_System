@@ -10,8 +10,13 @@ namespace REST.Models
     {
         [Key]
         public string Documents { get; set; }
-        public DateTime Dates { get; set; }
-        public string Description { get; set; }
+        public DateTime DateDocument { get; set; }
+        public DateTime DateTax { get; set; }
+        public string TaxNumber { get; set; }
+        public string SupplierId { get; set; }
+        public string Reference { get; set; }
+        public decimal SumBalance { get; set; }
+        // -------------------------------------------------------
         public string BranchId { get; set; }
         public string CreateUser { get; set; }
         public DateTime CreateDate { get; set; }

@@ -40,10 +40,7 @@ namespace REST.Controllers
                 if (Amount > 0)
                 {
                     var Staple = new CD_Staple();
-                    Staple = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == BranchId);
-
-                    var Unit = new CD_Unit();
-                    Unit = _db.CD_Unit.FirstOrDefault(x => x.UnitId == Staple.Unit && x.BranchId == Staple.BranchId);                    
+                    Staple = _db.CD_Staple.FirstOrDefault(x => x.StapleId == id && x.BranchId == BranchId);      
 
                     if (HttpContext.Session.GetString("Session_StapleList") != null)
                     {
@@ -61,8 +58,7 @@ namespace REST.Controllers
                             StapleId = Staple.StapleId,
                             StapleName = Staple.StapleName,
                             Amount = Amount,
-                            UnitId = Unit.UnitId,
-                            UnitName = Unit.UnitName
+                            Unit = Staple.Unit
                         };
 
                         ListStaple.Add(item);
@@ -131,9 +127,8 @@ namespace REST.Controllers
         {
             var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var List = new List<ViewFoodSub>();
-            var sql = $"SELECT FoodId, CD_Staple.StapleId, CD_Staple.StapleName, CD_FoodSub.Amount, CD_Unit.UnitId, CD_Unit.UnitName "
+            var sql = $"SELECT FoodId, CD_Staple.StapleId, CD_Staple.StapleName, CD_FoodSub.Amount, CD_Staple.Unit "
                     + $"FROM CD_FoodSub "
-                    + $"LEFT JOIN CD_Unit on CD_FoodSub.UnitId = CD_Unit.UnitId "
                     + $"LEFT JOIN CD_Staple on CD_FoodSub.StapleId = CD_Staple.StapleId "
                     + $"WHERE CD_FoodSub.FoodId = '{id}' AND CD_FoodSub.BranchId = '{BranchId}' AND CD_Staple.BranchId = '{BranchId}'";
             using (var command = _db.Database.GetDbConnection().CreateCommand())
@@ -149,8 +144,7 @@ namespace REST.Controllers
                         Item.StapleId = data.GetString(1);
                         Item.StapleName = data.GetString(2);
                         Item.Amount = data.GetDecimal(3);
-                        Item.UnitId = data.GetString(4);
-                        Item.UnitName = data.GetString(5);
+                        Item.Unit = data.GetString(4);
                         List.Add(Item);
                     }
                 }

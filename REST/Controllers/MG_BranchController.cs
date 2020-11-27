@@ -172,107 +172,164 @@ namespace REST.Controllers
             var item = new CD_Running();
             try
             {
-                item.Name = "Emproyee";
-                item.Front = "EM";
-                item.Number = "0000";
-                item.AutoRun = true;
-                item.SetDate = null;
-                item.AutoDate = false;
-                /* DATA */
-                item.BchName = null;
-                item.BranchId = info.BranchId;
-                item.CreateUser = User.Identity.Name;
-                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
-                item.UpdateUser = User.Identity.Name;
-                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+                var running = _db.CD_Running.Where(x => x.Name == "Emproyee").ToList();
+                if (running.Count > 0)
+                {
+                    item.Name = "Payment";
+                    item.Front = "PY";
+                    item.Number = "0000";
+                    item.AutoRun = true;
+                    item.SetDate = null;
+                    item.AutoDate = false;
+                    /* DATA */
+                    item.BchName = null;
+                    item.BranchId = info.BranchId;
+                    item.CreateUser = User.Identity.Name;
+                    item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.UpdateUser = User.Identity.Name;
+                    item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                _db.CD_Running.Add(item);
-                _db.SaveChanges();
+                    _db.CD_Running.Add(item);
+                    _db.SaveChanges();
 
-                item.Name = "Member";
-                item.Front = "MB";
-                item.Number = "0000";
-                item.AutoRun = true;
-                item.SetDate = null;
-                item.AutoDate = false;
-                /* DATA */
-                item.BchName = null;
-                item.BranchId = info.BranchId;
-                item.CreateUser = User.Identity.Name;
-                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
-                item.UpdateUser = User.Identity.Name;
-                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.Name = "Order";
+                    item.Front = "OR";
+                    item.Number = "0000";
+                    item.AutoRun = true;
+                    item.SetDate = null;
+                    item.AutoDate = false;
+                    /* DATA */
+                    item.BchName = null;
+                    item.BranchId = info.BranchId;
+                    item.CreateUser = User.Identity.Name;
+                    item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.UpdateUser = User.Identity.Name;
+                    item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                _db.CD_Running.Add(item);
-                _db.SaveChanges();
+                    _db.CD_Running.Add(item);
+                    _db.SaveChanges();
 
-                item.Name = "Supplier";
-                item.Front = "SP";
-                item.Number = "0000";
-                item.AutoRun = true;
-                item.SetDate = null;
-                item.AutoDate = false;
-                /* DATA */
-                item.BchName = null;
-                item.BranchId = info.BranchId;
-                item.CreateUser = User.Identity.Name;
-                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
-                item.UpdateUser = User.Identity.Name;
-                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.Name = "Store";
+                    item.Front = "ST";
+                    item.Number = "0000";
+                    item.AutoRun = true;
+                    item.SetDate = null;
+                    item.AutoDate = false;
+                    /* DATA */
+                    item.BchName = null;
+                    item.BranchId = info.BranchId;
+                    item.CreateUser = User.Identity.Name;
+                    item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.UpdateUser = User.Identity.Name;
+                    item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                _db.CD_Running.Add(item);
-                _db.SaveChanges();
+                    _db.CD_Running.Add(item);
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    item.Name = "Emproyee";
+                    item.Front = "EM";
+                    item.Number = "0000";
+                    item.AutoRun = true;
+                    item.SetDate = null;
+                    item.AutoDate = false;
+                    /* DATA */
+                    item.BchName = null;
+                    item.BranchId = info.BranchId;
+                    item.CreateUser = User.Identity.Name;
+                    item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.UpdateUser = User.Identity.Name;
+                    item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                item.Name = "Payment";
-                item.Front = "PY";
-                item.Number = "0000";
-                item.AutoRun = true;
-                item.SetDate = null;
-                item.AutoDate = false;
-                /* DATA */
-                item.BchName = null;
-                item.BranchId = info.BranchId;
-                item.CreateUser = User.Identity.Name;
-                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
-                item.UpdateUser = User.Identity.Name;
-                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+                    _db.CD_Running.Add(item);
+                    _db.SaveChanges();
 
-                _db.CD_Running.Add(item);
-                _db.SaveChanges();
+                    item.Name = "Member";
+                    item.Front = "MB";
+                    item.Number = "0000";
+                    item.AutoRun = true;
+                    item.SetDate = null;
+                    item.AutoDate = false;
+                    /* DATA */
+                    item.BchName = null;
+                    item.BranchId = info.BranchId;
+                    item.CreateUser = User.Identity.Name;
+                    item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.UpdateUser = User.Identity.Name;
+                    item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                item.Name = "Order";
-                item.Front = "OR";
-                item.Number = "0000";
-                item.AutoRun = true;
-                item.SetDate = null;
-                item.AutoDate = false;
-                /* DATA */
-                item.BchName = null;
-                item.BranchId = info.BranchId;
-                item.CreateUser = User.Identity.Name;
-                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
-                item.UpdateUser = User.Identity.Name;
-                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+                    _db.CD_Running.Add(item);
+                    _db.SaveChanges();
 
-                _db.CD_Running.Add(item);
-                _db.SaveChanges();
+                    item.Name = "Supplier";
+                    item.Front = "SP";
+                    item.Number = "0000";
+                    item.AutoRun = true;
+                    item.SetDate = null;
+                    item.AutoDate = false;
+                    /* DATA */
+                    item.BchName = null;
+                    item.BranchId = info.BranchId;
+                    item.CreateUser = User.Identity.Name;
+                    item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.UpdateUser = User.Identity.Name;
+                    item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                item.Name = "Store";
-                item.Front = "ST";
-                item.Number = "0000";
-                item.AutoRun = true;
-                item.SetDate = null;
-                item.AutoDate = false;
-                /* DATA */
-                item.BchName = null;
-                item.BranchId = info.BranchId;
-                item.CreateUser = User.Identity.Name;
-                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
-                item.UpdateUser = User.Identity.Name;
-                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+                    _db.CD_Running.Add(item);
+                    _db.SaveChanges();
 
-                _db.CD_Running.Add(item);
-                _db.SaveChanges();
+                    item.Name = "Payment";
+                    item.Front = "PY";
+                    item.Number = "0000";
+                    item.AutoRun = true;
+                    item.SetDate = null;
+                    item.AutoDate = false;
+                    /* DATA */
+                    item.BchName = null;
+                    item.BranchId = info.BranchId;
+                    item.CreateUser = User.Identity.Name;
+                    item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.UpdateUser = User.Identity.Name;
+                    item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                    _db.CD_Running.Add(item);
+                    _db.SaveChanges();
+
+                    item.Name = "Order";
+                    item.Front = "OR";
+                    item.Number = "0000";
+                    item.AutoRun = true;
+                    item.SetDate = null;
+                    item.AutoDate = false;
+                    /* DATA */
+                    item.BchName = null;
+                    item.BranchId = info.BranchId;
+                    item.CreateUser = User.Identity.Name;
+                    item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.UpdateUser = User.Identity.Name;
+                    item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                    _db.CD_Running.Add(item);
+                    _db.SaveChanges();
+
+                    item.Name = "Store";
+                    item.Front = "ST";
+                    item.Number = "0000";
+                    item.AutoRun = true;
+                    item.SetDate = null;
+                    item.AutoDate = false;
+                    /* DATA */
+                    item.BchName = null;
+                    item.BranchId = info.BranchId;
+                    item.CreateUser = User.Identity.Name;
+                    item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                    item.UpdateUser = User.Identity.Name;
+                    item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                    _db.CD_Running.Add(item);
+                    _db.SaveChanges();
+                }                
 
                 return true;
             }

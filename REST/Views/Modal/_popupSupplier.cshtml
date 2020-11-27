@@ -1,11 +1,11 @@
-﻿<!-- Modal Staple -->
-<div class="modal fade bd-example-modal-lg" id="popupStaple" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="popupStapleTitle" aria-hidden="true">
+﻿<!-- Modal Supplier -->
+<div class="modal fade bd-example-modal-lg" id="popupSupplier" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="popupSupplierTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="row">
                     <div class="col">
-                        <h6 class="font-weight-bold" id="exampleModalCenterTitle"><i class="fas fa-database mr-2"></i>ข้อมูลสินค้า</h6>
+                        <h6 class="font-weight-bold" id="exampleModalCenterTitle"><i class="fas fa-database mr-2"></i>ข้อมูล Supplier</h6>
                     </div>
                     <div class="col text-right">
                         <button type="button" class="btn btn-table-sm btn-danger text-white" data-dismiss="modal" aria-label="Close">
@@ -25,12 +25,12 @@
                     </thead>
                     <tbody id="TB_Staple">
                         @{
-                            foreach (var row in ViewBag.Staple)
+                            foreach (var row in ViewBag.Supplier)
                             {
                                 <tr>
-                                    <td class="text-center bg-info-light"><a href="#" onclick="show('@row.StapleId')" class="text-info">เลือก</a></td>
-                                    <td>@row.StapleId</td>
-                                    <td>@row.StapleName</td>
+                                    <td class="text-center bg-info-light"><a href="#" onclick="showSupplier('@row.SupplierId')" class="text-info">เลือก</a></td>
+                                    <td>@row.SupplierId</td>
+                                    <td>@row.Title @row.FirstName @row.LastName</td>
                                 </tr>
                             }
                         }
