@@ -33,14 +33,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @*@foreach (var row in ViewBag.DT_Dish)
+                            @foreach (var row in ViewBag.Trans)
                             {
                                 <tr>
-                                    <td>@row.DishId</td>
-                                    <td>@row.DishName</td>
-                                    <td class="text-center"><a href="@Url.Action("FrmDish", "CD_Dish", new { mode = "Edit", id = row.DishId})" class="text-info"><i class="fas fa-edit"></i></a></td>
+                                    <td>@row.Document</td>
+                                    <td class="text-center">@row.DateDocument</td>
+                                    <td>@row.SupplierName</td>
+                                    <td class="text-center"><a href="@Url.Action("FrmStore", "ST_Store", new { mode = "Edit", id = row.Document})" class="text-info"><i class="fas fa-edit"></i></a></td>
                                 </tr>
-                            }*@
+                            }
                         </tbody>
                     </table>
                 </section>

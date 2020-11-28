@@ -13,6 +13,7 @@ namespace REST.Service
             public const string ADD = "ADD";
             public const string EDIT = "EDIT";
             public const string SEARCH = "SEARCH";
+            public const string DELETE = "DELETE";
         }
     }
 }

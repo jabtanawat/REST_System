@@ -1,0 +1,61 @@
+﻿<!-- Modal Staple Balance -->
+@{ 
+    var StapleBalance = ViewBag.StapleBalance;
+}
+<div class="modal fade bd-example-modal-sm" id="popupStapleBalance" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="popupStapleBalanceTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <h6 class="font-weight-bold" id="exampleModalCenterTitle"><i class="fas fa-database mr-2"></i>วัตถุดิบ และอุปกรณ์คงเหลือ</h6>
+                    <button type="button" class="btn btn-table-sm btn-danger text-white" data-dismiss="modal">X</button>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">สาขา</th>
+                            <th class="text-center">จำนวนคงเหลือ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @*@{ 
+                            foreach (var row in StapleBalance)
+                            {
+                                <tr>
+                                    <td>@row.BranchId</td>
+                                    <td class="text-right">@row.QtyBalance</td>
+                                </tr>
+                            }
+                        }*@
+
+                        @if (StapleBalance != null && StapleBalance.Count > 0)
+                        {
+                            foreach (var row in StapleBalance)
+                            {
+                                <tr>
+                                    <td>@row.BranchId</td>
+                                    <td class="text-right">@row.QtyBalance</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="text-center text-danger" colspan="2">ไม่มีรายการ</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#DT_Staple').DataTable({
+            "info": false,
+            "ordering": false
+        });
+    })
+</script>

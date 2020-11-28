@@ -24,7 +24,7 @@ namespace REST.ApiControllers
         }
         #endregion 
 
-        public List<ViewST_Trans> FoodAll(string branchid)
+        public List<ViewST_Trans> TransAll(string branchid)
         {
             var List = new List<ViewST_Trans>();
             string sql = $"SELECT Documents, DateDocument, Title, FirstName, LastName "
@@ -46,11 +46,63 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(1))
                             Item.DateDocument = data.GetDateTime(1).ToString("dd/MM/yyyy");
                         if (!data.IsDBNull(2))
-                            Item.DishName = data.GetString(2);
+                            Item.SupplierName = data.GetString(2);
                         if (!data.IsDBNull(3))
-                            Item.Price = Share.Cnumber(Share.FormatDouble(data.GetDecimal(3)), 2);
+                            Item.SupplierName += ' ' + data.GetString(3);
                         if (!data.IsDBNull(4))
-                            Item.GroupFoodName = data.GetString(4);
+                            Item.SupplierName += ' ' + data.GetString(4);
+                        List.Add(Item);
+                    }
+                }
+            }
+
+            return List;
+        }
+
+        public List<ViewST_TranSub> TranSubId(string id, string branchid)
+        {
+            var List = new List<ViewST_TranSub>();
+            string sqlWhere = null;
+            string sql = $"SELECT Documents, ST_TranSub.StapleId, CD_Staple.StapleName, Amount, Price, Total "
+                    + $"FROM ST_TranSub "
+                    + $"LEFT JOIN CD_Staple ON ST_TranSub.StapleId = CD_Staple.StapleId ";
+
+            if (branchid != null)
+                if (sqlWhere != null)
+                    sqlWhere += $"AND ST_TranSub.BranchId = '{branchid}' ";
+                else
+                    sqlWhere += $"ST_TranSub.BranchId = '{branchid}' ";
+
+            if (id != null)
+                if (sqlWhere != null)
+                    sqlWhere += $"AND Documents = '{id}' ";
+                else
+                    sqlWhere += $"Documents = '{id}' ";
+
+            if (sqlWhere != null)
+                sql += "WHERE " + sqlWhere + "ORDER BY i ASC ";
+
+            using (var command = _db.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = sql;
+                _db.Database.OpenConnection();
+                using (var data = command.ExecuteReader())
+                {
+                    while (data.Read())
+                    {
+                        var Item = new ViewST_TranSub();
+                        if (!data.IsDBNull(0))
+                            Item.Documents = data.GetString(0);
+                        if (!data.IsDBNull(1))
+                            Item.StapleId = data.GetString(1);
+                        if (!data.IsDBNull(2))
+                            Item.StapleName = data.GetString(2);
+                        if (!data.IsDBNull(3))
+                            Item.Amount = data.GetDecimal(3);
+                        if (!data.IsDBNull(4))
+                            Item.Price = data.GetDecimal(4);
+                        if (!data.IsDBNull(5))
+                            Item.Total = data.GetDecimal(5);
                         List.Add(Item);
                     }
                 }

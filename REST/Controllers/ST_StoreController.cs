@@ -35,7 +35,8 @@ namespace REST.Controllers
         public IActionResult Index()
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
-            ViewBag.Trans = 
+            var _trans = new GetST_TransController(_db);
+            ViewBag.Trans = _trans.TransAll(branchid);
             return View();
         }
 
@@ -55,8 +56,8 @@ namespace REST.Controllers
             {
                 _mode = Comp.FormMode.EDIT;
                 FrmMode();
-                //var item = LoadData(id, branchid);
-                return View();
+                var item = LoadData(id, branchid);
+                return View(item);
             }
         }
 
@@ -73,6 +74,41 @@ namespace REST.Controllers
                 status = "success";
             }
             else
+            {
+                status = "error";
+            }
+
+            return Json(new { data = status });
+        }
+
+        [HttpPost]
+        public IActionResult Delete(ViewST_Trans info)
+        {
+            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
+            string status = "success";
+            try
+            {                
+
+                _mode = Comp.FormMode.DELETE;
+
+                // Delete Trans
+                var itemTran = _db.ST_Trans.FirstOrDefault(x => x.Documents == info.Document && x.BranchId == branchid);
+
+                _db.ST_Trans.Remove(itemTran);
+                _db.SaveChanges();
+
+                // Add/Update Amount Staple
+                StapleAmount(info, branchid);
+
+                // Delete TranSub
+                var itemTranSub = _db.ST_TranSub.FirstOrDefault(x => x.Documents == info.Document && x.BranchId == branchid);
+
+                _db.ST_TranSub.RemoveRange(itemTranSub);
+                _db.SaveChanges();
+
+                toastrAlert("บันทึกการสั่งซื้อ", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);                
+            }
+            catch (Exception)
             {
                 status = "error";
             }
@@ -102,8 +138,17 @@ namespace REST.Controllers
                             // Save Trans
 
                             item.Documents = info.Document;
-                            item.DateDocument = Share.FormatDate(info.DateDocument).Date;
-                            item.DateTax = Share.FormatDate(info.DateTax).Date;
+
+                            if(info.DateDocument != null)
+                                item.DateDocument = Share.FormatDate(info.DateDocument).Date;
+                            else
+                                item.DateDocument = Share.FormatDate("25/08/2539").Date;
+
+                            if (info.DateTax != null)
+                                item.DateTax = Share.FormatDate(info.DateTax).Date;
+                            else
+                                item.DateTax = Share.FormatDate("25/08/2539").Date;
+
                             item.TaxNumber = info.TaxNumber;
                             item.SupplierId = info.SupplierId;
                             item.Reference = info.Reference;
@@ -149,6 +194,9 @@ namespace REST.Controllers
 
                             // Set Runnig
                             _running.SetRunning("Store", info.Document, branchid);
+
+                            // Add/Update Amount Staple
+                            StapleAmount(info, branchid);
                         }
 
                         break;
@@ -173,6 +221,9 @@ namespace REST.Controllers
                         // Save FoodSub
                         if (tranSub.Count > 0)
                         {
+                            // Add/Update Amount Staple
+                            StapleAmount(info, branchid);
+
                             var delete = _db.ST_TranSub.Where(x => x.Documents == info.Document).ToList();
                             _db.ST_TranSub.RemoveRange(delete);
                             _db.SaveChanges();
@@ -216,6 +267,118 @@ namespace REST.Controllers
             }
         }
 
+        public Boolean StapleAmount(ViewST_Trans info, string branchid)
+        {
+            var item = new StapleBalance();
+            var itemBefore = new ST_TranSub();
+            dynamic tranSub = JsonConvert.DeserializeObject(info.Sub);
+            try
+            {
+                switch (_mode)
+                {
+                    case Comp.FormMode.ADD:
+
+                        foreach (dynamic result in tranSub)
+                        {
+                            string id = result.StapleId;
+                            decimal amount = result.Amount;
+
+                            var list = _db.StapleBalance.Where(x => x.StapleId == id && x.BranchId == branchid).ToList();
+
+                            if (list.Count > 0)
+                            {
+                                item = _db.StapleBalance.FirstOrDefault(x => x.StapleId == id && x.BranchId == branchid);
+                                var qty = item.QtyBalance + amount;
+                                item.QtyBalance = qty;
+
+                                _db.StapleBalance.Update(item);
+                                _db.SaveChanges();
+                            }
+                            else
+                            {
+                                item.StapleId = id;
+                                item.QtyBalance = amount;
+                                item.BranchId = branchid;
+
+                                _db.StapleBalance.Add(item);
+                                _db.SaveChanges();
+                            }
+                        }
+
+                        break;
+
+                    case Comp.FormMode.EDIT:
+
+                        foreach (dynamic result in tranSub)
+                        {
+                            string id = result.StapleId;
+                            decimal amount = result.Amount;
+
+                            item = _db.StapleBalance.FirstOrDefault(x => x.StapleId == id && x.BranchId == branchid);
+                            itemBefore = _db.ST_TranSub.FirstOrDefault(x => x.Documents == info.Document && x.StapleId == id && x.BranchId == branchid);
+                            var qty = item.QtyBalance - itemBefore.Amount;
+                            item.QtyBalance = qty;
+
+                            _db.StapleBalance.Update(item);
+                            _db.SaveChanges();
+                        }
+
+                        foreach (dynamic result in tranSub)
+                        {
+                            string id = result.StapleId;
+                            decimal amount = result.Amount;
+
+                            var list = _db.StapleBalance.Where(x => x.StapleId == id && x.BranchId == branchid).ToList();
+
+                            if (list.Count > 0)
+                            {
+                                item = _db.StapleBalance.FirstOrDefault(x => x.StapleId == id && x.BranchId == branchid);
+                                var qty = item.QtyBalance + amount;
+                                item.QtyBalance = qty;
+
+                                _db.StapleBalance.Update(item);
+                                _db.SaveChanges();
+                            }
+                            else
+                            {
+                                item.StapleId = id;
+                                item.QtyBalance = amount;
+                                item.BranchId = branchid;
+
+                                _db.StapleBalance.Add(item);
+                                _db.SaveChanges();
+                            }
+                        }
+
+                        break;
+
+                    case Comp.FormMode.DELETE:
+
+                        foreach (dynamic result in tranSub)
+                        {
+                            string id = result.StapleId;
+                            decimal amount = result.Amount;
+
+                            item = _db.StapleBalance.FirstOrDefault(x => x.StapleId == id && x.BranchId == branchid);
+                            itemBefore = _db.ST_TranSub.FirstOrDefault(x => x.Documents == info.Document && x.StapleId == id && x.BranchId == branchid);
+                            var qty = item.QtyBalance - itemBefore.Amount;
+                            item.QtyBalance = qty;
+
+                            _db.StapleBalance.Update(item);
+                            _db.SaveChanges();
+                        }
+
+                        break;
+                }                            
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public void FrmMode()
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
@@ -246,6 +409,39 @@ namespace REST.Controllers
                 ViewData["DocRunning"] = "";
             }
         }
+
+        public ViewST_Trans LoadData(string id, string branchid)
+        {
+            var item = new ViewST_Trans();
+
+            var ST_Trans = _db.ST_Trans.FirstOrDefault(x => x.Documents == id);
+            item.Document = ST_Trans.Documents;
+
+            if(ST_Trans.DateDocument.ToString("dd/MM/yyyy") == "25/08/2539")
+                item.DateDocument = null;
+            else
+                item.DateDocument = ST_Trans.DateDocument.ToString("dd/MM/yyyy");
+
+            if (ST_Trans.DateTax.ToString("dd/MM/yyyy") == "25/08/2539")
+                item.DateTax = null;
+            else
+                item.DateTax = ST_Trans.DateTax.ToString("dd/MM/yyyy");
+
+            item.TaxNumber = ST_Trans.TaxNumber;
+            item.SupplierId = ST_Trans.SupplierId;
+
+            var supplier = _db.MB_Supplier.FirstOrDefault(x => x.SupplierId == ST_Trans.SupplierId);
+            item.SupplierName = supplier.Title + " " + supplier.FirstName + " " + supplier.LastName;
+
+            item.Reference = ST_Trans.Reference;
+            item.SumBalance = Share.Cnumber(Share.FormatDouble(ST_Trans.SumBalance), 2);
+
+            var _transub = new GetST_TransController(_db);
+            item.TranSub = _transub.TranSubId(id, null);
+
+            return item;
+        }
+
 
 
 

@@ -11,7 +11,7 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-blue">
+    @*<nav class="navbar navbar-expand-lg navbar-dark bg-blue">
         <div class="container-xl">
             <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                 ร้านอาหารโครตจะอร่อย
@@ -25,6 +25,15 @@
                 </div>
             </div>
         </div>
+    </nav>*@
+
+    <nav class="navbar fixed-top navbar-dark bg-black">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")"><i class="fas fa-home"></i>&nbsp;&nbsp;REST SYSTEM</a>
+            <div class="navbar-nav ml-auto mt-2 mt-lg-0">
+                <a class="nav-item nav-link active" href="#" data-toggle="modal" data-target=".bd-example-modal-sm"><i class="fas fa-user-cog"></i></a>
+            </div>
+        </div>        
     </nav>
 
     <!---------- modal ผู้ใช้งาน ---------->
@@ -55,6 +64,16 @@
     </div>
 
     @RenderBody()
+
+    <nav class="navbar navbar-dark bg-black">
+        <div class="container">
+            <div class="navbar-nav ml-auto mt-2 mt-lg-0">
+                <span class="navbar-text">
+                    Version 1.0.0.0
+                </span>
+            </div>            
+        </div>        
+    </nav>
 
     <script src="~/Plugins/Jquery-3.5.1/jquery-3.5.1.js"></script>
     <script src="~/Plugins/Bootstrap-4.5.2/js/bootstrap.min.js"></script>

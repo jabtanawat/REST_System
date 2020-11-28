@@ -7,105 +7,124 @@
     <link rel="stylesheet" href="~/StyleSheet/Home/Style.css" />
 }
 
-<div class="jumbotron">
-    <div class="container-xl">
-        <h1 class="display-4">Program Restaurant</h1>
-        <p>โปรแกรมร้านอาหาร พัฒนาโดย Mixpro Advance Co., Ltd.</p>
-        <a href="https://www.mixproadvance.com/" class="btn btn-primary btn-lg">Contact Us</a>
-    </div>
-</div>
-
-<div class="container-xl">
-    <div class="row text-center">
-        <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card h-100" id="StoreFront">
-                <div class="text-center">
-                    <i class="fas fa-cash-register icon-home"></i>
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title font-weight-bold">ระบบหน้าร้าน</h4>
-                </div>
+<div class="container">    
+    <section class="form-system">
+        <h2 class="text-center text-white mb-4">ระบบร้านอาหาร</h2>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-3">
+                <a href="@Url.Action("Index", "StoreFront")" class="text-decoration-none">
+                    <div class="card h-100" id="StoreFront">
+                        <div class="text-center">
+                            <i class="fas fa-cash-register icon-home"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="text-system">ระบบหน้าร้าน</p>
+                        </div>
+                    </div>
+                </a>                
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3">
+                <a href="@Url.Action("Index", "Stock")" class="text-decoration-none">
+                    <div class="card h-100" id="Stock">
+                        <div class="text-center">
+                            <i class="fas fa-truck-loading icon-home"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="text-system">ระบบสั่งซื้อ</p>
+                        </div>
+                    </div>
+                </a>                
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3">
+                <a href="@Url.Action("Index", "Member")" class="text-decoration-none">
+                    <div class="card h-100" id="Member">
+                        <div class="text-center">
+                            <i class="fas fa-user-circle icon-home"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="text-system">ระบบบุคลากร</p>
+                        </div>
+                    </div>
+                </a>                
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3">
+                <a href="@Url.Action("Index", "StoreBack")" class="text-decoration-none">
+                    <div class="card h-100" id="StoreBack">
+                        <div class="text-center">
+                            <i class="fas fa-paste icon-home"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="text-system">ระบบทะเบียน</p>
+                        </div>
+                    </div>
+                </a>                
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3">
+                <a href="@Url.Action("Index", "Kitchen")" class="text-decoration-none">
+                    <div class="card h-100" id="Kitchen">
+                        <div class="text-center">
+                            <i class="fas fa-utensils icon-home"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="text-system">ระบบห้องครัว</p>
+                        </div>
+                    </div>
+                </a>                
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3">
+                <a href="@Url.Action("Index", "Manage")" class="text-decoration-none">
+                    <div class="card h-100" id="Manage">
+                        <div class="text-center">
+                            <i class="fas fa-chart-pie icon-home"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="text-system">ระบบบัญชี</p>
+                        </div>
+                    </div>
+                </a>                
+            </div>
+            <div class="col mb-3">
+                <a href="#" class="text-decoration-none">
+                    <div class="card h-100">
+                        <div class="text-center">
+                            <i class="fas fa-file-alt icon-home"></i>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="text-system">ระบบรายงาน</p>
+                        </div>
+                    </div>
+                </a>                
             </div>
         </div>
-        <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card h-100" id="Stock">
-                <div class="text-center">
-                    <i class="fas fa-truck-loading icon-home"></i>
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title font-weight-bold">ระบบสั่งซื้อ</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card h-100" id="Member">
-                <div class="text-center">
-                    <i class="fas fa-user-circle icon-home"></i>
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title font-weight-bold">ระบบบุคลากร</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card h-100" id="StoreBack">
-                <div class="text-center">
-                    <i class="fas fa-paste icon-home"></i>
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title font-weight-bold">ระบบทะเบียน</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card h-100" id="Kitchen">
-                <div class="text-center">
-                    <i class="fas fa-utensils icon-home"></i>
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title font-weight-bold">ระบบห้องครัว</h4>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card h-100" id="Manage">
-                <div class="text-center">
-                    <i class="fas fa-chart-pie icon-home"></i>
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title font-weight-bold">ระบบบริหาร และบัญชี</h4>
-                </div>
-            </div>
-        </div>
-    </div>
+    </section>    
 </div>
 
 @section Scripts {
     <script>
 
-        $('#StoreBack').on('click', function () {
+        @*$('#StoreBack').on('click', function () {
             window.location.href = '@Url.Action("Index", "StoreBack")'
-        });
+        });*@
 
-        $('#StoreFront').on('click', function () {
+        @*$('#StoreFront').on('click', function () {
             window.location.href = '@Url.Action("Index", "StoreFront")'
-        });
+        });*@
 
-        $('#Kitchen').on('click', function () {
+        @*$('#Kitchen').on('click', function () {
             window.location.href = '@Url.Action("Index", "Kitchen")'
-        });
+        });*@
 
-        $('#Stock').on('click', function () {
+        @*$('#Stock').on('click', function () {
             window.location.href = '@Url.Action("Index", "Stock")'
-        });
+        });*@
 
-        $('#Member').on('click', function () {
+        @*$('#Member').on('click', function () {
             window.location.href = '@Url.Action("Index", "Member")'
-        });
+        });*@
 
-        $('#Manage').on('click', function () {
+        @*$('#Manage').on('click', function () {
             window.location.href = '@Url.Action("Index", "Manage")'
-        });
+        });*@
 
     </script>
 }

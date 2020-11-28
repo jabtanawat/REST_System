@@ -109,5 +109,11 @@ namespace REST.Controllers
             ViewBag.Supplier = _Get.SupplierAll();
             return PartialView("_popupSupplier");
         }
+
+        public IActionResult _popupStapleBalance(string id)
+        {
+            ViewBag.StapleBalance = _db.StapleBalance.Where(x => x.StapleId == id).ToList();
+            return PartialView("_popupStapleBalance");
+        }
     }
 }

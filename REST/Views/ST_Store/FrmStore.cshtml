@@ -176,7 +176,7 @@
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ยอดรวมสุทธิ :</label>
                                 <div class="col-sm-7">
                                     <div class="input-group input-group-sm">
-                                        <input asp-for="SumBalance" id="txtSumBalance" type="text" class="form-control text-right" placeholder="0.00">
+                                        <input asp-for="SumBalance" id="txtSumBalance" type="text" class="form-control text-right" placeholder="0.00" readonly>
                                         <div class="input-group-append">
                                             <span class="input-group-text">บาท</span>
                                         </div>
@@ -194,7 +194,7 @@
                     </div>
                 </section>
             </div>
-        </div>        
+        </div>
     </div>
 </div>
 
@@ -302,37 +302,6 @@
             )
 
             $('#popupStaple').modal('hide')
-
-
-            @*$.ajax({
-                type: 'POST',
-                url: '@Url.Action("ShowData", "Store")',
-                data: { id: id },
-                success: function (data) {
-                    $.each(data, function (index, val) {
-                        $('#txtDocument').val(val.documents);
-                        $('#txtDateMark').val(val.dates);
-                        $('#txtDescription').val(val.description);
-
-                        // Remove Td No Data
-                        $('#TB').empty()
-
-                        for (let i = 0; i < val.tranSub.length; i++) {
-                            var t = `<tr id="row${x}">`
-                                + `<td>${val.tranSub[i].stapleId}</td>`
-                                + `<td>${val.tranSub[i].stapleName}</td>`
-                                + `<td class="text-center"><input type="text" class="form-table-control form-table-control-sm text-right txt_Amount" id="A_${x}" onkeypress="NumberOnly()" value="${numeral(val.tranSub[i].amount).format('0,0.00')}" on></td>`
-                                + `<td class="text-right"><input type="text" class="form-table-control form-table-control-sm text-right txt_Price" id="P_${x}" onkeypress="NumberOnly()" value="${numeral(val.tranSub[i].price).format('0,0.00')}"></td>`
-                                + `<td class="text-right"><input type="text" class="form-table-control form-table-control-sm text-right" id="Total_${x}" value="${numeral(val.tranSub[i].total).format('0,0.00')}" readonly></td>`
-                                + `<td class="text-center"><a href="#" id="remove" class="btn btn-table-sm btn-danger-light text-white"><i class="fas fa-times"></i></a></td>`
-                                + '</tr>';
-                            $('#TB').append(t)
-                            x++;
-                        }
-                    })
-                    $('#MadalStTrans').modal('hide')
-                }
-            })*@
         }
 
         $(document).on('blur', '.Amount', function () {
@@ -517,9 +486,9 @@
             })
         })
 
-        function Save() {
-            Swal.fire({
-                text: "ต้องการบันทึกข้อมูลหรือไม่ ?",
+        document.querySelector("[btn-delete]").addEventListener('click', () => {
+             Swal.fire({
+                text: "ต้องการลบข้อมูลหรือไม่ ?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -529,81 +498,52 @@
             }).then((result) => {
                 if (result.value) {
 
-                    let Document = $('#txtDocument').val();
-                    let Date = $('#txtDateMark').val();
-                    let Description = $('#txtDescription').val();
-                    var myH = {
-                        Document,
-                        Date,
-                        Description
-                    };
+                    var tdata = [];
 
-                    if ($('#txtDocument').val() == "") {
-                        Swal.fire({
-                            text: "กรุณากรอกเลขที่เอกสาร",
-                            icon: 'warning'
-                        })
-                        return;
-                    }
-
-                    var myObj = [];
-                    var t = document.getElementById('TB')
-                    if (t.rows[0].cells[0].innerHTML != "ไม่มีข้อมูล") {
+                    // ตาราง
+                    var t = document.getElementById('bodyt')
+                    if (t.rows[0].cells[0].innerHTML != "ไม่มีรายการ") {
                         if (t.rows.length > 0) {
                             for (let i = 0; i < t.rows.length; i++) {
-                                var row = 0;
-                                var A_Id = t.rows[i].cells[0].innerHTML
-                                var A_Qty = (t.rows[i].cells[2].getElementsByTagName("input")[0].value)
-                                var A_Price = (t.rows[i].cells[3].getElementsByTagName("input")[0].value)
-                                var A_Total = (t.rows[i].cells[4].getElementsByTagName("input")[0].value)
+                                var id = t.rows[i].cells[0].innerHTML
+                                var amount = t.rows[i].cells[2].getElementsByTagName("input")[0].value
+                                var price = t.rows[i].cells[3].getElementsByTagName("input")[0].value
+                                var total = t.rows[i].cells[4].getElementsByTagName("input")[0].value
 
-                                if (A_Total == 0) {
-                                    Swal.fire({
-                                        text: "กรุณาใส่จำนวน หรือราคา/ต่อหน่อย",
-                                        icon: 'warning'
-                                    })
-                                    return;
-                                }
-                                var obj = { id: A_Id, qty: A_Qty, price: A_Price, total: A_Total }
-                                myObj.push(obj)
+                                var obj = { StapleId: id, Amount: amount, Price: price, Total: total }
+                                tdata.push(obj)
                             }
                         }
                     }
 
-                    // Check Data Tabble
-                    if (myObj.length == 0) {
-                        Swal.fire({
-                            text: "กรุณาเลือกรายการ",
-                            icon: 'warning'
-                        })
-                        return;
-                    }
+                    var data = new FormData();
+                    data.append('Document', $('#txtDocument').val());
+                    data.append('DateDocument', $('#txtDateDocument').val());
+                    data.append('DateTax', $('#txtDateTax').val());
+                    data.append('TaxNumber', $('#txtTaxNumber').val());
+                    data.append('SupplierId', $('#txtSupplierId').val());
+                    data.append('Reference', $('#txtReference').val());
+                    data.append('SumBalance', $('#txtSumBalance').val());
+                    data.append('Sub', JSON.stringify(tdata));
 
-                    // SaveData
                     $.ajax({
                         type: 'POST',
-                        url: '@Url.Action("Save", "Store")',
-                        data: { h: JSON.stringify(myH), d: JSON.stringify(myObj) },
+                        url: '@Url.Action("Delete", "ST_Store")',
+                        contentType: false,
+                        processData: false,
+                        data: data,
                         success: function (data) {
                             $.each(data, function (index, val) {
                                 if (val == "success") {
-                                    window.location.href = '@Url.Action("Index", "Store")'
-                                } else if (val == "error id") {
-                                    Swal.fire({
-                                        text: "เลขที่เอกสารนี้มีอยู่แล้ว",
-                                        icon: 'error'
-                                    })
+                                    window.location.href = '@Url.Action("Index", "ST_Store")'
                                 } else {
-                                    Swal.fire({
-                                        text: "Error Data",
-                                        icon: 'error'
-                                    })
+                                    Swal.fire({ text: "ไม่สามารถลบข้อมูลได้", icon: 'warning'} )
                                 }
                             })
                         }
                     });
                 }
             })
-        }
+        })
     </script>
 }
