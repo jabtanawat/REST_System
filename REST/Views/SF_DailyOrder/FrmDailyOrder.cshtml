@@ -1,8 +1,8 @@
 ﻿@using REST.Service;
 @{
-    ViewData["Title"] = "Kitchen";
+    ViewData["Title"] = "ระบบหน้าร้าน";
     ViewData["System"] = "ออเดอร์รายวัน";
-    Layout = "_Kitchen";
+    Layout = "_StoreFront";
     var DateNow = DateTime.Now.ToString("dd/MM/yyyy");
     var DataOrder = ViewBag.DataTable;
 }
@@ -15,73 +15,25 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">
-                <section class="head">
-                    @*<div class="d-flex">
-                        <div class="flex-grow-1">ข้อมูล</div>
-                        <div class="ml-2">
-                            <div class="input-group input-group-sm">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">วันที่</span>
-                                </div>
-                                <input type="text" class="form-control datepicker" placeholder="dd/MM/yyyy" value="@DateNow">
-                            </div>
-                        </div>
-                        <div class="ml-2">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" id="tabledropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-exclamation-circle"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="tabledropdown">
-                                    <button class="dropdown-item active" type="button" value="">Show All</button>
-                                    <button class="dropdown-item" type="button" value="1"><span class="text-danger"><i class="far fa-times-circle"></i>&nbsp;</span>ยังไม่ได้ทำ</button>
-                                    <button class="dropdown-item" type="button" value="2"><span class="text-success"><i class="far fa-check-circle"></i>&nbsp;</span>ทำเสร็จแล้ว</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>*@
-                    @*<hr />*@
-                </section>
-                
-                <section class="panel-table">
-
-                    @*<h3 class="card-title">Fixed Header Table</h3>
-        <div class="card-tools">
-            <div class="input-group input-group-sm" style="width: 150px;">
-                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                </div>
-            </div>
-        </div>*@
-
-                    @*<div class="d-flex">
-                        <div><input type="text" class="form-control form-control-sm" /></div>
-                    </div>*@
+            <div class="col-xl-11 mx-auto">                
+                <section>
                     <div class="d-flex mb-3">
                         <div class="mr-auto">
-                            <div hidden><input type="text" class="form-control form-control-sm" placeholder="ค้นหา..." /></div>
+                            <div hidden><button class="btn btn-sm btn-info" type="button"><i class="fas fa-globe-europe"></i>&nbsp;ทั้งหมด</button></div>
                         </div>
                         <div class="ml-2">
                             <div class="input-group input-group-sm">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">วันที่</span>
+                                    <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
                                 </div>
                                 <input type="text" id="txtdate" class="form-control datepicker" placeholder="dd/MM/yyyy" value="@DateNow">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary" type="button" id="btnSearch"><i class="fas fa-search"></i>&nbsp;ค้นหา</button>
+                                </div>
                             </div>
                         </div>
                         <div class="ml-2">
-                            <div class="btn-group" hidden>
-                                <button type="button" class="btn btn-sm btn-primary dropdown-toggle" id="tabledropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-exclamation-circle"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="tabledropdown">
-                                    <button class="dropdown-item active" type="button" value="">Show All</button>
-                                    <button class="dropdown-item" type="button" value="1"><span class="text-danger"><i class="far fa-times-circle"></i>&nbsp;</span>ยังไม่ได้ทำ</button>
-                                    <button class="dropdown-item" type="button" value="2"><span class="text-success"><i class="far fa-check-circle"></i>&nbsp;</span>ทำเสร็จแล้ว</button>
-                                </div>
-                            </div>
+                            <div><button class="btn btn-sm btn-info" type="button" id="btnSearchAll"><i class="fas fa-globe-europe"></i>&nbsp;ทั้งหมด</button></div>
                         </div>
                     </div>
 
@@ -96,7 +48,7 @@
                                         <th class="text-center">ชื่อโต๊ะ</th>
                                         <th class="text-center" style="width:5%;">สถานะ</th>
                                         <th class="text-center" style="width:15%;">จำนวนเงิน</th>
-                                        <th class="text-center" style="width:5%;">#</th>
+                                        <th class="text-center" style="width:5%;"><i class="fas fa-info-circle"></i></th>
                                     </tr>
                                 </thead>
                                 <tbody id="table-body">
@@ -111,7 +63,7 @@
                                                     <td class="text-center">@x</td>
                                                     <td>@row.OrderId</td>
                                                     <td class="text-center">@row.Dates</td>
-                                                    <td class="text-center">@row.TableName</td>
+                                                    <td>@row.TableName</td>
                                                     @if (row.ST == 1)
                                                     {
                                                         <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
@@ -125,14 +77,14 @@
                                                         <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                                                     }
                                                     <td class="text-right">@row.PriceTotal.ToString("N2")</td>
-                                                    <td class="text-center"><a href="@Url.Action("FrmKC_OrderSub", "Kitchen", new { id = row.OrderId})" class="btn btn-table-sm btn-info"><i class="far fa-eye"></i></a></td>
+                                                    <td class="text-center"><a href="@Url.Action("FrmDailyOrderSub", "SF_DailyOrder", new { id = row.OrderId})" class="text-info"><i class="far fa-eye"></i></a></td>
                                                 </tr>
                                             }
                                         }
                                         else
                                         {
                                             <tr>
-                                                <td colspan="7" class="text-center">no order</td>
+                                                <td colspan="7" class="text-center text-danger">ไม่มีรายการ</td>
                                             </tr>
                                         }
                                     }
@@ -156,7 +108,7 @@
     <script>
         $(document).ready(function () {
             // Add Side Menu
-            $(".item_click_OrderDate").addClass("active");
+            $(".item_click_Order").addClass("active");
             // DataTable
             //$('#DataTable').DataTable({
             //    "info": false,
@@ -172,6 +124,7 @@
                 todayBtn: 'linked',
                 autoclose: true
             });
+
             // Scroll Table
             $('[scroll]').slimScroll({
                 height: $(window).height() - $('.navbar').height() - 140,
@@ -180,7 +133,85 @@
             });
         });
 
-        $('#txtdate').on('change', function () {
+        document.getElementById('btnSearch').addEventListener('click', () => {
+            const date = $('#txtdate').val()
+            const tp = $('#table-body')
+            tp.empty()
+            let x = 0;
+            var t;
+            $.get("@Url.Action("GetSF_Order", "api")" + "/AOrder", { OrderDt: date },
+                function (data, status) {
+                    if (data.length > 0) {
+                        $.each(data, function (index, val) {
+                            x++;
+                            var link = `@Url.Action("FrmKC_OrderSub", "Kitchen")` + `/` + `${val.orderId}`;
+                            t = '<tr>'
+                                + `<td class="text-center">${x}</td>`
+                                + `<td>${val.orderId}</td>`
+                                + `<td class="text-center">${val.dates}</td>`
+                                + `<td>${val.tableName}</td>`
+                                if (val.st == 1) {
+                                    t += `<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>`
+                                } else if (val.st == 2) {
+                                    t += `<td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>`
+                                } else {
+                                    t += `<td class="text-center text-success"><i class="far fa-check-circle"></i></td>`
+                                }
+                                t += `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
+                                + `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-eye"></i></td>`
+                                + '</tr>';
+
+                            $('#table-body').append(t)
+                        })
+                    } else {
+                        t = '<tr><td colspan="7" class="text-center text-danger">ไม่มีรายการ</td></tr>';
+                        $('#table-body').append(t)
+                    }
+
+                }
+            )
+        })
+
+        document.getElementById('btnSearchAll').addEventListener('click', () => {
+            const date = $('#txtdate').val()
+            const tp = $('#table-body')
+            tp.empty()
+            let x = 0;
+            var t;
+            $.get("@Url.Action("GetSF_Order", "api")" + "/AOrder",
+                function (data, status) {
+                    if (data.length > 0) {
+                        $.each(data, function (index, val) {
+                            x++;
+                            var link = `@Url.Action("FrmKC_OrderSub", "Kitchen")` + `/` + `${val.orderId}`;
+                            t = '<tr>'
+                                + `<td class="text-center">${x}</td>`
+                                + `<td>${val.orderId}</td>`
+                                + `<td class="text-center">${val.dates}</td>`
+                                + `<td>${val.tableName}</td>`
+                                if (val.st == 1) {
+                                    t += `<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>`
+                                } else if (val.st == 2) {
+                                    t += `<td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>`
+                                } else {
+                                    t += `<td class="text-center text-success"><i class="far fa-check-circle"></i></td>`
+                                }
+                                t += `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
+                                + `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-eye"></i></td>`
+                                + '</tr>';
+
+                            $('#table-body').append(t)
+                        })
+                    } else {
+                        t = '<tr><td colspan="7" class="text-center text-danger">ไม่มีรายการ</td></tr>';
+                        $('#table-body').append(t)
+                    }
+
+                }
+            )
+        })
+
+        @*$('#txtdate').on('change', function () {
             const date = $('#txtdate').val()
             const tp = $('#table-body')
             tp.empty()
@@ -217,7 +248,7 @@
 
                 }
             )
-        })
+        })*@
 
         //function Scroll() {
         //    //var height_P = $(window).height() - $('.navbar').height() - 140
@@ -227,35 +258,5 @@
         //        railVisible: true
         //    });
         //}
-
-        $(".dropdown-item").on("click", function () {
-            $(this).addClass("active").siblings().removeClass("active");
-
-            var t = '<tr>'
-                + '<td class="text-center">10</td>'
-                + '<td>1111</td>'
-                + '<td class="text-center">16/07/2539</td>'
-                + '<td class="text-center">Z1</td>'
-                + '<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>'
-                + '<td class="text-right">200</td>'
-                + '<td class="text-center"><a href="#" class="btn btn-table-sm btn-info"><i class="fas fa-search"></i></a></td>'
-                + '</tr>';
-
-            $('#table-body').append(t)
-
-            var t = '<tr>'
-                + '<td class="text-center">11</td>'
-                + '<td>1111</td>'
-                + '<td class="text-center">16/07/2539</td>'
-                + '<td class="text-center">Z1</td>'
-                + '<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>'
-                + '<td class="text-right">200</td>'
-                + '<td class="text-center"><a href="#" class="btn btn-table-sm btn-info"><i class="fas fa-search"></i></a></td>'
-                + '</tr>';
-
-            $('#table-body').append(t)
-        });
-
-
     </script>
 }

@@ -57,7 +57,17 @@ namespace REST.Controllers
             }
            
             return View();
-        }        
+        }   
+
+        public IActionResult FrmDataTable(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _Table = new GetCD_TableController(_db);
+            ViewBag.Table = _Table.TableById(id, branchid);
+            var _OrderSub = new GetSF_OrderController(_db);
+            ViewBag.OrderSub = _OrderSub.OrderSub(id, null, branchid);
+            return View();
+        }
 
         [HttpPost]
         public IActionResult GetTable(string ZoneId, string Status)

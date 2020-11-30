@@ -28,57 +28,62 @@ namespace REST.Controllers
 
         #endregion 
 
-        public IActionResult FrmPayment(string TableId = null)
+        public IActionResult FrmPayment()
         {
-            var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            var _table = new GetCD_TableController(_db);
-            var _ordersub = new GetSF_OrderController(_db);
-            var item = new ViewFrmPayment();
-            if(TableId != null)
-            {
-                var order = _db.SF_OrderSub.Where(x => x.TableId == TableId && x.Status == 1 || x.Status == 2 && x.BranchId == branch).ToList();
-                if(order.Count > 0)
-                {
-                    item.TableId = TableId;
-                    Alert("", "รายการอาหาร ยังทำไม่เสร็จหรือได้ไม่ครบ", Enums.NotificationType.warning);
-                    return View(item);
-                }
-                else
-                {
-                    var table = _table.TableById(TableId, branch);
-                    var info = _ordersub.OrderSubByTableId(TableId, branch);                    
-                    decimal price = 0;
-                    foreach (var row in info)
-                    {
-                        price += row.Price * row.Amount;
-                    }
-                    // input pricer ordersub
-                    item.TableId = TableId;
-                    item.TableName = table.TableName;
-                    item.St = table.TableST;
-                    if (table.TableST == 1)
-                    {                        
-                        item.Status = "ว่าง";
-                    }else if(table.TableST == 2)
-                    {
-                        item.Status = "ใช้บริการอยู่";
-                    }
-                    else if(table.TableST == 3)
-                    {
-                        item.Status = "จอง";
-                    }
-                    item.Total = Share.Cnumber(Share.FormatDouble(price), 2);
-                    item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
-                    item.OrderSub = _ordersub.OrderSub(TableId, null, branch);
-
-                    return View(item);
-                }                
-            }
-            else
-            {
-                return View(item);
-            }            
+            return View();
         }
+
+        //public IActionResult FrmPayment(string TableId = null)
+        //{
+        //    var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+        //    var _table = new GetCD_TableController(_db);
+        //    var _ordersub = new GetSF_OrderController(_db);
+        //    var item = new ViewFrmPayment();
+        //    if(TableId != null)
+        //    {
+        //        var order = _db.SF_OrderSub.Where(x => x.TableId == TableId && x.Status == 1 || x.Status == 2 && x.BranchId == branch).ToList();
+        //        if(order.Count > 0)
+        //        {
+        //            item.TableId = TableId;
+        //            Alert("", "รายการอาหาร ยังทำไม่เสร็จหรือได้ไม่ครบ", Enums.NotificationType.warning);
+        //            return View(item);
+        //        }
+        //        else
+        //        {
+        //            var table = _table.TableById(TableId, branch);
+        //            var info = _ordersub.OrderSubByTableId(TableId, branch);                    
+        //            decimal price = 0;
+        //            foreach (var row in info)
+        //            {
+        //                price += row.Price * row.Amount;
+        //            }
+        //            // input pricer ordersub
+        //            item.TableId = TableId;
+        //            item.TableName = table.TableName;
+        //            item.St = table.TableST;
+        //            if (table.TableST == 1)
+        //            {                        
+        //                item.Status = "ว่าง";
+        //            }else if(table.TableST == 2)
+        //            {
+        //                item.Status = "ใช้บริการอยู่";
+        //            }
+        //            else if(table.TableST == 3)
+        //            {
+        //                item.Status = "จอง";
+        //            }
+        //            item.Total = Share.Cnumber(Share.FormatDouble(price), 2);
+        //            item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
+        //            item.OrderSub = _ordersub.OrderSub(TableId, null, branch);
+
+        //            return View(item);
+        //        }                
+        //    }
+        //    else
+        //    {
+        //        return View(item);
+        //    }            
+        //}
 
         [HttpPost]
         public IActionResult FrmPayment(ViewFrmPayment info)

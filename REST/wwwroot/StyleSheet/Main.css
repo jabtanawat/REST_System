@@ -41,12 +41,12 @@ body {
     color: #D4EDDA;
 }
 
-.bg-red {
-    background-color: #F8D7DA;
-}
-
 .text-red {
     color: #F8D7DA;
+}
+
+.bg-red-light {
+    background-color: #F8D7DA;
 }
 
 .bg-yellow {

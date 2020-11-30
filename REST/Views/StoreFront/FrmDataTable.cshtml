@@ -1,0 +1,162 @@
+﻿@using REST.Service;
+@{
+    ViewData["Title"] = "ระบบหน้าร้าน";
+    ViewData["System"] = "ข้อมูลโต๊ะ";
+    Layout = "_StoreFront";
+    var _table = ViewBag.Table;
+    var _order = ViewBag.OrderSub;
+    var price = 0;
+    foreach (var i in _order)
+    {
+        if (i.Status != 4)
+        {
+            price += i.Price * i.Amount;
+        }
+    }
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-11 mx-auto">
+                <!-- 1 -->
+                <section>
+                    <div class="row">
+                        <div class="col-xl-7 mx-auto">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ชื่อโต๊ะ :</label>
+                                        <div class="col-sm-7">
+                                            <p class="col-form-label-sm border-bottom mb-0">@_table.TableName</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">สถานะ :</label>
+                                        <div class="col-sm-7">
+                                            @{
+                                                if (_table.TableST == 1)
+                                                {
+                                                    <p class="col-form-label-sm border-bottom mb-0 text-danger">ยังไม่ได้ทำ</p>
+                                                }
+                                                else if (_table.TableST == 2)
+                                                {
+                                                    <p class="col-form-label-sm border-bottom mb-0 text-primary">กำลังดำเนินการ</p>
+                                                }
+                                                else if (_table.TableST == 3)
+                                                {
+                                                    <p class="col-form-label-sm border-bottom mb-0 text-success">เรียบร้อยแล้ว</p>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- 2 -->
+                <section>
+                    <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;รายการอาหาร</p>
+                    <div class="card border-0">
+                        <div class="card-body table-responsive p-0" scroll>
+                            <table class="table table-md table-bordered table-head-fixed text-nowrap">
+                                <thead class="thead-black">
+                                    <tr>
+                                        <th class="text-center" style="width:5%;">ลำดับ</th>
+                                        <th class="text-center">รหัส</th>
+                                        <th class="text-center">ชื่ออาหาร</th>
+                                        <th class="text-center" style="width:5%;"><i class="fas fa-info-circle"></i></th>
+                                        <th class="text-center" style="width:12%;">จำนวน</th>
+                                        <th class="text-center" style="width:12%;">ราคา</th>
+                                        <th class="text-center" style="width:12%;">ราคารวม</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        decimal total = 0;
+                                        if (_order.Count > 0)
+                                        {
+                                            var x = 0;
+                                            foreach (var row in _order)
+                                            {
+                                                x++;
+                                                if (row.Status != 4)
+                                                {
+                                                    total += row.Price * row.Amount;
+                                                }
+                                                <tr>
+                                                    <td class="text-center">@x</td>
+                                                    <td>@row.FoodId</td>
+                                                    <td>@row.FoodName</td>
+                                                    @if (row.Status == 1)
+                                                    {
+                                                        <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
+
+                                                    }
+                                                    else if (row.Status == 2)
+                                                    {
+                                                        <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
+                                                    }
+                                                    else if (row.Status == 3)
+                                                    {
+                                                        <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                                    }
+                                                    else if (row.Status == 4)
+                                                    {
+                                                        <td class="text-center text-danger">ยกเลิก</td>
+                                                    }
+                                                    <td class="text-right">@row.Amount</td>
+                                                    <td class="text-right">@row.Price</td>
+                                                    <td class="text-right">@Share.Cnumber(Share.FormatDouble(total),2)</td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="6" class="text-center text-danger">ไม่มีรายการ</td>
+                                            </tr>
+                                        }
+                                    }                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                <!-- 3 -->
+                <section>
+                    <div class="row justify-content-end mt-3">
+                        <div class="col-xl-4 col-lg-6">
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ราคารวมทั้งหมด :</label>
+                                <div class="col-sm-7">
+                                    <div class="input-group input-group-sm">
+                                        <input type="text" value="@Share.Cnumber(price,2)" class="form-control-plaintext form-control-sm text-right pr-3" placeholder="0.00" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">บาท</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[scroll]').slimScroll({
+                height: $(window).height() - $('.navbar').height() - 258,
+                railBorderRadius: 0,
+                railVisible: true
+            });
+        });
+    </script>
+}

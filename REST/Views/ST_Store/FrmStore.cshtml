@@ -120,7 +120,6 @@
                     <div class="card border-0">
                         <div class="card-body table-responsive p-0" scroll>
                             <table class="table table-md table-bordered table-head-fixed" id="tableStaple">
-                                <caption><a href="#" class="text-primary" data-toggle="ajax-modal" data-target="#popupStaple" data-url="@Url.Action("_popupStaple", "Modal")">เพิ่มรายการ</a></caption>
                                 <thead class="thead-black">
                                     <tr>
                                         <th class="text-center" style="width:15%;">รหัส</th>
@@ -167,9 +166,10 @@
                             </table>
                         </div>
                     </div>
+                    <span><a href="#" class="text-primary" data-toggle="ajax-modal" data-target="#popupStaple" data-url="@Url.Action("_popupStaple", "Modal")">เพิ่มรายการ</a></span>
                 </section>
                 <!-- Footer Form -->
-                <section>
+                <section>                    
                     <div class="row justify-content-end">
                         <div class="col-md-6">
                             <div class="form-group row">
@@ -222,7 +222,7 @@
             });
 
             $('[scroll]').slimScroll({
-                height: $(window).height() - 488,
+                height: $(window).height() - 514,
                 railBorderRadius: 0,
                 railVisible: true,
                 distance: '-10px'

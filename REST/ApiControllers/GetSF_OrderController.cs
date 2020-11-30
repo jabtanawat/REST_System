@@ -197,9 +197,15 @@ namespace REST.ApiControllers
         }
 
 
-        //----------- ACTION -----------
+        // -------------------------------------------
+        // -------------------------------------------
+        // ---                                     ---
+        // ---            ACTION ORDER            ---
+        // ---                                     ---
+        // -------------------------------------------
+        // -------------------------------------------
 
-        public JsonResult AOrder(string OrderDt)
+        public JsonResult AOrder(string OrderDt = null)
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var List = Order(null, OrderDt, branchid);

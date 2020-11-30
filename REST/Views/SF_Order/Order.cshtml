@@ -1,8 +1,8 @@
 ﻿@{
-    ViewData["Title"] = "Order";
-    ViewData["System"] = "รับออเดอร์";
-    Layout = "_Order";
     var Table = ViewBag.Table;
+    ViewData["Title"] = "Order";
+    ViewData["System"] = Table.TableName;
+    Layout = "_Order";
 }
 
 @section Styles {
@@ -12,7 +12,7 @@
 <div class="container-fluid">
     <!-- content-table-heard -->
     <section class="content-table-heard">
-        <div class="card mt-3 mb-3">
+        @*<div class="card mt-3 mb-3">
             <div class="card-body py-2">
                 <div class="d-flex">
                     <div class="mr-auto">
@@ -41,30 +41,110 @@
                         {
                             bg = "color-yellow";
                         }
-                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>รหัส : </strong>&nbsp;@Table.TableId</h6></div>
-                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>ชื่อ : </strong>&nbsp;@Table.TableName</h6></div>
-                        <div class="ml-2"><h6 class="mb-0 mt-1"><strong>สถานะ : </strong>&nbsp;<span class="@bg"><i class="fas fa-circle"></i>&nbsp;</span>@Table.Status</h6></div>
+                        <div class="ml-2"><h6 class="mb-0 mt-1">รหัส : &nbsp;@Table.TableId</h6></div>
+                        <div class="ml-2"><h6 class="mb-0 mt-1">ชื่อ : &nbsp;@Table.TableName</h6></div>
+                        <div class="ml-2"><h6 class="mb-0 mt-1">สถานะ : &nbsp;<span class="@bg"><i class="fas fa-circle"></i>&nbsp;</span>@Table.Status</h6></div>
                     }
                 </div>
             </div>
-        </div>
+        </div>*@
     </section>
 
     <div class="card mt-3">
         <div class="card-body" scroll-card>
-            <div class="row" panel-food>
-                @foreach (var row in ViewBag.Food)
-                {
-                    var Image = "~/Images/Food/" + (row.ImageName ?? "NOIMAGE.jpg");
-                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
-                        <button class="btn btn-block text-truncate p-0 button_order" onclick="amountfood('@Url.Action("_AmountFood", "Modal", new { id = row.FoodId})')" data-toggle="ajax-modal" data-target="#amountfood">
-                            <span class="price_order">@row.Price.ToString("N2")</span>
-                            <img src="@Image" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
-                            <p class="mb-0">@row.FoodName</p>
-                        </button>
-                    </div>
-                }                
+
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                @{
+                    var x = 0;
+                    foreach (var row in ViewBag.GroupFood)
+                    {
+                        x++;
+                        if (x == 1)
+                        {
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="@row.GroupFoodId-tab" data-toggle="tab" href="#@row.GroupFoodId" role="tab" aria-controls="@row.GroupFoodId" aria-selected="true">@row.GroupFoodName</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="@row.GroupFoodId-tab" data-toggle="tab" href="#@row.GroupFoodId" role="tab" aria-controls="@row.GroupFoodId" aria-selected="true">@row.GroupFoodName</a>
+                            </li>
+                        }
+
+                    }
+                }
+            </ul>
+
+            <div class="tab-content mt-3" id="myTabContent">
+                @{
+                    var z = 0;
+                    foreach (var row in ViewBag.GroupFood)
+                    {
+                        z++;
+                        if (z == 1)
+                        {
+                            <div class="tab-pane fade show active" id="@row.GroupFoodId" role="tabpanel" aria-labelledby="@row.GroupFoodId-tab">
+                                <div class="row" panel-food>
+                                    @foreach (var row1 in ViewBag.Food)
+                                    {
+                                        if (row1.GroupFoodId == row.GroupFoodId)
+                                        {
+                                            var Image = "~/Images/Food/" + (row1.ImageName ?? "NOIMAGE.jpg");
+                                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+                                                <button class="btn btn-block text-truncate p-0 button_order" onclick="amountfood('@Url.Action("_AmountFood", "Modal", new { id = row1.FoodId})')" data-toggle="ajax-modal" data-target="#amountfood">
+                                                    <span class="price_order">@row1.Price.ToString("N2")</span>
+                                                    <img src="@Image" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
+                                                    <p class="mb-0">@row1.FoodName</p>
+                                                </button>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="tab-pane fade" id="@row.GroupFoodId" role="tabpanel" aria-labelledby="@row.GroupFoodId-tab">
+                                <div class="row" panel-food>
+                                    @foreach (var row1 in ViewBag.Food)
+                                    {
+                                        if (row1.GroupFoodId == row.GroupFoodId)
+                                        {
+                                            var Image = "~/Images/Food/" + (row1.ImageName ?? "NOIMAGE.jpg");
+                                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+                                                <button class="btn btn-block text-truncate p-0 button_order" onclick="amountfood('@Url.Action("_AmountFood", "Modal", new { id = row1.FoodId})')" data-toggle="ajax-modal" data-target="#amountfood">
+                                                    <span class="price_order">@row1.Price.ToString("N2")</span>
+                                                    <img src="@Image" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
+                                                    <p class="mb-0">@row1.FoodName</p>
+                                                </button>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                }
             </div>
+
+
+
+
+
+            @*<div class="row" panel-food>
+            @foreach (var row in ViewBag.Food)
+            {
+                var Image = "~/Images/Food/" + (row.ImageName ?? "NOIMAGE.jpg");
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
+                    <button class="btn btn-block text-truncate p-0 button_order" onclick="amountfood('@Url.Action("_AmountFood", "Modal", new { id = row.FoodId})')" data-toggle="ajax-modal" data-target="#amountfood">
+                        <span class="price_order">@row.Price.ToString("N2")</span>
+                        <img src="@Image" class="card-img-top" style="height:90px;width:100%;" asp-append-version="true" />
+                        <p class="mb-0">@row.FoodName</p>
+                    </button>
+                </div>
+            }
+        </div>*@
         </div>
     </div>
 </div>
@@ -138,7 +218,7 @@
             Order()
         });
 
-        document.getElementById('GroupFood').addEventListener('change', () => {
+        @*document.getElementById('GroupFood').addEventListener('change', () => {
             const groupfood = $('#GroupFood').val()
             const panel = $('[panel-food]')
             panel.empty() // ให้ข้อมูลโต๊ะ = ว่าง
@@ -164,7 +244,7 @@
                     })
                 })
             });
-        })
+        })*@
 
         function Order() {
             const table = $('[table-body]')
@@ -347,11 +427,12 @@
         }
 
         function screenScroll() {
-            var height_P = $(window).height() - $('.navbar').height() - $('.content-table-heard').height() - 70
+            var height_P = $(window).height() - $('.navbar').height() - $('.content-table-heard').height() - 52
             $('[scroll-card]').slimScroll({
                 height: height_P,
                 railBorderRadius: 0,
-                railVisible: true
+                railVisible: true,
+                distance: '-10px'
             });
         }
 
