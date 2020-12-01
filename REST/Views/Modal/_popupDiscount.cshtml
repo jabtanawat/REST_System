@@ -1,0 +1,34 @@
+﻿<!-- Modal Staple -->
+<div class="modal fade bd-example-modal-sm" id="popupDiscount" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="popupDiscountTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row mt-2">
+                    <div class="col-md-6 mx-auto text-center">
+                        <label class="font-weight-bold">ส่วนลด % </label>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6 mx-auto">
+                        <input type="text" class="form-control numberonly text-right" id="txtDiscount" />
+                    </div>
+                </div>
+                <div class="text-center mt-3 mb-2">
+                    <button type="button" class="btn btn-success" btn-select>ตกลง</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#popupDiscount').on('shown.bs.modal', function () {
+        $('#txtDiscount').trigger('focus')
+    })
+
+    document.querySelector("[btn-select]").addEventListener("click", () => {
+        const discount = document.getElementById("txtDiscount").value
+        Discount(discount)
+    })
+</script>

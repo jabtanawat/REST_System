@@ -1,14 +1,12 @@
 ﻿/* Navbar */
 .nav-bar {
     border-bottom: 1px solid #E3EBF6;
-
 }
 
 /* CONTENT */
 .wrapper .content {
     width: 100%;
-    transition: all ease 0.25s;
-    margin: 1rem;
+    margin: 1rem 1rem 1rem 1rem;
 }
 
 /* MENU */

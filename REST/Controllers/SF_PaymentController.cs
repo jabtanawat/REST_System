@@ -28,9 +28,59 @@ namespace REST.Controllers
 
         #endregion 
 
-        public IActionResult FrmPayment()
+        public IActionResult FrmPayment(string id = null)
         {
-            return View();
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var item = new ViewFrmPayment();
+            var _table = _db.CD_Table.FirstOrDefault(x => x.TableId == id && x.BranchId == branchid);
+            var _setting = _db.Setting.FirstOrDefault();
+            if(id != null)
+            {
+                item.TableId = _table.TableId;
+                item.TableName = _table.TableName;
+                if (_table.TableST == 1)
+                    item.TableST = "ว่าง";
+                else if (_table.TableST == 2)
+                    item.TableST = "ใช้บริการอยู่";
+                else
+                    item.TableST = "จอง";
+                // รายการอาหาร
+                var _OrderSub = new GetSF_OrderController(_db);
+                var ordersub = _OrderSub.OrderSub(id, null, branchid);
+                decimal price = 0;
+                foreach (var i in ordersub)
+                {
+                    if (i.Status != 4)
+                    {
+                        price += i.Price * i.Amount;
+                    }
+                }
+                item.OrderSub = ordersub;
+                // หาค่า ServiceCharge
+                var B = price * _setting.Service / 100;
+                item.ServiceP = Share.Cnumber(Share.FormatDouble(_setting.Service), 2);
+                item.ServiceB = Share.Cnumber(Share.FormatDouble(B), 2);
+                item.MemberP = "0.00";
+                item.MemberB = "0.00";
+                item.PersenP = "0.00";
+                item.PersenB = "0.00";
+                var sum = price + B;
+                item.SumBalance = Share.Cnumber(Share.FormatDouble(sum), 2);
+                item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
+            }
+            else
+            {
+                item.TableST = "ว่าง";
+                item.Balance = "0.00";
+                item.ServiceP = "0.00";
+                item.ServiceB = "0.00";
+                item.MemberP = "0.00";
+                item.MemberB = "0.00";
+                item.PersenP = "0.00";
+                item.PersenB = "0.00";
+                item.SumBalance = "0.00";
+            }
+            return View(item);
         }
 
         //public IActionResult FrmPayment(string TableId = null)
@@ -221,6 +271,7 @@ namespace REST.Controllers
             var item = new ViewMB_Member();
             item.MemberId = id;
             item.Name = member.Name;
+            item.TypeName = member.TypeName;
             item.Rebate = member.Rebate;
             item.Score = member.Score;
             return Json(new { data = item });

@@ -28,7 +28,7 @@ namespace REST.ApiControllers
         public ViewMB_Member ViewMemberById(string id, string branchId)
         {
             var Item = new ViewMB_Member();
-            var sql = $"SELECT MemberId, Title + ' ' + FirstName + ' ' + LastName AS Name, Rebate, Score "
+            var sql = $"SELECT MemberId, Title + ' ' + FirstName + ' ' + LastName AS Name, CASE WHEN Type = 1 THEN 'ทั่วไป' WHEN Type = 2 THEN 'สมาชิก' END AS TypeName, Rebate, Score "
                     + $"FROM MB_Member "
                     + $"WHERE BranchId = '{branchId}' ";
                 if (id != null)
@@ -46,9 +46,11 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(1))
                             Item.Name = data.GetString(1);
                         if (!data.IsDBNull(2))
-                            Item.Rebate = data.GetInt32(2);
+                            Item.TypeName = data.GetString(2);
                         if (!data.IsDBNull(3))
-                            Item.Score = Share.FormatString(data.GetDecimal(3));
+                            Item.Rebate = data.GetInt32(3);
+                        if (!data.IsDBNull(4))
+                            Item.Score = Share.FormatString(data.GetDecimal(4));
                     }
                 }
             }

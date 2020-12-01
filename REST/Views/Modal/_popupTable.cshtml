@@ -15,12 +15,12 @@
                 </div>
                 <hr />
                 <table id="ViewDT" class="table table-md table-bordered table-hover mt-3">
-                    <thead class="thead-light">
+                    <thead class="thead-black">
                         <tr>
+                            <th class="text-center" style="width:2rem;"></th>
                             <th class="text-center"> รหัส </th>
                             <th class="text-center"> ชื่อ </th>
                             <th class="text-center" style="width:7rem;"> สถานะ </th>
-                            <th class="text-center" style="width:1rem;"> # </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -28,6 +28,7 @@
                             foreach (var row in ViewBag.View)
                             {
                                 <tr>
+                                    <td class="text-center bg-info-light"><a href="#" onclick="showTable('@row.TableId')" class="text-info">เลือก</a></td>
                                     <td>@row.TableId</td>
                                     <td>@row.TableName</td>
                                     @if(row.TableST == 1)
@@ -39,8 +40,7 @@
                                     }else if(row.TableST == 3)
                                     {
                                         <td class="text-center">จอง</td>
-                                    }
-                                    <td class="text-center"><a href="@Url.Action("FrmPayment", "SF_Payment", new { TableId = row.TableId})" class="btn btn-table-sm btn-info"><i class="fas fa-location-arrow"></i></a></td>
+                                    }                                    
                                 </tr>
                             }
                         }

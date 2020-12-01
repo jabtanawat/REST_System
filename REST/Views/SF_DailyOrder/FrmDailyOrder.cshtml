@@ -144,7 +144,7 @@
                     if (data.length > 0) {
                         $.each(data, function (index, val) {
                             x++;
-                            var link = `@Url.Action("FrmKC_OrderSub", "Kitchen")` + `/` + `${val.orderId}`;
+                            var link = `@Url.Action("FrmDailyOrderSub", "SF_DailyOrder")` + `/` + `${val.orderId}`;
                             t = '<tr>'
                                 + `<td class="text-center">${x}</td>`
                                 + `<td>${val.orderId}</td>`
@@ -183,7 +183,7 @@
                     if (data.length > 0) {
                         $.each(data, function (index, val) {
                             x++;
-                            var link = `@Url.Action("FrmKC_OrderSub", "Kitchen")` + `/` + `${val.orderId}`;
+                            var link = `@Url.Action("FrmDailyOrderSub", "SF_DailyOrder")` + `/` + `${val.orderId}`;
                             t = '<tr>'
                                 + `<td class="text-center">${x}</td>`
                                 + `<td>${val.orderId}</td>`

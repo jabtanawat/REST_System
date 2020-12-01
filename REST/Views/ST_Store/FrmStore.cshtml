@@ -377,6 +377,7 @@
             }
         })
 
+        // Show Supplier
         function showSupplier(id) {
             $.get("@Url.Action("GetMB_Supplier", "api")" + "/AShowSupplier", { id: id },
                 function (data, status) {

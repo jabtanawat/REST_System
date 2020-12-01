@@ -80,6 +80,11 @@ namespace REST.Controllers
         // ---                                     ---
         // -------------------------------------------
 
+        public IActionResult _popupDiscount()
+        {
+            return PartialView("_popupDiscount");
+        }
+
         public IActionResult _popupMember()
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;

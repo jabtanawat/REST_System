@@ -1,4 +1,4 @@
-﻿<!-- Modal Staple -->
+﻿<!-- Modal Member -->
 <div class="modal fade bd-example-modal-lg" id="popupMember" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="popupMemberTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -15,11 +15,12 @@
                 </div>
                 <hr />
                 <table id="ViewDT" class="table table-md table-bordered table-hover mt-3">
-                    <thead style="background-color:#F8FAFD;">
+                    <thead class="thead-black">
                         <tr>
+                            <th class="text-center" style="width:2rem;"></th>
                             <th class="text-center"> รหัส </th>
                             <th class="text-center"> ชื่อ </th>
-                            <th class="text-center" style="width:5%;"> # </th>
+                            <th class="text-center"> ประเภท </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -27,9 +28,10 @@
                             foreach (var row in ViewBag.View)
                             {
                                 <tr>
+                                    <td class="text-center bg-info-light"><a href="#" onclick="showMember('@row.MemberId')" class="text-info">เลือก</a></td>
                                     <td>@row.MemberId</td>
-                                    <td>@row.Name</td>
-                                    <td class="text-center"><button type="button" onclick="showMember('@row.MemberId')" class="btn btn-table-sm btn-info"><i class="fas fa-location-arrow"></i></button></td>
+                                    <td>@row.Name</td>    
+                                    <td>@row.TypeName</td>    
                                 </tr>
                             }
                         }
