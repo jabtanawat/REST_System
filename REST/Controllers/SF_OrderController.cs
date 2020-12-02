@@ -47,6 +47,11 @@ namespace REST.Controllers
             {                
                 return RedirectToAction("OrderOld", new { id = id, mode = mode });
             }
+            else if(item.TableST == 3)
+            {
+                Alert("", "โต๊ะอยู่ระหว่างรอชำระเงิน !", Enums.NotificationType.warning);
+                return RedirectToAction("Index", "StoreFront");
+            }
             else
             {
                 return View();

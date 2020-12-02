@@ -52,6 +52,8 @@ namespace REST.Controllers
                 item.NameTh = "ชำระเงิน";
             else if (infoRunning.Name == "Store")
                 item.NameTh = "สั่งซื้อ";
+            else if (infoRunning.Name == "Bill")
+                item.NameTh = "เช็คบิล";
             item.Front = infoRunning.Front;
             item.Number = infoRunning.Number;
             item.AutoRun = infoRunning.AutoRun;
@@ -156,6 +158,18 @@ namespace REST.Controllers
                 IStore.Number = row.Number;
                 IStore.AutoRun = row.AutoRun;
                 List.Add(IStore);
+            }
+
+            var LBill = _db.CD_Running.Where(x => x.Name == "Bill" && x.BranchId == id).ToList();
+            var IBill = new ViewRunning();
+            foreach (var row in LBill)
+            {
+                IBill.Name = row.Name;
+                IBill.NameTh = "เช็คบิล";
+                IBill.Front = row.Front;
+                IBill.Number = row.Number;
+                IBill.AutoRun = row.AutoRun;
+                List.Add(IBill);
             }
 
             return Json(new { data = List }) ;
@@ -406,6 +420,18 @@ namespace REST.Controllers
                 IStore.Number = row.Number;
                 IStore.AutoRun = row.AutoRun;
                 List.Add(IStore);
+            }
+
+            var LBill = _db.CD_Running.Where(x => x.Name == "Bill" && x.BranchId == B.BranchId).ToList();
+            var IBill = new ViewRunning();
+            foreach (var row in LBill)
+            {
+                IBill.Name = row.Name;
+                IBill.NameTh = "เช็คบิล";
+                IBill.Front = row.Front;
+                IBill.Number = row.Number;
+                IBill.AutoRun = row.AutoRun;
+                List.Add(IBill);
             }
 
             ViewBag.Branch = _db.MG_Branch.ToList();

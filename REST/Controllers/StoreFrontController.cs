@@ -8,11 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using REST.ApiControllers;
 using REST.Data;
 using REST.Models;
+using REST.Service;
 
 namespace REST.Controllers
 {
     [Authorize]
-    public class StoreFrontController : Controller
+    public class StoreFrontController : BaseController
     {
         #region db
         private readonly DbConnection _db;
@@ -63,10 +64,88 @@ namespace REST.Controllers
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var _Table = new GetCD_TableController(_db);
-            ViewBag.Table = _Table.TableById(id, branchid);
+            var table = _Table.TableById(id, branchid);
+            if(table.TableST == 3)
+            {
+                ViewData["check-bill"] = "disabled";
+            }
+            else
+            {
+                ViewData["check-bill"] = "";
+            }
+            ViewBag.Table = table;
             var _OrderSub = new GetSF_OrderController(_db);
             ViewBag.OrderSub = _OrderSub.OrderSub(id, null, branchid);
             return View();
+        }
+
+        public IActionResult CheckBill(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;    
+            var _OrderSub = new GetSF_OrderController(_db);
+            try
+            {
+                var ordersub = _OrderSub.OrderSub(id, null, branchid);
+
+                var _get = new GetRunningController(_db);
+                string DocRunning = _get.Running("Bill", branchid);
+
+                int i = 0;
+                decimal PTotal = 0;
+
+                // หาจำนวนเงินทั่้งหมด
+                foreach (var row in ordersub)
+                {
+                    PTotal += row.Price * row.Amount;
+                }
+
+                // Save Bill
+                var item = new SF_Bill();
+                item.BillId = DocRunning;
+                item.TableId = id;
+                item.BillDt = Share.FormatDate(DateTime.Now).Date;
+                item.PriceTotal = PTotal;
+                item.BranchId = branchid;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+                _db.SF_Bill.Add(item);
+                _db.SaveChanges();
+
+                //Svae Order Sub
+                foreach (var row in ordersub)
+                {
+                    i++;
+
+                    var itemSub = new SF_BillSub();
+                    itemSub.BillId = DocRunning;
+                    itemSub.i = i;
+                    itemSub.TableId = id;
+                    itemSub.FoodId = row.FoodId;
+                    itemSub.Amount = row.Amount;
+                    itemSub.Price = row.Price;
+                    itemSub.BranchId = branchid;
+                    _db.SF_BillSub.Add(itemSub);
+                    _db.SaveChanges();                    
+                }
+
+                // Updata Status Table = 3 อยู่ระหว่างรอชำระเงิน
+                var table = _db.CD_Table.FirstOrDefault(x => x.TableId == id && x.BranchId == branchid);
+                table.TableST = 3;
+                _db.CD_Table.Update(table);
+                _db.SaveChanges();
+
+                // Set Runnig
+                _get.SetRunning("Bill", DocRunning, branchid);
+
+                return RedirectToAction("Index", "StoreFront");
+            }
+            catch (Exception)
+            {
+                Alert("", "Error Data !", Enums.NotificationType.warning);
+                return RedirectToAction("FrmDataTable", "StoreFront", new { id = id });
+            }
         }
 
         [HttpPost]

@@ -23,23 +23,17 @@
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">โต๊ะ :</label>
-                                                <div class="col-xl-9 col-lg-8  col-sm-7">
-                                                    <div class="input-group input-group-sm">
-                                                        <input asp-for="TableId" type="hidden" />
-                                                        <input asp-for="TableName" type="text" class="form-control">
-                                                        <div class="input-group-append">
-                                                            <button class="btn btn-info" type="button" data-toggle="ajax-modal" data-target="#popupTable" data-url="@Url.Action("_popupTable", "Modal")"><i class="fas fa-search"></i></button>
-                                                        </div>
-                                                    </div>
+                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">เลขที่บิล :</label>
+                                                <div class="col-xl-9 col-lg-8 col-sm-7">
+                                                    <input asp-for="BillId" type="text" class="form-control form-control-sm">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
                                             <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">สถานะ :</label>
+                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">โต๊ะ :</label>
                                                 <div class="col-xl-9 col-lg-8  col-sm-7">
-                                                    <p class="col-form-label-sm border-bottom mb-0">@Model.TableST</p>
+                                                    <p class="col-form-label-sm border-bottom mb-0">@Model.TableName</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -83,7 +77,6 @@
                                             <th class="text-center" style="width:5%;">ลำดับ</th>
                                             <th class="text-center">รหัส</th>
                                             <th class="text-center">ชื่ออาหาร</th>
-                                            <th class="text-center" style="width:5%;"><i class="fas fa-info-circle"></i></th>
                                             <th class="text-center" style="width:12%;">จำนวน</th>
                                             <th class="text-center" style="width:12%;">ราคา</th>
                                             <th class="text-center" style="width:12%;">ราคารวม</th>
@@ -92,10 +85,10 @@
                                     <tbody>
                                         @{
 
-                                            if (Model.OrderSub != null && Model.OrderSub.Count() > 0)
+                                            if (Model.BillSub != null && Model.BillSub.Count() > 0)
                                             {
                                                 var x = 0;
-                                                foreach (var row in Model.OrderSub)
+                                                foreach (var row in Model.BillSub)
                                                 {
                                                     decimal total = 0;
                                                     x++;
@@ -107,23 +100,6 @@
                                                         <td class="text-center">@x</td>
                                                         <td>@row.FoodId</td>
                                                         <td>@row.FoodName</td>
-                                                        @if (row.Status == 1)
-                                                        {
-                                                            <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
-
-                                                        }
-                                                        else if (row.Status == 2)
-                                                        {
-                                                            <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
-                                                        }
-                                                        else if (row.Status == 3)
-                                                        {
-                                                            <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
-                                                        }
-                                                        else if (row.Status == 4)
-                                                        {
-                                                            <td class="text-center text-danger">ยกเลิก</td>
-                                                        }
                                                         <td class="text-right">@row.Amount</td>
                                                         <td class="text-right">@row.Price</td>
                                                         <td class="text-right">@Share.Cnumber(Share.FormatDouble(total), 2)</td>
@@ -133,7 +109,7 @@
                                             else
                                             {
                                                 <tr>
-                                                    <td colspan="7" class="text-center text-danger">ไม่มีรายการ</td>
+                                                    <td colspan="6" class="text-center text-danger">ไม่มีรายการ</td>
                                                 </tr>
                                             }
                                         }
@@ -152,13 +128,13 @@
                 <div class="card">
                     <div class="card-body">
                         <section class="bill-payment">
-                            <div class="alert alert-primary text-center mb-0" role="alert">
+                            <div class="alert alert-primary text-center py-2 mb-0" role="alert">
                                 <h6>ยอดบิล</h6>
                             </div>
                             <div class="form-group">
                                 <input asp-for="SumBalance" id="txtSumBalance" type="text" class="form-control-plaintext form-control-lg text-right text-danger" style="font-size: 2rem;font-weight: bold;">
                             </div>
-                            <div class="alert alert-primary text-center" role="alert">
+                            <div class="alert alert-primary text-center py-2 mb-0" role="alert">
                                 <h6>รายละเอียดบิล</h6>
                             </div>
                         </section>
@@ -201,7 +177,7 @@
                                 </div>
                             </div>
                         </section>
-                        <button type="button" class="btn btn-success btn-block" btn-save><i class="fab fa-paypal"></i> ชำระเงิน <span class="text-danger">(F2)</span></button>
+                        <button type="button" class="btn btn-success btn-block" data-toggle="ajax-modal" data-target="#popupCalculate" data-url="@Url.Action("_popupCalculate", "Modal")"><i class="fab fa-paypal"></i> ชำระเงิน <span class="text-danger">(F2)</span></button>
                     </div>
                 </div>
             </section>
@@ -259,11 +235,11 @@
             })
         })
 
-        // Show Supplier
+        @*// Show Supplier
         function showTable(id) {
             window.location.href = '@Url.Action("FrmPayment", "SF_Payment")?id=' + id
             $('#popupTable').modal('hide')
-        }
+        }*@
 
         // Show Member
         function showMember(id) {
@@ -301,6 +277,18 @@
             $('#txtMemberId').val('')
             $('#txtMemberName').val('')
             $('#Type').html('ทั่วไป')
+
+            $('#txtMemP').val('0.00')
+            $('#txtMemB').val('0.00')
+
+            const balance = parseFloat($('#txtBalance').val().replace(/,/g, ''))
+            const serviceB = parseFloat($('#txtServiceB').val().replace(/,/g, ''))
+            const memberB = parseFloat($('#txtMemB').val().replace(/,/g, ''))
+            const persenB = parseFloat($('#txtPersB').val().replace(/,/g, ''))
+
+            const price = balance + serviceB - persenB - memberB
+
+            $('#txtSumBalance').val(numeral(price).format('0,0.00'))
         }
 
         // Load Window
@@ -324,7 +312,13 @@
                 })
                 return false;
             } else if (e.which == 113) {
-                alert('F2')
+                // F2 Show Payment
+                var url = '@Url.Action("_popupCalculate", "Modal")'
+                var decodedUrl = decodeURIComponent(url)
+                $.get(decodedUrl).done(function (data) {
+                    PlaceHolderElement.html(data)
+                    PlaceHolderElement.find('.modal').modal('show')
+                })
                 return false;
             }
         });

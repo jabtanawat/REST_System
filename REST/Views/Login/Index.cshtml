@@ -13,23 +13,23 @@
         <div class="card shadow">
             <img src="~/Images/System/REST_Logo.jpg" class="card-img-top rounded-circle" />
             <div class="card-body">
-                <h3 class="text-center mb-3">ร้านอาหาร</h3>
+                <h3 class="text-center mb-3 text-white">ร้านอาหาร</h3>
                 <form method="post" asp-controller="Login" asp-action="Index">
                     <div class="form-group mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="btn btn-blue"><i class="fas fa-user"></i></span>
+                                <span class="btn btn-light"><i class="fas fa-user"></i></span>
                             </div>
-                            <input asp-for="UserName" type="text" class="form-control" placeholder="Username" autofocus>
+                            <input asp-for="UserName" type="text" class="form-control text-white bg-dark" placeholder="Username" autofocus>
                         </div>
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
                     <div class="form-group mb-3">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="btn btn-blue"><i class="fas fa-lock"></i></span>
+                                <span class="btn btn-light"><i class="fas fa-lock"></i></span>
                             </div>
-                            <input asp-for="PassWord" type="password" class="form-control" placeholder="Password">
+                            <input asp-for="PassWord" type="password" class="form-control text-white bg-dark" placeholder="Password">
                         </div>
                         <span asp-validation-for="PassWord" class="text-danger"></span>
                     </div>

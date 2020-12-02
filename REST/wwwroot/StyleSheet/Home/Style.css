@@ -38,12 +38,13 @@ body {
 
 .card .icon-home {
     margin-top: 1rem;
-    font-size: 4rem;
+    font-size: 3.1rem;
 }
 
 .card .text-system {
-    font-size: 26px;
+    font-size: 20px;
     font-weight: 400;
+    margin-bottom: 0;
 }
 
 .card .card-body {

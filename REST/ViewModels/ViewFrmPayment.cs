@@ -7,6 +7,7 @@ namespace REST.ViewModels
 {
     public class ViewFrmPayment
     {
+        public string BillId { get; set; }
         public string TableId { get; set; }
         public string TableName { get; set; }
         public string TableST { get; set; }
@@ -23,6 +24,6 @@ namespace REST.ViewModels
         public int PayType { get; set; } // 1 = เงินสด, 2 = บัตรเครดิต
         public decimal MoneyPut { get; set; }
         public decimal MoneyChange { get; set; }
-        public List<ViewSF_OrderSub> OrderSub { get; set; }
+        public List<ViewSF_BillSub> BillSub { get; set; }
     }
 }

@@ -120,5 +120,10 @@ namespace REST.Controllers
             ViewBag.StapleBalance = _db.StapleBalance.Where(x => x.StapleId == id).ToList();
             return PartialView("_popupStapleBalance");
         }
+
+        public IActionResult _popupCalculate()
+        {
+           return PartialView("_popupCalculate");
+        }
     }
 }

@@ -12,12 +12,12 @@ using REST.Service;
 namespace REST.Controllers
 {
     [Authorize]
-    public class SF_DailyOrderController : BaseController
+    public class SF_DailyController : BaseController
     {
         #region Connect db
         private readonly DbConnection _db;
 
-        public SF_DailyOrderController(DbConnection db)
+        public SF_DailyController(DbConnection db)
         {
             _db = db;
         }
@@ -37,6 +37,14 @@ namespace REST.Controllers
             var _Order = new GetSF_OrderController(_db);
             ViewBag.Data = _Order.OrderSub(null, id, branch);
             ViewBag.Desc = _Order.OrderById(id, branch);
+            return View();
+        }
+
+        public IActionResult FrmDailyBill()
+        {
+            var branchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _bill = new GetSF_BillController(_db);
+            ViewBag.Table = _bill.Bill(null, DateTime.Now.ToString("dd/MM/yyyy"), branchId);
             return View();
         }
 
@@ -99,22 +107,5 @@ namespace REST.Controllers
                 return RedirectToAction("FrmDailyOrderSub", "SF_DailyOrder", new { id = OrderId });
             }                               
         }
-
-        //public Boolean UpdateStatusOrder(string OrderId, int status, string branchid)
-        //{
-        //    try
-        //    {
-        //        var Item = _db.SF_Order.FirstOrDefault(x => x.OrderId == OrderId && x.BranchId == branchid);
-        //        Item.ST = status;
-        //        _db.SF_Order.Update(Item);
-        //        _db.SaveChanges();
-
-        //        return true;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return false;
-        //    }
-        //}
     }
 }

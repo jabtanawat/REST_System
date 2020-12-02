@@ -1,0 +1,262 @@
+﻿@using REST.Service;
+@{
+    ViewData["Title"] = "ระบบหน้าร้าน";
+    ViewData["System"] = "ออเดอร์รายวัน";
+    Layout = "_StoreFront";
+    var DateNow = DateTime.Now.ToString("dd/MM/yyyy");
+    var DataOrder = ViewBag.DataTable;
+}
+
+@section Styles{
+    @*<link href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" rel="stylesheet" />*@
+    <link href="~/Plugins/Datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-xl-11 mx-auto">                
+                <section>
+                    <div class="d-flex mb-3">
+                        <div class="mr-auto">
+                            <div hidden><button class="btn btn-sm btn-info" type="button"><i class="fas fa-globe-europe"></i>&nbsp;ทั้งหมด</button></div>
+                        </div>
+                        <div class="ml-2">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                                <input type="text" id="txtdate" class="form-control datepicker" placeholder="dd/MM/yyyy" value="@DateNow">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary" type="button" id="btnSearch"><i class="fas fa-search"></i>&nbsp;ค้นหา</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ml-2">
+                            <div><button class="btn btn-sm btn-info" type="button" id="btnSearchAll"><i class="fas fa-globe-europe"></i>&nbsp;ทั้งหมด</button></div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0">
+                        <div class="card-body table-responsive p-0" scroll>
+                            <table class="table table-md table-bordered table-head-fixed text-nowrap">
+                                <thead class="thead-black">
+                                    <tr>
+                                        <th class="text-center" style="width:5%;">ลำดับ</th>
+                                        <th class="text-center">เลขที่ออเดอร์</th>
+                                        <th class="text-center" style="width:15%;">วันที่รับออเดอร์</th>
+                                        <th class="text-center">ชื่อโต๊ะ</th>
+                                        <th class="text-center" style="width:5%;">สถานะ</th>
+                                        <th class="text-center" style="width:15%;">จำนวนเงิน</th>
+                                        <th class="text-center" style="width:5%;"><i class="fas fa-info-circle"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    @{
+                                        if (DataOrder.Count > 0)
+                                        {
+                                            var x = 0;
+                                            foreach (var row in DataOrder)
+                                            {
+                                                x++;
+                                                <tr>
+                                                    <td class="text-center">@x</td>
+                                                    <td>@row.OrderId</td>
+                                                    <td class="text-center">@row.Dates</td>
+                                                    <td>@row.TableName</td>
+                                                    @if (row.ST == 1)
+                                                    {
+                                                        <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
+                                                    }
+                                                    else if(row.ST == 2)
+                                                    {
+                                                        <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
+                                                    }
+                                                    else if(row.ST == 3)
+                                                    {
+                                                        <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                                    }
+                                                    <td class="text-right">@row.PriceTotal.ToString("N2")</td>
+                                                    <td class="text-center"><a href="@Url.Action("FrmDailyOrderSub", "SF_Daily", new { id = row.OrderId})" class="text-info"><i class="far fa-eye"></i></a></td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="7" class="text-center text-danger">ไม่มีรายการ</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>                
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @*<script src="~/Plugins/DataTables/datatables.min.js"></script>
+    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>*@
+    <script src="~/Plugins/Datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="~/Plugins/Datepicker/bootstrap-datepicker-thai.js"></script>
+    <script src="~/Plugins/Datepicker/locales/bootstrap-datepicker.th.js"></script>
+    <script src="~/Plugins/Numeral/numeral.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Add Side Menu
+            $(".item_click_Order").addClass("active");
+            // DataTable
+            //$('#DataTable').DataTable({
+            //    "info": false,
+            //    "ordering": false,
+            //    "searching": false
+            //});
+            // From DatePicker
+            $('.datepicker').datepicker({
+                language: 'th-th',
+                format: 'dd/mm/yyyy',
+                todayHighlight: true,
+                todayBtn: true,
+                todayBtn: 'linked',
+                autoclose: true
+            });
+
+            // Scroll Table
+            $('[scroll]').slimScroll({
+                height: $(window).height() - $('.navbar').height() - 140,
+                railBorderRadius: 0,
+                railVisible: true
+            });
+        });
+
+        document.getElementById('btnSearch').addEventListener('click', () => {
+            const date = $('#txtdate').val()
+            const tp = $('#table-body')
+            tp.empty()
+            let x = 0;
+            var t;
+            $.get("@Url.Action("GetSF_Order", "api")" + "/AOrder", { OrderDt: date },
+                function (data, status) {
+                    if (data.length > 0) {
+                        $.each(data, function (index, val) {
+                            x++;
+                            var link = `@Url.Action("FrmDailyOrderSub", "SF_Daily")` + `/` + `${val.orderId}`;
+                            t = '<tr>'
+                                + `<td class="text-center">${x}</td>`
+                                + `<td>${val.orderId}</td>`
+                                + `<td class="text-center">${val.dates}</td>`
+                                + `<td>${val.tableName}</td>`
+                                if (val.st == 1) {
+                                    t += `<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>`
+                                } else if (val.st == 2) {
+                                    t += `<td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>`
+                                } else {
+                                    t += `<td class="text-center text-success"><i class="far fa-check-circle"></i></td>`
+                                }
+                                t += `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
+                                + `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-eye"></i></td>`
+                                + '</tr>';
+
+                            $('#table-body').append(t)
+                        })
+                    } else {
+                        t = '<tr><td colspan="7" class="text-center text-danger">ไม่มีรายการ</td></tr>';
+                        $('#table-body').append(t)
+                    }
+
+                }
+            )
+        })
+
+        document.getElementById('btnSearchAll').addEventListener('click', () => {
+            const date = $('#txtdate').val()
+            const tp = $('#table-body')
+            tp.empty()
+            let x = 0;
+            var t;
+            $.get("@Url.Action("GetSF_Order", "api")" + "/AOrder",
+                function (data, status) {
+                    if (data.length > 0) {
+                        $.each(data, function (index, val) {
+                            x++;
+                            var link = `@Url.Action("FrmDailyOrderSub", "SF_Daily")` + `/` + `${val.orderId}`;
+                            t = '<tr>'
+                                + `<td class="text-center">${x}</td>`
+                                + `<td>${val.orderId}</td>`
+                                + `<td class="text-center">${val.dates}</td>`
+                                + `<td>${val.tableName}</td>`
+                                if (val.st == 1) {
+                                    t += `<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>`
+                                } else if (val.st == 2) {
+                                    t += `<td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>`
+                                } else {
+                                    t += `<td class="text-center text-success"><i class="far fa-check-circle"></i></td>`
+                                }
+                                t += `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
+                                + `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-eye"></i></td>`
+                                + '</tr>';
+
+                            $('#table-body').append(t)
+                        })
+                    } else {
+                        t = '<tr><td colspan="7" class="text-center text-danger">ไม่มีรายการ</td></tr>';
+                        $('#table-body').append(t)
+                    }
+
+                }
+            )
+        })
+
+        @*$('#txtdate').on('change', function () {
+            const date = $('#txtdate').val()
+            const tp = $('#table-body')
+            tp.empty()
+            let x = 0;
+            var t;
+            $.get("@Url.Action("GetSF_Order", "api")" + "/AOrder", { OrderDt: date },
+                function (data, status) {
+                    if (data.length > 0) {
+                        $.each(data, function (index, val) {
+                            x++;
+                            var link = `@Url.Action("FrmKC_OrderSub", "Kitchen")` + `/` + `${val.orderId}`;
+                            t = '<tr>'
+                                + `<td class="text-center">${x}</td>`
+                                + `<td>${val.orderId}</td>`
+                                + `<td class="text-center">${val.dates}</td>`
+                                + `<td class="text-center">${val.tableName}</td>`
+                                if (val.st == 1) {
+                                    t += `<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>`
+                                } else if (val.st == 2) {
+                                    t += `<td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>`
+                                } else {
+                                    t += `<td class="text-center text-success"><i class="far fa-check-circle"></i></td>`
+                                }
+                                t += `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
+                                + `<td class="text-center"><a href="${link}" class="btn btn-table-sm btn-info"><i class="far fa-eye"></i></td>`
+                                + '</tr>';
+
+                            $('#table-body').append(t)
+                        })
+                    } else {
+                        t = '<tr><td colspan="7" class="text-center"> no order</td></tr>';
+                        $('#table-body').append(t)
+                    }
+
+                }
+            )
+        })*@
+
+        //function Scroll() {
+        //    //var height_P = $(window).height() - $('.navbar').height() - 140
+        //    $('[scroll]').slimScroll({
+        //        height: $(window).height() - $('.navbar').height() - 140,
+        //        railBorderRadius: 0,
+        //        railVisible: true
+        //    });
+        //}
+    </script>
+}

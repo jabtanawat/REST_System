@@ -47,7 +47,7 @@
                                                 }
                                                 else if (_table.TableST == 3)
                                                 {
-                                                    <p class="col-form-label-sm border-bottom mb-0 text-success">เรียบร้อยแล้ว</p>
+                                                    <p class="col-form-label-sm border-bottom mb-0 text-warning">รอชำระเงิน</p>
                                                 }
                                             }
                                         </div>
@@ -144,6 +144,12 @@
                         </div>
                     </div>
                 </section>
+                <!-- เช็คบิล -->
+                <section>
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="#" class="btn btn-sm btn-success @ViewData["check-bill"]" btn-bill><i class="fas fa-file-invoice-dollar"></i>&nbsp;&nbsp;เช็คบิล</a>
+                    </div>
+                </section>
             </div>
         </div>
     </div>
@@ -153,10 +159,27 @@
     <script>
         $(document).ready(function () {
             $('[scroll]').slimScroll({
-                height: $(window).height() - $('.navbar').height() - 258,
+                height: $(window).height() - $('.navbar').height() - 305,
                 railBorderRadius: 0,
-                railVisible: true
+                railVisible: true,
+                distance: '-10px'
             });
         });
+
+        document.querySelector("[btn-bill]").addEventListener('click', () => {
+             Swal.fire({
+                text: "ต้องการเช็คบิลหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = '@Url.Action("CheckBill", "StoreFront", new { id = _table.TableName })'
+                }
+            })
+        })
     </script>
 }

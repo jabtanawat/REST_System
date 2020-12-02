@@ -32,30 +32,24 @@ namespace REST.Controllers
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var item = new ViewFrmPayment();
-            var _table = _db.CD_Table.FirstOrDefault(x => x.TableId == id && x.BranchId == branchid);
+            var _Get = new GetSF_BillController(_db);
+            var _bill = _Get.BillById(id, branchid);
             var _setting = _db.Setting.FirstOrDefault();
             if(id != null)
             {
-                item.TableId = _table.TableId;
-                item.TableName = _table.TableName;
-                if (_table.TableST == 1)
-                    item.TableST = "ว่าง";
-                else if (_table.TableST == 2)
-                    item.TableST = "ใช้บริการอยู่";
-                else
-                    item.TableST = "จอง";
+                item.BillId = _bill.BillId;
+                item.TableName = _bill.TableName;
                 // รายการอาหาร
-                var _OrderSub = new GetSF_OrderController(_db);
-                var ordersub = _OrderSub.OrderSub(id, null, branchid);
+                var billsub = _Get.BillSubById(id, branchid);
                 decimal price = 0;
-                foreach (var i in ordersub)
+                foreach (var i in billsub)
                 {
                     if (i.Status != 4)
                     {
                         price += i.Price * i.Amount;
                     }
                 }
-                item.OrderSub = ordersub;
+                item.BillSub = billsub;
                 // หาค่า ServiceCharge
                 var B = price * _setting.Service / 100;
                 item.ServiceP = Share.Cnumber(Share.FormatDouble(_setting.Service), 2);
@@ -138,25 +132,31 @@ namespace REST.Controllers
         [HttpPost]
         public IActionResult FrmPayment(ViewFrmPayment info)
         {
-            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
-            if (ModelState.IsValid)
-            {
-                if (SaveData(info, branchid))
-                {
-                    toastrAlert("ชำระเงิน", "ชำระเงินเรียบร้อย", Enums.NotificationToastr.success);
-                    return RedirectToAction("Index", "StoreFront");
-                }
-                else
-                {                    
-                    return View();
-                }                
-            }
-            else
-            {
-                Alert("", "ไม่สามารถบันทึกข้อมูลได้ !", Enums.NotificationType.error);
-                return View();
-            }            
+            return View();
         }
+
+        //[HttpPost]
+        //public IActionResult FrmPayment(ViewFrmPayment info)
+        //{
+        //    var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (SaveData(info, branchid))
+        //        {
+        //            toastrAlert("ชำระเงิน", "ชำระเงินเรียบร้อย", Enums.NotificationToastr.success);
+        //            return RedirectToAction("Index", "StoreFront");
+        //        }
+        //        else
+        //        {                    
+        //            return View();
+        //        }                
+        //    }
+        //    else
+        //    {
+        //        Alert("", "ไม่สามารถบันทึกข้อมูลได้ !", Enums.NotificationType.error);
+        //        return View();
+        //    }            
+        //}
 
         public Boolean SaveData(ViewFrmPayment info, string branchid)
         {         
@@ -172,11 +172,11 @@ namespace REST.Controllers
                 var item = new SF_Payment();
                 item.PaymentId = Doc;
                 item.TableId = info.TableId;
-                item.Total = Share.FormatDecimal(info.Total);
-                item.Persen = info.Persen;
+                //item.Total = Share.FormatDecimal(info.Total);
+                //item.Persen = info.Persen;
                 item.MemberId = info.MemberId;
-                item.Rebate = info.Rebate;
-                item.Score = info.Score;
+                //item.Rebate = info.Rebate;
+                //item.Score = info.Score;
                 item.Balance = Share.FormatDecimal(info.Balance);
                 item.PayType = info.PayType;
                 item.MoneyPut = info.MoneyPut;
@@ -257,7 +257,7 @@ namespace REST.Controllers
                 Total += row.PriceTotal;
             }
             var item = new ViewFrmPayment();
-            item.Total = Total.ToString("N2");
+            //item.Total = Total.ToString("N2");
             item.Balance = Total.ToString("N2");
             return View(item);
         }

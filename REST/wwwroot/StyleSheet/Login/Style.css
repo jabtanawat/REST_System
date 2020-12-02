@@ -13,6 +13,12 @@
     transform: translate(-50%, -50%);
     width: 20rem;
     border-radius: 20px;
+    border: none;
+    background-color: #27282A;
+    -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    opacity: 1;
 }
 
 .form-login .card .card-img-top {
@@ -26,4 +32,8 @@
 .form-login .card span,
 .form-login .card button {
     border-radius: 20px;
+}
+
+input[type=text], input[type=password] {
+    border-color: #27282A;
 }

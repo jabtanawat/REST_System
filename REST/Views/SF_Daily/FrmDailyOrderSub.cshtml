@@ -159,7 +159,7 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href = '@Url.Action("removeOrder", "SF_DailyOrder")?OrderId=' + orderid + '&FoodId=' + foodid + '&TableId=' + tableid
+                    window.location.href = '@Url.Action("removeOrder", "SF_Daily")?OrderId=' + orderid + '&FoodId=' + foodid + '&TableId=' + tableid
                 }
             })
         }
