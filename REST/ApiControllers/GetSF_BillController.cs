@@ -193,17 +193,17 @@ namespace REST.ApiControllers
         // -------------------------------------------
         // -------------------------------------------
         // ---                                     ---
-        // ---            ACTION ORDER            ---
+        // ---             ACTION BILL             ---
         // ---                                     ---
         // -------------------------------------------
         // -------------------------------------------
 
-        //public JsonResult AOrder(string OrderDt = null)
-        //{
-        //    var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-        //    var List = Order(null, OrderDt, branchid);
-        //    return Json(List);
-        //}
+        public JsonResult ABill(string OrderDt = null)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var List = Bill(null, OrderDt, branchid);
+            return Json(List);
+        }
 
     }
 }

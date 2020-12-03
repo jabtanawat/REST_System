@@ -11,21 +11,20 @@
 
 <form name="FrmPayment" method="post">
     <div class="row">
-        <div class="col-xl-9 col-lg-8 col-md-8 pr-md-0 order-md-first order-last">
+        <div class="col-xl-8 col-lg-8 col-md-8 pr-md-0 order-md-first order-last">
             <!-- 2 -->
             <section>
                 <div class="card">
                     <div class="card-body">
-
                         <section class="bill-header">
                             <div class="row">
-                                <div class="col-xl-8 mx-auto">
+                                <div class="col-xl-12 mx-auto">
                                     <div class="row">
                                         <div class="col-lg-6">
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">เลขที่บิล :</label>
                                                 <div class="col-xl-9 col-lg-8 col-sm-7">
-                                                    <input asp-for="BillId" type="text" class="form-control form-control-sm">
+                                                    <input asp-for="BillId" id="txtBillId" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
                                                 </div>
                                             </div>
                                         </div>
@@ -66,8 +65,6 @@
                                 </div>
                             </div>
                         </section>
-
-
                         <div class="card border-0">
                             <div class="card-body table-responsive p-0" scroll>
                                 <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;รายการอาหาร</p>
@@ -122,58 +119,58 @@
             </section>
         </div>
 
-        <div class="col-xl-3 col-lg-4 col-md-4">
+        <div class="col-xl-4 col-lg-4 col-md-4">
             <!-- 3 -->
             <section>
                 <div class="card">
                     <div class="card-body">
                         <section class="bill-payment">
-                            <div class="alert alert-primary text-center py-2 mb-0" role="alert">
+                            <div class="alert alert-primary text-center py-1 mb-0" role="alert">
                                 <h6>ยอดบิล</h6>
                             </div>
-                            <div class="form-group">
-                                <input asp-for="SumBalance" id="txtSumBalance" type="text" class="form-control-plaintext form-control-lg text-right text-danger" style="font-size: 2rem;font-weight: bold;">
+                            <div class="form-group mb-0">
+                                <input asp-for="SumBalance" id="txtSumBalance" type="text" readonly class="form-control-plaintext form-control-lg text-right text-danger" style="font-size: 2rem;font-weight: bold;">
                             </div>
-                            <div class="alert alert-primary text-center py-2 mb-0" role="alert">
+                            <div class="alert alert-primary text-center py-1 mb-1" role="alert">
                                 <h6>รายละเอียดบิล</h6>
                             </div>
                         </section>
                         <section scroll-payment>
                             <!-- ราคารวม -->
-                            <div class="form-group row">
+                            <div class="form-group mb-0 row">
                                 <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">ราคารวม :</label>
                                 <div class="col-xl-8 col-lg-7 col-sm-8">
                                     <input asp-for="Balance" id="txtBalance" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
                             <!-- Service Charge -->
-                            <div class="form-group row">
+                            <div class="form-group mb-0 row">
                                 <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">Service Charge :</label>
                                 <div class="col-sm">
-                                    <input asp-for="ServiceP" id="txtServiceP" type="text" class="form-control form-control-sm text-right" readonly placeholder="0">
+                                    <input asp-for="ServicePersen" id="txtServiceP" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0">
                                 </div>
                                 <div class="col-xl-5 col-lg-3 col-sm-6">
-                                    <input asp-for="ServiceB" id="txtServiceB" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                    <input asp-for="ServiceBath" id="txtServiceB" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
                             <!-- Member % -->
-                            <div class="form-group row">
+                            <div class="form-group mb-0 row">
                                 <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">Member % :</label>
                                 <div class="col-sm">
-                                    <input asp-for="MemberP" id="txtMemP" type="text" class="form-control form-control-sm text-right" readonly placeholder="0.00">
+                                    <input asp-for="MemberPersen" id="txtMemP" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0.00">
                                 </div>
                                 <div class="col-xl-5 col-lg-3 col-sm-6">
-                                    <input asp-for="MemberB" id="txtMemB" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                    <input asp-for="MemberBath" id="txtMemB" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
                             <!-- ส่วนลด % -->
-                            <div class="form-group row">
+                            <div class="form-group mb-0 row">
                                 <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">ส่วนลด % <span class="text-danger">(F10)</span> :</label>
                                 <div class="col-sm">
-                                    <input asp-for="PersenP" id="txtPersP" type="text" class="form-control form-control-sm text-right" readonly placeholder="0.00">
+                                    <input asp-for="Persen" id="txtPersP" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0.00">
                                 </div>
                                 <div class="col-xl-5 col-lg-3 col-sm-6">
-                                    <input asp-for="PersenB" id="txtPersB" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                    <input asp-for="PersenBath" id="txtPersB" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
                         </section>
@@ -202,7 +199,7 @@
             });
 
             $('[scroll-payment]').slimScroll({
-                height: $(window).height() - $('.navbar').height() - $('.bill-payment').height() - 145,
+                height: $(window).height() - $('.navbar').height() - $('.bill-payment').height() - 129,
                 railBorderRadius: 0,
                 railVisible: true,
                 distance: '-10px'
@@ -340,7 +337,7 @@
         }
 
         // BTN-SAVE
-        document.querySelector("[btn-save]").addEventListener('click', () => {
+        @*document.querySelector("[btn-save]").addEventListener('click', () => {
              Swal.fire({
                 text: "ต้องการบันทึกข้อมูลหรือไม่ ?",
                 icon: 'warning',
@@ -355,6 +352,6 @@
                     document.FrmPayment.submit();
                 }
             })
-        })
+        })*@
     </script>
 }

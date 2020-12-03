@@ -29,7 +29,7 @@ namespace REST.Controllers
         public void toastrAlert(string title, string message, NotificationToastr NotificationToastr)
         {
             var msg = "<script>"
-                    + "toastr." + NotificationToastr + "('" + title +"', '" + message + "', { timeOut: 3000 });"
+                    + "toastr." + NotificationToastr + "('" + title +"', '" + message + "', { timeOut: 3000, closeButton: true });"
                     + "</script>";
             TempData["notification"] = msg;
         }

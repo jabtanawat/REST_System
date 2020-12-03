@@ -52,12 +52,12 @@ namespace REST.Controllers
                 item.BillSub = billsub;
                 // หาค่า ServiceCharge
                 var B = price * _setting.Service / 100;
-                item.ServiceP = Share.Cnumber(Share.FormatDouble(_setting.Service), 2);
-                item.ServiceB = Share.Cnumber(Share.FormatDouble(B), 2);
-                item.MemberP = "0.00";
-                item.MemberB = "0.00";
-                item.PersenP = "0.00";
-                item.PersenB = "0.00";
+                item.ServicePersen = Share.Cnumber(Share.FormatDouble(_setting.Service), 2);
+                item.ServiceBath = Share.Cnumber(Share.FormatDouble(B), 2);
+                item.MemberPersen = "0.00";
+                item.MemberBath = "0.00";
+                item.Persen = "0.00";
+                item.PersenBath = "0.00";
                 var sum = price + B;
                 item.SumBalance = Share.Cnumber(Share.FormatDouble(sum), 2);
                 item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
@@ -66,12 +66,12 @@ namespace REST.Controllers
             {
                 item.TableST = "ว่าง";
                 item.Balance = "0.00";
-                item.ServiceP = "0.00";
-                item.ServiceB = "0.00";
-                item.MemberP = "0.00";
-                item.MemberB = "0.00";
-                item.PersenP = "0.00";
-                item.PersenB = "0.00";
+                item.ServicePersen = "0.00";
+                item.ServiceBath = "0.00";
+                item.MemberPersen = "0.00";
+                item.MemberBath = "0.00";
+                item.Persen = "0.00";
+                item.PersenBath = "0.00";
                 item.SumBalance = "0.00";
             }
             return View(item);
@@ -178,7 +178,7 @@ namespace REST.Controllers
                 //item.Rebate = info.Rebate;
                 //item.Score = info.Score;
                 item.Balance = Share.FormatDecimal(info.Balance);
-                item.PayType = info.PayType;
+                //item.PayType = info.PayType;
                 item.MoneyPut = info.MoneyPut;
                 item.MoneyChange = info.MoneyChange;
                 item.Dates = Share.FormatDate(DateTime.Now).Date;

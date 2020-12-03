@@ -1,24 +1,203 @@
 ﻿<!-- Modal Calculate -->
+<style>
+    .calc_btn_row{
+        display: flex;
+        align-content: stretch;
+        justify-content: space-between;
+        margin-bottom: 0.8%;
+    }
+
+    .calc_btn{
+        background-color: #d8d8d8;
+        color: #000;
+        font-weight: bold;
+        font-size: 1.5rem;
+        border: none;
+        height: 70px;
+        flex-basis: 24.5%;
+        cursor: pointer;
+    }
+
+    .calc_btn:hover{
+        background-color: #ebebeb;
+    }
+
+    .calc_btn:active{
+        background-color: #bbbcbe;
+    }
+
+    .bath {
+        background-color: #df974c;
+        color: #fff;
+        font-size: 0.9rem;
+        border: none;
+        height: 70px;
+        flex-basis: 24.5%;
+        cursor: pointer;
+    }
+
+    .bath:hover {
+        background-color: #dfb07e;
+    }
+   
+    .coupon {
+        background-color: #4caedf;
+        color: #fff;
+        font-size: 0.9rem;
+        border: none;
+        height: 70px;
+        flex-basis: 24.5%;
+        cursor: pointer;
+    }
+
+    .coupon:hover {
+        background-color: #4cb5df;
+    }
+
+    .print {
+        background-color: #07a832;
+        color: #fff;
+        font-size: 0.9rem;
+        border: none;
+        height: 70px;
+        flex-basis: 24.5%;
+        cursor: pointer;
+    }
+
+    .print:hover {
+        background-color: #06b835;
+    }
+
+    .out {
+        background-color: red;
+        color: #fff;
+        font-size: 0.9rem;
+        border: none;
+        height: 70px;
+        flex-basis: 100%;
+        cursor: pointer;
+    }
+
+    .out:hover {
+        background-color: #de0d0d;
+    }
+
+    .double {
+        flex-basis: 49.7%;
+    }
+</style>
+
 <div class="modal fade" id="popupCalculate" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="popupCalculateTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
-            @*<div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>*@
             <div class="modal-body">
-                <div class="form-group row">
-                    <label class="col-4 col-form-label col-form-label-lg font-weight-bold text-right">ยอดบิล :</label>
-                    <div class="col-8">
-                        <input id="txtSum" type="text" class="form-control-plaintext form-control-lg text-right text-danger" placeholder="0.00" style="font-size: 2rem;font-weight: bold;">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- Left -->
+                        <div class="col-md-6 bg-primary-light">
+                            <div class="form-group mt-2 mb-0 row">
+                                <label class="col-5 col-form-label font-weight-bold text-right">จำนวนเงิน :</label>
+                                <div class="col-7">
+                                    <input id="txtSum" type="text" readonly class="form-control-plaintext form-control-lg text-right" placeholder="0.00" style="font-weight: bold;">
+                                </div>
+                            </div>
+                            <div class="form-group mb-0 row">
+                                <label class="col-5 col-form-label font-weight-bold text-right">ส่วนลดคูปอง :</label>
+                                <div class="col-7">
+                                    <input id="txtCoupon" type="text" class="form-control-plaintext form-control-lg numberonly text-right text-muted" placeholder="0.00" style="font-weight: bold;">
+                                </div>
+                            </div>
+                            <div class="form-group mb-0 row">
+                                <label class="col-5 col-form-label font-weight-bold text-right">จำนวนเงินชำระ :</label>
+                                <div class="col-7">
+                                    <input id="txtTotal" type="text" class="form-control-plaintext form-control-lg text-right" placeholder="0.00" style="font-weight: bold;">
+                                </div>
+                            </div>
+                            <div class="form-group mb-0 row">
+                                <label class="col-5 col-form-label font-weight-bold text-right">เงินทอน :</label>
+                                <div class="col-7">
+                                    <input id="txtChang" type="text" readonly class="form-control-plaintext form-control-lg text-right text-primary" placeholder="0.00" style="font-weight: bold;">
+                                </div>
+                            </div>     
+                            <hr />
+                            <p class="font-weight-bold col-form-label-sm"><i class="fas fa-money-check-alt"></i>&nbsp;ชำระโดย</p>
+                            <div class="form-group mb-1 row">
+                                <div class="col-4 ml-5">
+                                    <input class="form-check-input mt-2" type="checkbox" id="cash1" checked>
+                                    <label class="form-check-label col-form-label-sm" for="cash1">
+                                        เงินสด
+                                    </label>
+                                </div>
+                                <div class="col"><input id="txtCash1" type="text" class="form-control form-control-sm text-right numberonly" placeholder="0.00"></div>
+                            </div>
+                            <div class="form-group mb-1  row">
+                                <div class="col-4 ml-5">
+                                    <input class="form-check-input mt-2" type="checkbox" id="cash2">
+                                    <label class="form-check-label col-form-label-sm" for="cash2">
+                                        เงินโอน
+                                    </label>
+                                </div>
+                                <div class="col"><input id="txtCash2" type="text" class="form-control form-control-sm text-right numberonly" placeholder="0.00"></div>
+                            </div>
+                            <div class="form-group mb-1  row">
+                                <div class="col-4 ml-5">
+                                    <input class="form-check-input mt-2" type="checkbox" id="cash3">
+                                    <label class="form-check-label col-form-label-sm" for="cash3">
+                                        บัตรเครดิต
+                                    </label>
+                                </div>
+                                <div class="col"><input id="txtCash3" type="text" class="form-control form-control-sm text-right numberonly" placeholder="0.00"></div>
+                            </div>
+                            <div class="form-group mb-1 row">
+                                <div class="col-4 ml-5 text-right">
+                                    <label class="form-check-label col-form-label-sm" for="autoSizingCheck">
+                                        เลขบัตร
+                                    </label>
+                                </div>
+                                <div class="col"><input id="txtNumberCash3" type="text" class="form-control form-control-sm" placeholder="xxxxxxxxxx" readonly></div>
+                            </div>
+                        </div>
+                        <!-- Right -->
+                        <div class="col-md-6 ml-auto">
+                            <div class="form-group mt-2">
+                                <input id="txtNumberCalculate" type="text" class="form-control form-control-lg text-right text-danger bg-white" placeholder="0.00" style="font-weight: bold;">
+                            </div>
+                            <section class="calc-btn_row">
+                                <div class="calc_btn_row">
+                                    <button class="calc_btn bath" data-20>20 บาท</button>
+                                    <button class="calc_btn coupon" data-coupon>คูปอง</button>
+                                    <button class="calc_btn double" data-all-clear>C</button>
+                                </div>
+                                <div class="calc_btn_row">
+                                    <button class="calc_btn bath" data-100>100 บาท</button>
+                                    <button class="calc_btn" data-number>7</button>
+                                    <button class="calc_btn" data-number>8</button>
+                                    <button class="calc_btn" data-number>9</button>
+                                </div>
+                                <div class="calc_btn_row">
+                                    <button class="calc_btn bath" data-500>500 บาท</button>
+                                    <button class="calc_btn" data-number>4</button>
+                                    <button class="calc_btn" data-number>5</button>
+                                    <button class="calc_btn" data-number>6</button>
+                                </div>
+                                <div class="calc_btn_row">
+                                    <button class="calc_btn bath" data-1000>1000 บาท</button>
+                                    <button class="calc_btn" data-number>1</button>
+                                    <button class="calc_btn" data-number>2</button>
+                                    <button class="calc_btn" data-number>3</button>
+                                </div>
+                                <div class="calc_btn_row">
+                                    <button class="calc_btn print double" data-print>พิมพ์ใบเสร็จ</button>
+                                    <button class="calc_btn" data-number>0</button>
+                                    <button class="calc_btn" data-number>.</button>
+                                </div>
+                                <div class="calc_btn_row">
+                                    <button class="calc_btn out" data-dismiss="modal">ปิด</button>
+                                </div>
+                            </section>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" btn-save><i class="far fa-thumbs-up"></i>&nbsp;&nbsp;ตกลง</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">ปิด</button>
             </div>
         </div>
     </div>
@@ -26,6 +205,178 @@
 
 <script>
     $('#popupCalculate').on('shown.bs.modal', function () {
+        const billId = $('#txtBillId').val()
+        const memberId = $('#txtMemberId').val()
+        const balance = $('#txtBalance').val()
+        const servicePersen = $('#txtServiceP').val()
+        const serviceBath = $('#txtServiceB').val()
+        const memberPersen = $('#txtMemP').val()
+        const memberBath = $('#txtMemB').val()
+        const persen = $('#txtPersP').val()
+        const persenBath = $('#txtPersB').val()
+
         $('#txtSum').val($('#txtSumBalance').val())
+        $('#txtTotal').val($('#txtSumBalance').val())
+        $('#txtCash1').val($('#txtSumBalance').val())
+
+        const txtsum = document.getElementById('txtSum')
+        const txtcoupon = document.getElementById('txtCoupon')
+        const txttotal = document.getElementById('txtTotal')
+        const txtchang = document.getElementById('txtChang')
+
+        txtcoupon.value = '0.00'
+        txtchang.value = '0.00'
+
+        const numberButton = document.querySelectorAll('[data-number]')
+        const number20 = document.querySelector('[data-20]')
+        const number100 = document.querySelector('[data-100]')
+        const number500 = document.querySelector('[data-500]')
+        const number1000 = document.querySelector('[data-1000]')
+        const coupon = document.querySelector('[data-coupon]')
+        const clearNumber = document.querySelector('[data-all-clear]')
+        const numberCalculate = document.getElementById('txtNumberCalculate')
+
+        numberCalculate.value = '0.00'
+
+        document.getElementById('cash3').addEventListener('change', () => {
+            if ($('#cash3').prop("checked") == true) {
+                $('#txtNumberCash3').prop('readonly', false)
+            } else {
+                $('#txtNumberCash3').prop('readonly', true)
+            }
+        })
+
+        document.getElementById('txtNumberCalculate').addEventListener('keyup', () => {
+            var t = parseFloat(numberCalculate.value.replace(/,/g, '')) - parseFloat(txttotal.value.replace(/,/g, ''))
+            txtchang.value = numeral(t).format('0,0.00')
+
+            if (parseFloat(txtchang.value.replace(/,/g, '')) < 0)
+                txtchang.value = numeral(0).format('0,0.00')
+
+        })
+
+        document.getElementById('txtCoupon').addEventListener('keyup', () => {
+            var t = parseFloat(txtsum.value.replace(/,/g, '')) - parseFloat(txtcoupon.value.replace(/,/g, ''))
+            if (txtcoupon.value > parseFloat(txtsum.value.replace(/,/g, ''))) {
+                Swal.fire({ text: "ส่วนลดคูปองมากกว่า จำนวนเงินต้องชำระ", icon: 'warning' })
+                txtcoupon.value = ''
+                txttotal.value = numeral(txtsum.value).format('0,0.00')
+            } else {
+                txttotal.value = numeral(t).format('0,0.00')
+            }
+
+        })
+
+        class Calculatore {
+
+            clear() {
+                numberCalculate.value = '0.00';
+                txtchang.value = '0.00'
+            }
+
+            appendNumber(number) {
+                if (number == '.' && numberCalculate.value.includes('.'))
+                    return;
+
+                if (numberCalculate.value == '0.00')
+                    numberCalculate.value = ''
+
+                numberCalculate.value = numberCalculate.value.toString() + number.toString()
+
+                txtchang.value = numeral(parseFloat(numberCalculate.value.replace(/,/g, '')) - parseFloat(txttotal.value.replace(/,/g, ''))).format('0,0.00')
+
+                if (parseFloat(txtchang.value.replace(/,/g, '')) < 0)
+                    txtchang.value = numeral(0).format('0,0.00')
+
+            }
+
+            appendNumberPlus(number) {
+                if (numberCalculate.value != "")
+                    numberCalculate.value = numeral(parseFloat(numberCalculate.value.replace(/,/g, '')) + number).format('0,0.00')
+                else
+                    numberCalculate.value = numeral(number).format('0,0.00')
+
+                txtchang.value = numeral(parseFloat(numberCalculate.value.replace(/,/g, '')) - parseFloat(txttotal.value.replace(/,/g, ''))).format('0,0.00')
+
+                if (parseFloat(txtchang.value.replace(/,/g, '')) < 0)
+                    txtchang.value = numeral(0).format('0,0.00')
+            }
+        }
+
+        const calculator = new Calculatore(numberCalculate);
+
+        numberButton.forEach((button) => {
+            button.addEventListener('click', () => {
+                calculator.appendNumber(button.innerHTML)
+            })
+
+        })
+
+        number20.addEventListener('click', () => {
+            calculator.appendNumberPlus(20)
+        })
+
+        number100.addEventListener('click', () => {
+            calculator.appendNumberPlus(100)
+        })
+
+        number500.addEventListener('click', () => {
+            calculator.appendNumberPlus(500)
+        })
+
+        number1000.addEventListener('click', () => {
+            calculator.appendNumberPlus(1000)
+        })
+
+        coupon.addEventListener('click', () => {
+            $('#txtCoupon').focus()
+        })
+
+        clearNumber.addEventListener('click', () => {
+            calculator.clear()
+        })
+
+        document.querySelector('[data-print]').addEventListener('click', () => {
+            var data = new FormData();
+            data.append('BillId', billId);
+            data.append('MemberId', memberId);
+            data.append('SumBalance', balance);
+            data.append('ServicePersen', servicePersen);
+            data.append('ServiceBath', serviceBath);
+            data.append('MemberPersen', memberPersen);
+            data.append('MemberBath', memberBath);
+            data.append('Persen', persen);
+            data.append('PersenBath', persenBath);
+            data.append('Sum', txtsum.value);
+            data.append('Coupon', txtcoupon.value);
+            data.append('Total', txttotal.value);
+            data.append('MoneyPut', numberCalculate.value);
+            data.append('MoneyChange', txtchang.value);
+            data.append('cash1', $('#cash1').prop("checked"));
+            data.append('BathCash1', $('#txtCash1').val());
+            data.append('cash2', $('#cash2').prop("checked"));
+            data.append('BathCash2', $('#txtCash2').val());
+            data.append('cash3', $('#cash3').prop("checked"));
+            data.append('BathCash3', $('#txtCash3').val());
+            data.append('NumberCash3', $('#txtNumberCash3').val());
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("FrmPayment", "SF_Payment")',
+                contentType: false,
+                processData: false,
+                data: data,
+                success: function (data) {
+                    @*$.each(data, function (index, val) {
+                        if (val == "success") {
+                            window.location.href = '@Url.Action("Index", "CD_Food")'
+                        } else {
+                            Swal.fire({ text: "ไม่สามารถบันทึกข้อมูลได้", icon: 'warning'} )
+                        }
+                    })*@
+                }
+            })
+        })
+
     })
 </script>

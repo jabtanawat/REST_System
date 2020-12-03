@@ -18,11 +18,11 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col">
                 <!-- 1 -->
                 <section>
                     <div class="row">
-                        <div class="col-xl-7 mx-auto">
+                        <div class="col-xl-8 mx-auto">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
@@ -75,14 +75,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @{
-                                        decimal total = 0;
+                                    @{                                        
                                         if (_order.Count > 0)
                                         {
                                             var x = 0;
                                             foreach (var row in _order)
                                             {
                                                 x++;
+                                                decimal total = 0;
                                                 if (row.Status != 4)
                                                 {
                                                     total += row.Price * row.Amount;
@@ -129,7 +129,7 @@
                 <!-- 3 -->
                 <section>
                     <div class="row justify-content-end mt-3">
-                        <div class="col-xl-4 col-lg-6">
+                        <div class="col-xl-5 col-lg-6">
                             <div class="form-group row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ราคารวมทั้งหมด :</label>
                                 <div class="col-sm-7">

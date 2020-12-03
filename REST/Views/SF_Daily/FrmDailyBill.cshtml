@@ -14,7 +14,7 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">                
+            <div class="col mx-auto">                
                 <section>
                     <div class="d-flex mb-3">
                         <div class="mr-auto">
@@ -118,32 +118,25 @@
             tp.empty()
             let x = 0;
             var t;
-            $.get("@Url.Action("GetSF_Order", "api")" + "/AOrder", { OrderDt: date },
+            $.get("@Url.Action("GetSF_Bill", "api")" + "/ABill", { OrderDt: date },
                 function (data, status) {
                     if (data.length > 0) {
                         $.each(data, function (index, val) {
                             x++;
-                            var link = `@Url.Action("FrmDailyOrderSub", "SF_Daily")` + `/` + `${val.orderId}`;
+                            var link = `@Url.Action("FrmPayment", "SF_Payment")` + `/` + `${val.billId}`;
                             t = '<tr>'
                                 + `<td class="text-center">${x}</td>`
-                                + `<td>${val.orderId}</td>`
+                                + `<td>${val.billId}</td>`
                                 + `<td class="text-center">${val.dates}</td>`
                                 + `<td>${val.tableName}</td>`
-                                if (val.st == 1) {
-                                    t += `<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>`
-                                } else if (val.st == 2) {
-                                    t += `<td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>`
-                                } else {
-                                    t += `<td class="text-center text-success"><i class="far fa-check-circle"></i></td>`
-                                }
-                                t += `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
-                                + `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-eye"></i></td>`
+                                + `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
+                                + `<td class="text-center bg-info-light"><a href="${link}" class="text-info"><i class="fab fa-paypal"></i>&nbsp;ชำระเงิน</td>`
                                 + '</tr>';
 
                             $('#table-body').append(t)
                         })
                     } else {
-                        t = '<tr><td colspan="7" class="text-center text-danger">ไม่มีรายการ</td></tr>';
+                        t = '<tr><td colspan="6" class="text-center text-danger">ไม่มีรายการ</td></tr>';
                         $('#table-body').append(t)
                     }
 
@@ -157,32 +150,25 @@
             tp.empty()
             let x = 0;
             var t;
-            $.get("@Url.Action("GetSF_Order", "api")" + "/AOrder",
+            $.get("@Url.Action("GetSF_Bill", "api")" + "/ABill",
                 function (data, status) {
                     if (data.length > 0) {
                         $.each(data, function (index, val) {
                             x++;
-                            var link = `@Url.Action("FrmDailyOrderSub", "SF_Daily")` + `/` + `${val.orderId}`;
+                            var link = `@Url.Action("FrmPayment", "SF_Payment")` + `/` + `${val.billId}`;
                             t = '<tr>'
                                 + `<td class="text-center">${x}</td>`
-                                + `<td>${val.orderId}</td>`
+                                + `<td>${val.billId}</td>`
                                 + `<td class="text-center">${val.dates}</td>`
                                 + `<td>${val.tableName}</td>`
-                                if (val.st == 1) {
-                                    t += `<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>`
-                                } else if (val.st == 2) {
-                                    t += `<td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>`
-                                } else {
-                                    t += `<td class="text-center text-success"><i class="far fa-check-circle"></i></td>`
-                                }
-                                t += `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
-                                + `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-eye"></i></td>`
+                                + `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
+                                + `<td class="text-center bg-info-light"><a href="${link}" class="text-info"><i class="fab fa-paypal"></i>&nbsp;ชำระเงิน</td>`
                                 + '</tr>';
 
                             $('#table-body').append(t)
                         })
                     } else {
-                        t = '<tr><td colspan="7" class="text-center text-danger">ไม่มีรายการ</td></tr>';
+                        t = '<tr><td colspan="6" class="text-center text-danger">ไม่มีรายการ</td></tr>';
                         $('#table-body').append(t)
                     }
 
