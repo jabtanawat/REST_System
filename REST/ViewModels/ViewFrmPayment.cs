@@ -24,15 +24,15 @@ namespace REST.ViewModels
         public string Coupon { get; set; }
         public string Total { get; set; }
         public string SumBalance { get; set; }
-        public Boolean cash1 { get; set; } // เงินสด checkbox
-        public string BathCash1 { get; set; } // เงินสด
-        public Boolean cash2 { get; set; } // เงินโอน checkbox
-        public string BathCash2 { get; set; } // เงินโอน
-        public Boolean cash3 { get; set; } // บัตรเครดิต checkbox
-        public string BathCash3 { get; set; } // บัตรเครดิต
-        public string NumberCash3 { get; set; } // เลขบัตรเครดิต
-        public decimal MoneyPut { get; set; }
-        public decimal MoneyChange { get; set; }
+        public Boolean Cash1 { get; set; } // เงินสด checkbox
+        public string Cash1Bath { get; set; } // เงินสด
+        public Boolean Cash2 { get; set; } // เงินโอน checkbox
+        public string Cash2Bath { get; set; } // เงินโอน
+        public Boolean Cash3 { get; set; } // บัตรเครดิต checkbox
+        public string Cash3Bath { get; set; } // บัตรเครดิต
+        public string Cash3Number { get; set; } // เลขบัตรเครดิต
+        public string MoneyPut { get; set; }
+        public string MoneyChange { get; set; }
 
 
         public List<ViewSF_BillSub> BillSub { get; set; }

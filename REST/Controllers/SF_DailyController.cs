@@ -48,10 +48,18 @@ namespace REST.Controllers
             return View();
         }
 
+        public IActionResult FrmDailyPayment()
+        {
+            var branchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _bill = new GetSF_PaymentController(_db);
+            ViewBag.Table = _bill.PaymentList(null, DateTime.Now.ToString("dd/MM/yyyy"), branchId);
+            return View();
+        }
+
         // -------------------------------------------
         // -------------------------------------------
         // ---                                     ---
-        // ---        FUNCTION DAILY ORDER         ---
+        // ---           FUNCTION DAILY            ---
         // ---                                     ---
         // -------------------------------------------
         // -------------------------------------------
@@ -73,7 +81,7 @@ namespace REST.Controllers
                 if(L_OrderSub.Count > 0)
                 {
                     toastrAlert("ออดอเร์รายวัน", "ยกเลิกเรียบร้อย", Enums.NotificationToastr.success);
-                    return RedirectToAction("FrmDailyOrderSub", "SF_DailyOrder", new { id = OrderId });
+                    return RedirectToAction("FrmDailyOrderSub", "SF_Daily", new { id = OrderId });
                 }
                 else
                 {
@@ -86,7 +94,7 @@ namespace REST.Controllers
                     if(i_OrderTable.Count > 0)
                     {
                         toastrAlert("ออดอเร์รายวัน", "ยกเลิกเรียบร้อย", Enums.NotificationToastr.success);
-                        return RedirectToAction("FrmDailyOrderSub", "SF_DailyOrder", new { id = OrderId });
+                        return RedirectToAction("FrmDailyOrderSub", "SF_Daily", new { id = OrderId });
                     }
                     else
                     {
@@ -97,14 +105,14 @@ namespace REST.Controllers
                         _db.SaveChanges();
 
                         toastrAlert("ออดอเร์รายวัน", "ยกเลิกเรียบร้อย", Enums.NotificationToastr.success);
-                        return RedirectToAction("FrmDailyOrder", "SF_DailyOrder");
+                        return RedirectToAction("FrmDailyOrder", "SF_Daily");
                     }                    
                 }
             }
             else
             {
                 Alert("", "ไม่สามารถยกเลิกได้ เนื่องจากรายการนี้ทำแล้ว", Enums.NotificationType.warning);
-                return RedirectToAction("FrmDailyOrderSub", "SF_DailyOrder", new { id = OrderId });
+                return RedirectToAction("FrmDailyOrderSub", "SF_Daily", new { id = OrderId });
             }                               
         }
     }

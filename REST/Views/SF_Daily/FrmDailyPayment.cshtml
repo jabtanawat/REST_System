@@ -1,0 +1,208 @@
+﻿@using REST.Service;
+@{
+    ViewData["Title"] = "ระบบหน้าร้าน";
+    ViewData["System"] = "ข้อมูลชำระเงิน";
+    Layout = "_StoreFront";
+    var DateNow = DateTime.Now.ToString("dd/MM/yyyy");
+    var DataOrder = ViewBag.Table;
+}
+
+@section Styles{
+    <link href="~/Plugins/Datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col mx-auto">                
+                <section>
+                    <div class="d-flex mb-3">
+                        <div class="mr-auto">
+                            <div hidden><button class="btn btn-sm btn-info" type="button"><i class="fas fa-globe-europe"></i>&nbsp;ทั้งหมด</button></div>
+                        </div>
+                        <div class="ml-2">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
+                                </div>
+                                <input type="text" id="txtdate" class="form-control datepicker" placeholder="dd/MM/yyyy" value="@DateNow">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary" type="button" id="btnSearch"><i class="fas fa-search"></i>&nbsp;ค้นหา</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ml-2">
+                            <div><button class="btn btn-sm btn-info" type="button" id="btnSearchAll"><i class="fas fa-globe-europe"></i>&nbsp;ทั้งหมด</button></div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0">
+                        <div class="card-body table-responsive p-0" scroll>
+                            <table class="table table-md table-bordered table-head-fixed text-nowrap">
+                                <thead class="thead-black">
+                                    <tr>
+                                        <th class="text-center" style="width:5%;">ลำดับ</th>
+                                        <th class="text-center">เลขเอกสารชำระเงิน</th>
+                                        <th class="text-center">เลขที่บิล</th>
+                                        <th class="text-center">ชื่อโต๊ะ</th>
+                                        <th class="text-center" style="width:15%;">วันที่ชำระเงิน</th>
+                                        <th class="text-center" style="width:15%;">จำนวนเงิน</th>
+                                        <th class="text-center" style="width:5%;"><i class="fas fa-info-circle"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body">
+                                    @{
+                                        if (DataOrder.Count > 0)
+                                        {
+                                            var x = 0;
+                                            foreach (var row in DataOrder)
+                                            {
+                                                x++;
+                                                <tr>
+                                                    <td class="text-center">@x</td>
+                                                    <td>@row.PaymentId</td>
+                                                    <td>@row.BillId</td>
+                                                    <td>@row.TableName</td>
+                                                    <td class="text-center">@row.Dates</td>
+                                                    <td class="text-right">@Share.Cnumber(Share.FormatDouble(row.SumBalance), 2)</td>
+                                                    @if (row.St == 1)
+                                                    {
+                                                        <td class="text-center"><a href="@Url.Action("FrmPaymentView", "SF_Payment", new { id = row.PaymentId})" class="text-info"><i class="far fa-edit"></i></a></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td class="text-center bg-red-light text-danger">ยกเลิก</td>
+                                                    }
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="7" class="text-center text-danger">ไม่มีรายการ</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>                
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Plugins/Datepicker/bootstrap-datepicker.min.js"></script>
+    <script src="~/Plugins/Datepicker/bootstrap-datepicker-thai.js"></script>
+    <script src="~/Plugins/Datepicker/locales/bootstrap-datepicker.th.js"></script>
+    <script src="~/Plugins/Numeral/numeral.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Add Side Menu
+            $(".item_click_Payment").addClass("active");
+
+            // From DatePicker
+            $('.datepicker').datepicker({
+                language: 'th-th',
+                format: 'dd/mm/yyyy',
+                todayHighlight: true,
+                todayBtn: true,
+                todayBtn: 'linked',
+                autoclose: true
+            });
+
+            // Scroll Table
+            $('[scroll]').slimScroll({
+                height: $(window).height() - $('.navbar').height() - 140,
+                railBorderRadius: 0,
+                railVisible: true
+            });
+        });
+
+        document.getElementById('btnSearch').addEventListener('click', () => {
+            const date = $('#txtdate').val()
+            const tp = $('#table-body')
+            tp.empty()
+            let x = 0;
+            var t;
+            $.get("@Url.Action("GetSF_Payment", "api")" + "/APayment", { OrderDt: date },
+                function (data, status) {
+                    if (data.length > 0) {
+                        $.each(data, function (index, val) {
+                            x++;
+                            var link = `@Url.Action("FrmPaymentView", "SF_Payment")` + `/` + `${val.paymentId}`;
+                            t = '<tr>'
+                                + `<td class="text-center">${x}</td>`
+                                + `<td>${val.paymentId}</td>`
+                                + `<td>${val.billId}</td>`
+                                + `<td>${val.tableName}</td>`
+                                + `<td class="text-center">${val.dates}</td>`
+                                + `<td class="text-right">${numeral(val.sumBalance).format('0,0.00')}</td>`;
+
+                                if (val.st == 1)
+                                {
+                                    t += `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-edit"></i></a></td>`;
+                                }
+                                else
+                                {
+                                    t += `<td class="text-center bg-red-light text-danger">ยกเลิก</td>`;
+                                }
+
+                                t += '</tr>';
+
+                            $('#table-body').append(t)
+                        })
+                    } else {
+                        t = '<tr><td colspan="7" class="text-center text-danger">ไม่มีรายการ</td></tr>';
+                        $('#table-body').append(t)
+                    }
+
+                }
+            )
+        })
+
+        document.getElementById('btnSearchAll').addEventListener('click', () => {
+            const date = $('#txtdate').val()
+            const tp = $('#table-body')
+            tp.empty()
+            let x = 0;
+            var t;
+            $.get("@Url.Action("GetSF_Payment", "api")" + "/APayment",
+                function (data, status) {
+                    if (data.length > 0) {
+                        $.each(data, function (index, val) {
+                            x++;
+                            var link = `@Url.Action("FrmPaymentView", "SF_Payment")` + `/` + `${val.paymentId}`;
+                            t = '<tr>'
+                                + `<td class="text-center">${x}</td>`
+                                + `<td>${val.paymentId}</td>`
+                                + `<td>${val.billId}</td>`
+                                + `<td>${val.tableName}</td>`
+                                + `<td class="text-center">${val.dates}</td>`
+                                + `<td class="text-right">${numeral(val.sumBalance).format('0,0.00')}</td>`;
+
+                                if (val.st == 1)
+                                {
+                                    t += `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-edit"></i></a></td>`;
+                                }
+                                else
+                                {
+                                    t += `<td class="text-center bg-red-light text-danger">ยกเลิก</td>`;
+                                }
+
+                                t += '</tr>';
+
+                            $('#table-body').append(t)
+                        })
+                    } else {
+                        t = '<tr><td colspan="7" class="text-center text-danger">ไม่มีรายการ</td></tr>';
+                        $('#table-body').append(t)
+                    }
+
+                }
+            )
+        })
+    </script>
+}

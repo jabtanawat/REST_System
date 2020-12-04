@@ -75,7 +75,7 @@ namespace REST.Controllers
             }
             ViewBag.Table = table;
             var _OrderSub = new GetSF_OrderController(_db);
-            ViewBag.OrderSub = _OrderSub.OrderSub(id, null, branchid);
+            ViewBag.OrderSub = _OrderSub.OrderSubTable(id, null, branchid);
             return View();
         }
 
@@ -130,6 +130,15 @@ namespace REST.Controllers
                     _db.SaveChanges();                    
                 }
 
+                // Update Success Order = 2 เช็คบิลออเดอร์เรียบร้อยแล้ว
+                foreach (var row in ordersub)
+                {
+                    var itemSub = _db.SF_Order.FirstOrDefault(x => x.OrderId == row.OrderId && x.BranchId == branchid);
+                    itemSub.Success = 2;
+                    _db.SF_Order.Add(itemSub);
+                    _db.SaveChanges();
+                }
+
                 // Updata Status Table = 3 อยู่ระหว่างรอชำระเงิน
                 var table = _db.CD_Table.FirstOrDefault(x => x.TableId == id && x.BranchId == branchid);
                 table.TableST = 3;
@@ -139,6 +148,7 @@ namespace REST.Controllers
                 // Set Runnig
                 _get.SetRunning("Bill", DocRunning, branchid);
 
+                toastrAlert("เช็คบิล", "เรียบร้อยแล้ว", Enums.NotificationToastr.success);
                 return RedirectToAction("Index", "StoreFront");
             }
             catch (Exception)

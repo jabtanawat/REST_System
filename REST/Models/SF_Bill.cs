@@ -11,6 +11,7 @@ namespace REST.Models
         [Key]
         public string BillId { get; set; }
         public string TableId { get; set; }
+        public int St { get; set; }
         public DateTime BillDt { get; set; }
         public decimal PriceTotal { get; set; }
         // -------------------------------------------------------

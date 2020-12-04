@@ -206,6 +206,7 @@
 <script>
     $('#popupCalculate').on('shown.bs.modal', function () {
         const billId = $('#txtBillId').val()
+        const tableId = $('#txtTableId').val()
         const memberId = $('#txtMemberId').val()
         const balance = $('#txtBalance').val()
         const servicePersen = $('#txtServiceP').val()
@@ -218,6 +219,8 @@
         $('#txtSum').val($('#txtSumBalance').val())
         $('#txtTotal').val($('#txtSumBalance').val())
         $('#txtCash1').val($('#txtSumBalance').val())
+        $('#txtCash2').val('0.00')
+        $('#txtCash3').val('0.00')
 
         const txtsum = document.getElementById('txtSum')
         const txtcoupon = document.getElementById('txtCoupon')
@@ -339,6 +342,7 @@
         document.querySelector('[data-print]').addEventListener('click', () => {
             var data = new FormData();
             data.append('BillId', billId);
+            data.append('TableId', tableId);
             data.append('MemberId', memberId);
             data.append('SumBalance', balance);
             data.append('ServicePersen', servicePersen);
@@ -347,18 +351,53 @@
             data.append('MemberBath', memberBath);
             data.append('Persen', persen);
             data.append('PersenBath', persenBath);
-            data.append('Sum', txtsum.value);
+            data.append('Balance', txtsum.value);
             data.append('Coupon', txtcoupon.value);
             data.append('Total', txttotal.value);
             data.append('MoneyPut', numberCalculate.value);
             data.append('MoneyChange', txtchang.value);
-            data.append('cash1', $('#cash1').prop("checked"));
-            data.append('BathCash1', $('#txtCash1').val());
-            data.append('cash2', $('#cash2').prop("checked"));
-            data.append('BathCash2', $('#txtCash2').val());
-            data.append('cash3', $('#cash3').prop("checked"));
-            data.append('BathCash3', $('#txtCash3').val());
-            data.append('NumberCash3', $('#txtNumberCash3').val());
+            data.append('Cash1', $('#cash1').prop("checked"));
+            data.append('Cash1Bath', $('#txtCash1').val());
+            data.append('Cash2', $('#cash2').prop("checked"));
+            data.append('Cash2Bath', $('#txtCash2').val());
+            data.append('Cash3', $('#cash3').prop("checked"));
+            data.append('Cash3Bath', $('#txtCash3').val());
+            data.append('Cash3Number', $('#txtNumberCash3').val());
+
+            if ($('#txtNumberCalculate').val() == '' || $('#txtNumberCalculate').val() == 0) {
+                Swal.fire({ text: "กรุณากรอกจำนวนเงิน", icon: 'warning' })
+                return;
+            }
+
+            if ($('#cash1').prop("checked") == true) {
+                if ($('#txtCash1').val() == '' || $('#txtCash1').val() == 0) {
+                    Swal.fire({ text: "กรุณากรอกจำนวนเงินสด", icon: 'warning' })
+                    return;
+                }
+            }
+
+            if ($('#cash2').prop("checked") == true) {
+                if ($('#txtCash2').val() == '' || $('#txtCash2').val() == 0) {
+                    Swal.fire({ text: "กรุณากรอกจำนวนเงินโอน", icon: 'warning' })
+                    return;
+                }
+            }
+
+            if ($('#cash3').prop("checked") == true) {
+                if ($('#txtCash3').val() == '' || $('#txtCash3').val() == 0) {
+                    Swal.fire({ text: "กรุณากรอกจำนวนเงินบัตรเครดิต", icon: 'warning' })
+                    return;
+                    if ($('#txtNumberCash3').val() == '') {
+                        Swal.fire({ text: "กรุณากรอกเลขบัตรเครดิต", icon: 'warning' })
+                        return;
+                    }
+                }
+            }
+
+            if ($('#cash1').prop("checked") == false && $('#cash2').prop("checked") == false && $('#cash3').prop("checked") == false) {
+                Swal.fire({ text: "กรุณาเลือกการชำระเงิน", icon: 'warning' })
+                return;
+            }
 
             $.ajax({
                 type: 'POST',
@@ -367,13 +406,13 @@
                 processData: false,
                 data: data,
                 success: function (data) {
-                    @*$.each(data, function (index, val) {
+                    $.each(data, function (index, val) {
                         if (val == "success") {
-                            window.location.href = '@Url.Action("Index", "CD_Food")'
+                            window.location.href = '@Url.Action("Index", "StoreFront")'
                         } else {
                             Swal.fire({ text: "ไม่สามารถบันทึกข้อมูลได้", icon: 'warning'} )
                         }
-                    })*@
+                    })
                 }
             })
         })

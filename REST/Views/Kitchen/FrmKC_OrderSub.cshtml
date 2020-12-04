@@ -10,7 +10,7 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col mx-auto">
                 <!-- PANEL HEAD -->
                 <section class="panel-head">
                     <div class="row">
@@ -80,7 +80,7 @@
                                         <th class="text-center">ชื่ออาหาร</th>
                                         <th class="text-center text-info" style="width:5%;"><i class="fas fa-info-circle"></i></th>
                                         <th class="text-center" style="width:12%;">จำนวน</th>
-                                        <th class="text-center" colspan="2">รายละเอียด</th>
+                                        <th class="text-center" colspan="2"><i class="fas fa-project-diagram"></i></th>
                                     </tr>
                                 </thead>
                                 <tbody id="table-body">
@@ -99,11 +99,13 @@
                                                     {
                                                         <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
                                                         <td class="text-right">@row.Amount</td>
-                                                        <td style="width:4%;">
-                                                            <button class="btn btn-block btn-table-sm btn-primary" onclick="receiveOrder('@row.OrderId', '@row.FoodId')"><i class="fas fa-clipboard-check"></i></button>
+                                                        <td class="text-center bg-primary-light" style="width:6%;">
+                                                            @*<button class="btn btn-block btn-table-sm btn-primary" onclick="receiveOrder('@row.OrderId', '@row.FoodId')"><i class="fas fa-clipboard-check"></i></button>*@
+                                                            <a href="@Url.Action("receiveOrder", "SF_Order", new { OrderId = row.OrderId, FoodId = row.FoodId})" class="text-primary"><i class="fas fa-mitten"></i> รับอาหาร</a>
                                                         </td>
-                                                        <td style="width:4%;">
-                                                            <button class="btn btn-block btn-table-sm btn-success" onclick="completeOrder('@row.OrderId', '@row.FoodId')"><i class="far fa-thumbs-up"></i></button>
+                                                        <td class="text-center bg-success-light" style="width:6%;">
+                                                            @*<button class="btn btn-block btn-table-sm btn-success" onclick="completeOrder('@row.OrderId', '@row.FoodId')"><i class="far fa-thumbs-up"></i></button>*@
+                                                            <a href="@Url.Action("completeOrder", "SF_Order", new { OrderId = row.OrderId, FoodId = row.FoodId})" class="text-success"><i class="fas fa-check"></i> เสร็จแล้ว</a>
                                                         </td>
                                                         @*<td style="width:4%;">
                                                 <button class="btn btn-block btn-table-sm btn-danger" onclick="cancelOrder('@row.OrderId', '@row.FoodId')"><i class="fas fa-ban"></i></button>
@@ -113,11 +115,12 @@
                                                     {
                                                         <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
                                                         <td class="text-right">@row.Amount</td>
-                                                        <td class="text-center text-primary" style="width:4%;">
-                                                            <i class="fas fa-clipboard-check"></i>
+                                                        <td class="text-center text-primary bg-primary-light" style="width:6%;">
+                                                            <i class="fas fa-mitten"></i>
                                                         </td>
-                                                        <td style="width:4%;">
-                                                            <button class="btn btn-block btn-table-sm btn-success" onclick="completeOrder('@row.OrderId', '@row.FoodId')"><i class="far fa-thumbs-up"></i></button>
+                                                        <td class="text-center bg-success-light" style="width:6%;">
+                                                            <a href="@Url.Action("completeOrder", "SF_Order", new { OrderId = row.OrderId, FoodId = row.FoodId})" class="text-success"><i class="fas fa-check"></i> เสร็จแล้ว</a>
+                                                            @*<button class="btn btn-block btn-table-sm btn-success" onclick="completeOrder('@row.OrderId', '@row.FoodId')"><i class="far fa-thumbs-up"></i></button>*@
                                                         </td>
                                                         @*<td style="width:4%;">
                                                 <button class="btn btn-block btn-table-sm btn-danger" onclick="cancelOrder('@row.OrderId', '@row.FoodId')"><i class="fas fa-ban"></i></button>
@@ -127,8 +130,8 @@
                                                     {
                                                         <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                                                         <td class="text-right">@row.Amount</td>
-                                                        <td class="text-center text-success" colspan="3" style="width:12%;">
-                                                            <i class="far fa-thumbs-up"></i>
+                                                        <td class="text-center text-success bg-success-light" colspan="3" style="width:12%;">
+                                                            <i class="fas fa-check"></i>
                                                         </td>
                                                     }
                                                     else if (row.Status == 4)

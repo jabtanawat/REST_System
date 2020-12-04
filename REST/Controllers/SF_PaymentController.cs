@@ -32,35 +32,10 @@ namespace REST.Controllers
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var item = new ViewFrmPayment();
-            var _Get = new GetSF_BillController(_db);
-            var _bill = _Get.BillById(id, branchid);
-            var _setting = _db.Setting.FirstOrDefault();
+            
             if(id != null)
             {
-                item.BillId = _bill.BillId;
-                item.TableName = _bill.TableName;
-                // รายการอาหาร
-                var billsub = _Get.BillSubById(id, branchid);
-                decimal price = 0;
-                foreach (var i in billsub)
-                {
-                    if (i.Status != 4)
-                    {
-                        price += i.Price * i.Amount;
-                    }
-                }
-                item.BillSub = billsub;
-                // หาค่า ServiceCharge
-                var B = price * _setting.Service / 100;
-                item.ServicePersen = Share.Cnumber(Share.FormatDouble(_setting.Service), 2);
-                item.ServiceBath = Share.Cnumber(Share.FormatDouble(B), 2);
-                item.MemberPersen = "0.00";
-                item.MemberBath = "0.00";
-                item.Persen = "0.00";
-                item.PersenBath = "0.00";
-                var sum = price + B;
-                item.SumBalance = Share.Cnumber(Share.FormatDouble(sum), 2);
-                item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
+                item = LoadData(id, branchid);
             }
             else
             {
@@ -75,88 +50,201 @@ namespace REST.Controllers
                 item.SumBalance = "0.00";
             }
             return View(item);
-        }
-
-        //public IActionResult FrmPayment(string TableId = null)
-        //{
-        //    var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-        //    var _table = new GetCD_TableController(_db);
-        //    var _ordersub = new GetSF_OrderController(_db);
-        //    var item = new ViewFrmPayment();
-        //    if(TableId != null)
-        //    {
-        //        var order = _db.SF_OrderSub.Where(x => x.TableId == TableId && x.Status == 1 || x.Status == 2 && x.BranchId == branch).ToList();
-        //        if(order.Count > 0)
-        //        {
-        //            item.TableId = TableId;
-        //            Alert("", "รายการอาหาร ยังทำไม่เสร็จหรือได้ไม่ครบ", Enums.NotificationType.warning);
-        //            return View(item);
-        //        }
-        //        else
-        //        {
-        //            var table = _table.TableById(TableId, branch);
-        //            var info = _ordersub.OrderSubByTableId(TableId, branch);                    
-        //            decimal price = 0;
-        //            foreach (var row in info)
-        //            {
-        //                price += row.Price * row.Amount;
-        //            }
-        //            // input pricer ordersub
-        //            item.TableId = TableId;
-        //            item.TableName = table.TableName;
-        //            item.St = table.TableST;
-        //            if (table.TableST == 1)
-        //            {                        
-        //                item.Status = "ว่าง";
-        //            }else if(table.TableST == 2)
-        //            {
-        //                item.Status = "ใช้บริการอยู่";
-        //            }
-        //            else if(table.TableST == 3)
-        //            {
-        //                item.Status = "จอง";
-        //            }
-        //            item.Total = Share.Cnumber(Share.FormatDouble(price), 2);
-        //            item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
-        //            item.OrderSub = _ordersub.OrderSub(TableId, null, branch);
-
-        //            return View(item);
-        //        }                
-        //    }
-        //    else
-        //    {
-        //        return View(item);
-        //    }            
-        //}
+        }        
 
         [HttpPost]
         public IActionResult FrmPayment(ViewFrmPayment info)
         {
-            return View();
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var item = new SF_Payment();            
+            var _Bill = new GetSF_BillController(_db);
+            int i = 0;
+            try
+            {
+                // รายการอาหาร
+                var billsub = _Bill.BillSubById(info.BillId, branchid);
+                // เลข running
+                var _Running = new GetRunningController(_db);
+                string DocRunning = _Running.Running("Payment", branchid);
+
+                // Updata Status Table = 1 ว่าง
+                var list = _db.SF_Payment.Where(x => x.BillId == info.BillId && x.BranchId == branchid).ToList();
+                if (list.Count == 0)
+                {
+                    var table = _db.CD_Table.FirstOrDefault(x => x.TableId == info.TableId && x.BranchId == branchid);
+                    table.TableST = 1;
+                    _db.CD_Table.Update(table);
+                    _db.SaveChanges();
+                }
+
+                // Save Payment
+                item.PaymentId = DocRunning;
+                item.BillId = info.BillId;
+                item.TableId = info.TableId;
+                item.MemberId = info.MemberId;
+                item.St = 1;
+                item.Dates = Share.FormatDate(DateTime.Now).Date;
+                item.Total = Share.FormatDecimal(info.Total);
+                item.ServicePersen = Share.FormatDecimal(info.ServicePersen);
+                item.ServiceBath = Share.FormatDecimal(info.ServiceBath);
+                item.MemberPersen = Share.FormatDecimal(info.MemberPersen);
+                item.MemberBath = Share.FormatDecimal(info.MemberBath);
+                item.Persen = Share.FormatDecimal(info.Persen);
+                item.PersenBath = Share.FormatDecimal(info.PersenBath);
+                item.Balance = Share.FormatDecimal(info.Balance);
+                item.Coupon = Share.FormatDecimal(info.Coupon);
+                item.SumBalance = Share.FormatDecimal(info.SumBalance);
+                item.Cash1 = info.Cash1;
+                item.Cash1Bath = Share.FormatDecimal(info.Cash1Bath);
+                item.Cash2 = info.Cash2;
+                item.Cash2Bath = Share.FormatDecimal(info.Cash2Bath);
+                item.Cash3 = info.Cash3;
+                item.Cash3Bath = Share.FormatDecimal(info.Cash3Bath);
+                item.Cash3Number = info.Cash3Number;
+                item.MoneyPut = Share.FormatDecimal(info.MoneyPut);
+                item.MoneyChange = Share.FormatDecimal(info.MoneyChange);
+                // -------------------------------------------------------
+                item.BranchId = branchid;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                _db.SF_Payment.Add(item);
+                _db.SaveChanges();
+
+                //Svae Payment Sub
+                foreach (var row in billsub)
+                {
+                    i++;
+
+                    var itemSub = new SF_PaymentSub();
+                    itemSub.PaymentId = DocRunning;
+                    itemSub.i = i;
+                    itemSub.FoodId = row.FoodId;
+                    itemSub.Amount = row.Amount;
+                    itemSub.Price = row.Price;
+                    itemSub.BranchId = branchid;
+                    _db.SF_PaymentSub.Add(itemSub);
+                    _db.SaveChanges();
+                }                              
+
+                // Updata Status Bill = 2 ชำระเงินแล้ว
+                var bill = _db.SF_Bill.FirstOrDefault(x => x.BillId == info.BillId && x.BranchId == branchid);
+                bill.St = 2;
+                _db.SF_Bill.Update(bill);
+                _db.SaveChanges();
+
+                // Set Runnig
+                _Running.SetRunning("Payment", DocRunning, branchid);
+
+                toastrAlert("ชำระเงิน", "เรียบร้อยแล้ว", Enums.NotificationToastr.success);
+                return Json(new { data = "success" });
+            }
+            catch (Exception)
+            {
+                return Json(new { data = "error" });
+            }
+           
         }
 
-        //[HttpPost]
-        //public IActionResult FrmPayment(ViewFrmPayment info)
-        //{
-        //    var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (SaveData(info, branchid))
-        //        {
-        //            toastrAlert("ชำระเงิน", "ชำระเงินเรียบร้อย", Enums.NotificationToastr.success);
-        //            return RedirectToAction("Index", "StoreFront");
-        //        }
-        //        else
-        //        {                    
-        //            return View();
-        //        }                
-        //    }
-        //    else
-        //    {
-        //        Alert("", "ไม่สามารถบันทึกข้อมูลได้ !", Enums.NotificationType.error);
-        //        return View();
-        //    }            
-        //}
+        public IActionResult FrmPaymentView(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _GetMember = new GetMB_MemberController(_db);
+            var _GetPayment = new GetSF_PaymentController(_db);
+            var item = new ViewSF_Payment();
+            var payment = _db.SF_Payment.FirstOrDefault(x => x.PaymentId == id && x.BranchId == branchid);
+            item.PaymentId = payment.PaymentId;
+            item.Dates = payment.Dates.ToString("dd/MM/yyyy");
+            item.BillId = payment.BillId;
+            item.TableId = payment.TableId;
+            var table = _db.CD_Table.FirstOrDefault(x => x.TableId == payment.TableId && x.BranchId == branchid);
+            item.TableName = table.TableName;
+            item.MemberId = payment.MemberId;
+            var member = _GetMember.ViewMemberById(payment.MemberId, branchid);
+            item.MemberName = member.Name;
+            item.MemberType = member.TypeName;
+
+            item.SumBalance = Share.Cnumber(Share.FormatDouble(payment.SumBalance), 2);
+            item.Total = Share.Cnumber(Share.FormatDouble(payment.Total), 2);
+            item.ServicePersen = Share.Cnumber(Share.FormatDouble(payment.ServicePersen), 2);
+            item.ServiceBath = Share.Cnumber(Share.FormatDouble(payment.ServiceBath), 2);
+            item.MemberPersen = Share.Cnumber(Share.FormatDouble(payment.MemberPersen), 2);
+            item.MemberBath = Share.Cnumber(Share.FormatDouble(payment.MemberBath), 2);
+            item.Persen = Share.Cnumber(Share.FormatDouble(payment.Persen), 2);
+            item.PersenBath = Share.Cnumber(Share.FormatDouble(payment.PersenBath), 2);
+            item.Coupon = Share.Cnumber(Share.FormatDouble(payment.Coupon), 2);
+            item.MoneyPut = Share.Cnumber(Share.FormatDouble(payment.MoneyPut), 2);
+            item.MoneyChange = Share.Cnumber(Share.FormatDouble(payment.MoneyChange), 2);
+
+            item.PaymentSub = _GetPayment.PaymentSubList(id, branchid);
+            return View(item);
+        }
+
+        public IActionResult CancelPayment(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            try
+            {
+                // Update Status Payment = 2 ยกเลิกเอกสาร
+                var payment = _db.SF_Payment.FirstOrDefault(x => x.PaymentId == id && x.BranchId == branchid);
+                payment.St = 2;
+                _db.SF_Payment.Update(payment);
+                _db.SaveChanges();
+
+                // Update Status bill = 1 ปกติ
+                var bill = _db.SF_Bill.FirstOrDefault(x => x.BillId == payment.BillId && x.BranchId == branchid);
+                bill.St = 1;
+                _db.SF_Bill.Update(bill);
+                _db.SaveChanges();
+
+                toastrAlert("ชำระเงิน", "ยกเลิกเรียบร้อยแล้ว", Enums.NotificationToastr.success);
+                return RedirectToAction("FrmDailyPayment", "SF_Daily");
+            }
+            catch (Exception)
+            {
+                Alert("", "Error Data !", Enums.NotificationType.warning);
+                return View();
+            }            
+        }
+
+        public ViewFrmPayment LoadData(string id, string branchid)
+        {
+            var item = new ViewFrmPayment();
+
+            var _Get = new GetSF_BillController(_db);
+            var _bill = _Get.BillById(id, branchid);
+            var _setting = _db.Setting.FirstOrDefault();
+
+            item.BillId = _bill.BillId;
+            item.TableId = _bill.TableId;
+            item.TableName = _bill.TableName;
+            // รายการอาหาร
+            var billsub = _Get.BillSubById(id, branchid);
+            decimal price = 0;
+            foreach (var i in billsub)
+            {
+                if (i.Status != 4)
+                {
+                    price += i.Price * i.Amount;
+                }
+            }
+            item.BillSub = billsub;
+            // หาค่า ServiceCharge
+            var B = price * _setting.Service / 100;
+            item.ServicePersen = Share.Cnumber(Share.FormatDouble(_setting.Service), 2);
+            item.ServiceBath = Share.Cnumber(Share.FormatDouble(B), 2);
+            item.MemberPersen = "0.00";
+            item.MemberBath = "0.00";
+            item.Persen = "0.00";
+            item.PersenBath = "0.00";
+            var sum = price + B;
+            item.SumBalance = Share.Cnumber(Share.FormatDouble(sum), 2);
+            item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
+
+            return item;
+        }        
 
         public Boolean SaveData(ViewFrmPayment info, string branchid)
         {         
@@ -179,8 +267,8 @@ namespace REST.Controllers
                 //item.Score = info.Score;
                 item.Balance = Share.FormatDecimal(info.Balance);
                 //item.PayType = info.PayType;
-                item.MoneyPut = info.MoneyPut;
-                item.MoneyChange = info.MoneyChange;
+                //item.MoneyPut = info.MoneyPut;
+                //item.MoneyChange = info.MoneyChange;
                 item.Dates = Share.FormatDate(DateTime.Now).Date;
                 /* DATA */
                 item.BranchId = branchid;
@@ -199,11 +287,11 @@ namespace REST.Controllers
                     var itemsub = new SF_PaymentSub();
                     itemsub.PaymentId = Doc;
                     itemsub.i = row.i;
-                    itemsub.TableId = row.TableId;
+                    //itemsub.TableId = row.TableId;
                     itemsub.FoodId = row.FoodId;
                     itemsub.Amount = row.Amount;
                     itemsub.Price = row.Price;
-                    itemsub.Status = row.Status;
+                    //itemsub.Status = row.Status;
                     itemsub.BranchId = branchid;
 
                     _db.SF_PaymentSub.Add(itemsub);

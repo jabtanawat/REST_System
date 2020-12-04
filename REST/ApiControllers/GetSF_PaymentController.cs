@@ -15,11 +15,11 @@ namespace REST.ApiControllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class GetSF_BillController : BaseController
+    public class GetSF_PaymentController : BaseController
     {
         #region Connect db
         private readonly DbConnection _db;
-        public GetSF_BillController(DbConnection db)
+        public GetSF_PaymentController(DbConnection db)
         {
             _db = db;
         }
@@ -60,18 +60,18 @@ namespace REST.ApiControllers
             return Item;
         }        
 
-        public List<ViewSF_Bill> Bill(string id, string Dt, string branchid)
+        public List<ViewSF_Payment> PaymentList(string id, string Dt, string branchid)
         {
-            var List = new List<ViewSF_Bill>();
-            var sql = $"SELECT BillId, SF_Bill.TableId, TableName, PriceTotal, BillDt "
-                    + $"FROM SF_Bill "
-                    + $"LEFT JOIN CD_Table ON SF_Bill.TableId = CD_Table.TableId "
-                    + $"WHERE SF_Bill.BranchId = '{branchid}' AND SF_Bill.St = '1' ";
+            var List = new List<ViewSF_Payment>();
+            var sql = $"SELECT PaymentId, Dates, BillId, TableName, SumBalance, St "
+                    + $"FROM SF_Payment "
+                    + $"LEFT JOIN CD_Table ON SF_Payment.TableId = CD_Table.TableId "
+                    + $"WHERE SF_Payment.BranchId = '{branchid}' ";
                     if (id != null)
-                        sql += $"AND SF_Bill.BillId = '{id}' ";
+                        sql += $"AND SF_Payment.PaymentId = '{id}' ";
                     if (Dt != null)
-                        sql += $"AND SF_Bill.BillDt = '{Share.ConvertFieldDate(Dt)}' ";
-                    sql += $"ORDER BY BillId DESC, BillDt DESC";
+                        sql += $"AND SF_Payment.Dates = '{Share.ConvertFieldDate(Dt)}' ";
+                    sql += $"ORDER BY PaymentId DESC, Dates DESC";
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
@@ -81,17 +81,19 @@ namespace REST.ApiControllers
                 {
                     while (data.Read())
                     {
-                        var Item = new ViewSF_Bill();
+                        var Item = new ViewSF_Payment();
                         if (!data.IsDBNull(0))
-                            Item.BillId = data.GetString(0);
+                            Item.PaymentId = data.GetString(0);
                         if (!data.IsDBNull(1))
-                            Item.TableId = data.GetString(1);
+                            Item.Dates = data.GetDateTime(1).ToString("dd/MM/yyyy");
                         if (!data.IsDBNull(2))
-                            Item.TableName = data.GetString(2);
+                            Item.BillId = data.GetString(2);
                         if (!data.IsDBNull(3))
-                            Item.PriceTotal = data.GetDecimal(3);
+                            Item.TableName = data.GetString(3);
                         if (!data.IsDBNull(4))
-                            Item.Dates = data.GetDateTime(4).ToString("dd/MM/yyyy");                        
+                            Item.SumBalance = Share.Cnumber(Share.FormatDouble(data.GetDecimal(4)), 2);
+                        if (!data.IsDBNull(5))
+                            Item.St = data.GetInt32(5);                       
                         List.Add(Item);
                     }
                 }
@@ -100,16 +102,16 @@ namespace REST.ApiControllers
             return List;
         }
 
-        public List<ViewSF_BillSub> BillSubById(string id, string branchid)
+        public List<ViewSF_PaymentSub> PaymentSubList(string id, string branchid)
         {
-            var List = new List<ViewSF_BillSub>();
-            var sql = $"SELECT B.BillId, B.i, B.TableId, T.TableName, B.FoodId, F.FoodName, B.Amount, B.Price "
-                    + $"FROM SF_BillSub AS B "
-                    + $"LEFT JOIN CD_Table AS T ON B.TableId = T.TableId "
-                    + $"LEFT JOIN CD_Food AS F ON B.FoodId = F.FoodId "
-                    + $"WHERE B.BranchId = '{branchid}' ";
-            if (id != null)
-                sql += $"AND B.BillId = '{id}' ";
+            var List = new List<ViewSF_PaymentSub>();
+            var sql = $"SELECT PaymentId, i, P.FoodId, F.FoodName, Amount, P.Price "
+                    + $"FROM SF_PaymentSub AS P "
+                    + $"LEFT JOIN CD_Food AS F ON P.FoodId = F.FoodId "
+                    + $"WHERE P.BranchId = '{branchid}' ";
+                    if (id != null)
+                        sql += $"AND PaymentId = '{id}' ";
+                    sql += $"ORDER BY i DESC";
 
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
@@ -119,23 +121,19 @@ namespace REST.ApiControllers
                 {
                     while (data.Read())
                     {
-                        var Item = new ViewSF_BillSub();
+                        var Item = new ViewSF_PaymentSub();
                         if (!data.IsDBNull(0))
-                            Item.BillId = data.GetString(0);
+                            Item.PaymentId = data.GetString(0);
                         if (!data.IsDBNull(1))
                             Item.i = data.GetInt32(1);
                         if (!data.IsDBNull(2))
-                            Item.TableId = data.GetString(2);
+                            Item.FoodId = data.GetString(2);
                         if (!data.IsDBNull(3))
-                            Item.TableName = data.GetString(3);
+                            Item.FoodName = data.GetString(3);
                         if (!data.IsDBNull(4))
-                            Item.FoodId = data.GetString(4);
+                            Item.Amount = data.GetDecimal(4);
                         if (!data.IsDBNull(5))
-                            Item.FoodName = data.GetString(5);
-                        if (!data.IsDBNull(6))
-                            Item.Amount = data.GetDecimal(6);
-                        if (!data.IsDBNull(7))
-                            Item.Price = data.GetDecimal(7);
+                            Item.Price = data.GetDecimal(5);
                         List.Add(Item);
                     }
                 }
@@ -193,15 +191,15 @@ namespace REST.ApiControllers
         // -------------------------------------------
         // -------------------------------------------
         // ---                                     ---
-        // ---             ACTION BILL             ---
+        // ---            ACTION PAYMENT           ---
         // ---                                     ---
         // -------------------------------------------
         // -------------------------------------------
 
-        public JsonResult ABill(string OrderDt = null)
+        public JsonResult APayment(string OrderDt = null)
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            var List = Bill(null, OrderDt, branchid);
+            var List = PaymentList(null, OrderDt, branchid);
             return Json(List);
         }
 

@@ -1,8 +1,8 @@
 ﻿@using REST.Service;
-@model REST.ViewModels.ViewFrmPayment;
+@model REST.ViewModels.ViewSF_Payment;
 @{
     ViewData["Title"] = "ระบบหน้าร้าน";
-    ViewData["link"] = Url.Action("FrmDailyBill", "SF_Daily");
+    ViewData["link"] = Url.Action("FrmDailyPayment", "SF_Daily");
     Layout = "_Payment";
 }
 
@@ -13,7 +13,7 @@
 <form name="FrmPayment" method="post">
     <div class="row">
         <div class="col-xl-8 col-lg-8 col-md-8 pr-md-0 order-md-first order-last">
-            <!-- 2 -->
+            <!-- 1 -->
             <section>
                 <div class="card">
                     <div class="card-body">
@@ -22,44 +22,56 @@
                                 <div class="col-xl-12 mx-auto">
                                     <div class="row">
                                         <div class="col-lg-6">
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">เลขที่บิล :</label>
+                                            <div class="form-group mb-2 row">
+                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">เอกสาร :</label>
                                                 <div class="col-xl-9 col-lg-8 col-sm-7">
-                                                    <input asp-for="BillId" id="txtBillId" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
+                                                    <input asp-for="PaymentId" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">โต๊ะ :</label>
+                                            <div class="form-group mb-2 row">
+                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">วันที่ชำระเงิน :</label>
                                                 <div class="col-xl-9 col-lg-8  col-sm-7">
-                                                    <input asp-for="TableId" id="txtTableId" type="hidden" />
-                                                    <p class="col-form-label-sm border-bottom mb-0">@Model.TableName</p>
+                                                    <input asp-for="Dates" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-6">
-                                            <div class="form-group row">
-                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">ลูกค้า <span class="text-danger">(F6)</span> :</label>
-                                                <div class="col-xl-9 col-lg-8  col-sm-7">
-                                                    <div class="input-group input-group-sm">
-                                                        <input asp-for="MemberId" id="txtMemberId" type="hidden" />
-                                                        <input asp-for="MemberName" id="txtMemberName" type="text" class="form-control">
-                                                        <div class="input-group-append">
-                                                            <button class="btn btn-danger" type="button" onclick="clearMember()"><i class="fas fa-redo-alt"></i></button>
-                                                            <button class="btn btn-info" type="button" data-toggle="ajax-modal" data-target="#popupMember" data-url="@Url.Action("_popupMember", "Modal")"><i class="fas fa-search"></i></button>
-                                                        </div>
-                                                    </div>
+                                            <div class="form-group mb-2 row">
+                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">เลขที่บิล :</label>
+                                                <div class="col-xl-9 col-lg-8 col-sm-7">
+                                                    <input asp-for="BillId" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
-                                            <div class="form-group row">
+                                            <div class="form-group mb-2 row">
+                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">โต๊ะ :</label>
+                                                <div class="col-xl-9 col-lg-8  col-sm-7">
+                                                    <input asp-for="TableId" type="hidden" />
+                                                    <input asp-for="TableName" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-6">
+                                            <div class="form-group mb-2 row">
+                                                <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">ลูกค้า :</label>
+                                                <div class="col-xl-9 col-lg-8  col-sm-7">
+                                                    <input asp-for="MemberId" type="hidden" />
+                                                    <input asp-for="MemberName" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group mb-2 row">
                                                 <label class="col-xl-3 col-lg-4 col-sm-5 col-form-label col-form-label-sm text-sm-right">ประเภท :</label>
                                                 <div class="col-xl-9 col-lg-8  col-sm-7">
-                                                    <p id="Type" class="col-form-label-sm border-bottom mb-0">ทั่วไป</p>
+                                                    <input asp-for="MemberType" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
                                                 </div>
                                             </div>
                                         </div>
@@ -69,7 +81,7 @@
                         </section>
                         <div class="card border-0">
                             <div class="card-body table-responsive p-0" scroll>
-                                <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;รายการอาหาร</p>
+                                <p class="font-weight-bold mt-2"><i class="far fa-dot-circle"></i>&nbsp;รายการอาหาร</p>
                                 <table class="table table-md table-bordered table-head-fixed text-nowrap">
                                     <thead class="thead-black">
                                         <tr>
@@ -84,17 +96,14 @@
                                     <tbody>
                                         @{
 
-                                            if (Model.BillSub != null && Model.BillSub.Count() > 0)
+                                            if (Model.PaymentSub != null && Model.PaymentSub.Count() > 0)
                                             {
                                                 var x = 0;
-                                                foreach (var row in Model.BillSub)
+                                                foreach (var row in Model.PaymentSub)
                                                 {
                                                     decimal total = 0;
                                                     x++;
-                                                    if (row.Status != 4)
-                                                    {
-                                                        total += row.Price * row.Amount;
-                                                    }
+                                                    total += row.Price * row.Amount;
                                                     <tr>
                                                         <td class="text-center">@x</td>
                                                         <td>@row.FoodId</td>
@@ -131,7 +140,7 @@
                                 <h6>ยอดบิล</h6>
                             </div>
                             <div class="form-group mb-0">
-                                <input asp-for="SumBalance" id="txtSumBalance" type="text" readonly class="form-control-plaintext form-control-lg text-right text-danger" style="font-size: 2rem;font-weight: bold;">
+                                <input asp-for="SumBalance" type="text" readonly class="form-control-plaintext form-control-lg text-right text-danger" style="font-size: 2rem;font-weight: bold;">
                             </div>
                             <div class="alert alert-primary text-center py-1 mb-1" role="alert">
                                 <h6>รายละเอียดบิล</h6>
@@ -142,41 +151,66 @@
                             <div class="form-group mb-0 row">
                                 <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">ราคารวม :</label>
                                 <div class="col-xl-8 col-lg-7 col-sm-8">
-                                    <input asp-for="Balance" id="txtBalance" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                    <input asp-for="Total" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
                             <!-- Service Charge -->
                             <div class="form-group mb-0 row">
                                 <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">Service Charge :</label>
                                 <div class="col-sm">
-                                    <input asp-for="ServicePersen" id="txtServiceP" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0">
+                                    <input asp-for="ServicePersen" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0">
                                 </div>
                                 <div class="col-xl-5 col-lg-3 col-sm-6">
-                                    <input asp-for="ServiceBath" id="txtServiceB" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                    <input asp-for="ServiceBath" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
                             <!-- Member % -->
                             <div class="form-group mb-0 row">
                                 <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">Member % :</label>
                                 <div class="col-sm">
-                                    <input asp-for="MemberPersen" id="txtMemP" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0.00">
+                                    <input asp-for="MemberPersen" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0.00">
                                 </div>
                                 <div class="col-xl-5 col-lg-3 col-sm-6">
-                                    <input asp-for="MemberBath" id="txtMemB" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                    <input asp-for="MemberBath" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
                             <!-- ส่วนลด % -->
                             <div class="form-group mb-0 row">
-                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">ส่วนลด % <span class="text-danger">(F10)</span> :</label>
+                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">ส่วนลด % :</label>
                                 <div class="col-sm">
-                                    <input asp-for="Persen" id="txtPersP" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0.00">
+                                    <input asp-for="Persen" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0.00">
                                 </div>
                                 <div class="col-xl-5 col-lg-3 col-sm-6">
-                                    <input asp-for="PersenBath" id="txtPersB" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                    <input asp-for="PersenBath" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                </div>
+                            </div>
+                            <!-- คูปอง -->
+                            <div class="form-group mb-0 row">
+                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">ส่วนลดคูปอง :</label>
+                                <div class="col-xl-8 col-lg-7 col-sm-8">
+                                    <input asp-for="Coupon" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                </div>
+                            </div>
+                            <hr />
+                            <!-- รับเงิน -->
+                            <div class="form-group mb-0 row">
+                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">รับเงิน :</label>
+                                <div class="col-xl-8 col-lg-7 col-sm-8">
+                                    <input asp-for="MoneyPut" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                </div>
+                            </div>
+                            <!-- เงินทอน -->
+                            <div class="form-group mb-0 row">
+                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">เงินทอน :</label>
+                                <div class="col-xl-8 col-lg-7 col-sm-8">
+                                    <input asp-for="MoneyChange" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
                         </section>
-                        <button type="button" class="btn btn-sm btn-success btn-block" data-toggle="ajax-modal" data-target="#popupCalculate" data-url="@Url.Action("_popupCalculate", "Modal")"><i class="fab fa-paypal"></i> ชำระเงิน <span class="text-danger">(F2)</span></button>
+                        <div class="row">
+                            <div class="col-sm-6"><button type="button" class="btn btn-sm btn-primary btn-block"><i class="fas fa-print"></i> พิมใบเสร็จ</button></div>
+                            <div class="col-sm-6"><button type="button" class="btn btn-sm btn-danger btn-block" btn-cancel><i class="far fa-window-close"></i> ยกเลิก</button></div>
+                        </div>                        
                     </div>
                 </div>
             </section>
@@ -201,7 +235,7 @@
             });
 
             $('[scroll-payment]').slimScroll({
-                height: $(window).height() - $('.navbar').height() - $('.bill-payment').height() - 129,
+                height: $(window).height() - $('.navbar').height() - $('.bill-payment').height() - 130,
                 railBorderRadius: 0,
                 railVisible: true,
                 distance: '-10px'
@@ -223,119 +257,22 @@
             $(this).val(numeral(number).format('0,0.00'))
         })
 
-        /* Modal */
-        var PlaceHolderElement = $('#PlaceHolderHere')
-        $('button[data-toggle="ajax-modal"]').click(function (event) {
-            var url = $(this).data('url')
-            var decodedUrl = decodeURIComponent(url)
-            $.get(decodedUrl).done(function (data) {
-                PlaceHolderElement.html(data)
-                PlaceHolderElement.find('.modal').modal('show')
-            })
-        })
-
-        @*// Show Supplier
-        function showTable(id) {
-            window.location.href = '@Url.Action("FrmPayment", "SF_Payment")?id=' + id
-            $('#popupTable').modal('hide')
-        }*@
-
-        // Show Member
-        function showMember(id) {
-            $.ajax({
-                type: 'POST',
-                url: '@Url.Action("ShowMember", "SF_Payment")',
-                data: { id: id },
-                success: function (data) {
-                    $.each(data, function (index, val) {
-                        $('#txtMemberId').val(val.memberId)
-                        $('#txtMemberName').val(val.name)
-                        $('#Type').html(val.typeName)
-
-                        const rebate = val.rebate
-                        // % Member
-                        const balance = parseFloat($('#txtBalance').val().replace(/,/g, ''))
-                        const serviceB = parseFloat($('#txtServiceB').val().replace(/,/g, ''))
-                        const MemP = balance * rebate / 100
-                        const PersenB = parseFloat($('#txtPersB').val().replace(/,/g, ''))
-                        //const bs = balance + serviceB
-                        const price = balance + serviceB - MemP - PersenB
-
-                        $('#txtMemP').val(numeral(val.rebate).format('0,0.00'))
-                        $('#txtMemB').val(numeral(MemP).format('0,0.00'))
-
-                        $('#txtSumBalance').val(numeral(price).format('0,0.00'))
-                    })
-                    $('#popupMember').modal('hide')
+        document.querySelector("[btn-cancel]").addEventListener('click', () => {
+             Swal.fire({
+                text: "ต้องการยกเลิกข้อมูลหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = '@Url.Action("CancelPayment", "SF_Payment", new { id = Model.PaymentId })'
+                    @*document.FrmPayment.action = '@Url.Action("FrmPaymentView")'
+                    document.FrmPayment.submit();*@
                 }
             })
-        }
-
-        // Clear Member
-        function clearMember() {
-            $('#txtMemberId').val('')
-            $('#txtMemberName').val('')
-            $('#Type').html('ทั่วไป')
-
-            $('#txtMemP').val('0.00')
-            $('#txtMemB').val('0.00')
-
-            const balance = parseFloat($('#txtBalance').val().replace(/,/g, ''))
-            const serviceB = parseFloat($('#txtServiceB').val().replace(/,/g, ''))
-            const memberB = parseFloat($('#txtMemB').val().replace(/,/g, ''))
-            const persenB = parseFloat($('#txtPersB').val().replace(/,/g, ''))
-
-            const price = balance + serviceB - persenB - memberB
-
-            $('#txtSumBalance').val(numeral(price).format('0,0.00'))
-        }
-
-        // Load Window
-        $(window).on('keydown', function (e) {
-            if (e.which == 121) {
-                // F10 popup Discount
-                var url = '@Url.Action("_popupDiscount", "Modal")'
-                var decodedUrl = decodeURIComponent(url)
-                $.get(decodedUrl).done(function (data) {
-                    PlaceHolderElement.html(data)
-                    PlaceHolderElement.find('.modal').modal('show')
-                })
-                return false;
-            } else if (e.which == 117) {
-                // F6 Show Member
-                var url = '@Url.Action("_popupMember", "Modal")'
-                var decodedUrl = decodeURIComponent(url)
-                $.get(decodedUrl).done(function (data) {
-                    PlaceHolderElement.html(data)
-                    PlaceHolderElement.find('.modal').modal('show')
-                })
-                return false;
-            } else if (e.which == 113) {
-                // F2 Show Payment
-                var url = '@Url.Action("_popupCalculate", "Modal")'
-                var decodedUrl = decodeURIComponent(url)
-                $.get(decodedUrl).done(function (data) {
-                    PlaceHolderElement.html(data)
-                    PlaceHolderElement.find('.modal').modal('show')
-                })
-                return false;
-            }
-        });
-
-        // Discount
-        function Discount(dis) {
-            const balance = parseFloat($('#txtBalance').val().replace(/,/g, ''))
-            const serviceB = parseFloat($('#txtServiceB').val().replace(/,/g, ''))
-            const memB = parseFloat($('#txtMemB').val().replace(/,/g, ''))
-            const persB = balance * parseFloat(dis.replace(/,/g, '')) / 100
-            const bs = balance + serviceB - persB
-            const price = bs - memB
-
-            $('#txtPersP').val(numeral(dis).format('0,0.00'))
-            $('#txtPersB').val(numeral(persB).format('0,0.00'))
-            $('#txtSumBalance').val(numeral(price).format('0,0.00'))
-
-            $('#popupDiscount').modal('hide')
-        }
+        })
     </script>
 }

@@ -255,6 +255,7 @@ namespace REST.Controllers
                 Item.OrderDt = Share.FormatDate(DateTime.Now).Date;
                 Item.PriceTotal = PTotal;
                 Item.ST = 1;
+                Item.Success = 1;
                 Item.BranchId = branchid;
                 Item.CreateUser = User.Identity.Name;
                 Item.CreateDate = Share.FormatDate(DateTime.Now).Date;

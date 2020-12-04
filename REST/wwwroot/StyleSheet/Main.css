@@ -61,6 +61,10 @@ body {
     background-color: #FFF3CD !important;
 }
 
+.bg-success-light {
+    background-color: #D4EDDA !important;
+}
+
 /* Button */
 
 .btn-blue {
