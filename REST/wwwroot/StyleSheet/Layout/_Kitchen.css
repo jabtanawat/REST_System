@@ -1,0 +1,8 @@
+﻿.wrapper{
+    margin-top: 0px;
+}
+
+.wrapper .nav__bar {
+    border-bottom: 1px solid #E3EBF6;
+    margin-bottom: 1rem;
+}

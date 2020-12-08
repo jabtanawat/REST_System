@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - REST</title>
+    <title>@ViewData["Title"] - Restaurant System</title>
     <link rel="stylesheet" href="~/Plugins/Bootstrap-4.5.2/css/bootstrap.css" />
     <link rel="stylesheet" href="~/Plugins/Fontawesome-Free-5.14.0/css/all.min.css" />
     <link rel="stylesheet" href="~/StyleSheet/Main.css" />
@@ -27,9 +27,9 @@
         </div>
     </nav>*@
 
-    <nav class="navbar fixed-top navbar-dark bg-black">
+    <nav class="navbar fixed-top navbar-light bg-background">
         <div class="container">
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")">REST SYSTEM</a>
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">ระบบร้านอาหาร</a>
             <div class="navbar-nav ml-auto mt-2 mt-lg-0">
                 <a class="nav-item nav-link active" href="#" data-toggle="modal" data-target=".bd-example-modal-sm"><i class="fas fa-user-cog"></i></a>
             </div>
@@ -65,7 +65,7 @@
 
     @RenderBody()
 
-    <nav class="navbar navbar-dark bg-black">
+    <nav class="navbar navbar-light bg-transparent">
         <div class="container">
             <div class="navbar-nav ml-auto mt-2 mt-lg-0">
                 <span class="navbar-text">

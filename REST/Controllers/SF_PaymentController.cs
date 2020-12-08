@@ -28,6 +28,16 @@ namespace REST.Controllers
 
         #endregion 
 
+        public IActionResult FrmBill(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var item = new ViewFrmPayment();
+
+            item = LoadOrder(id, branchid);
+
+            return View(item);
+        }
+
         public IActionResult FrmPayment(string id = null)
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
@@ -209,6 +219,55 @@ namespace REST.Controllers
             }            
         }
 
+        public ViewFrmPayment LoadOrder(string id, string branchid)
+        {
+            var item = new ViewFrmPayment();
+            // รายการอาหาร
+            var _GetOrder = new GetSF_OrderController(_db);            
+            var _order = _GetOrder.OrderSubTable(id, null, branchid);
+            
+            var _setting = _db.Setting.FirstOrDefault();
+
+            // ข้อมูลโต๊ะ
+            var _Table = new GetCD_TableController(_db);
+            var table = _Table.TableById(id, branchid);
+
+            // Setting
+            var _get = new GetRunningController(_db);
+            string DocRunning = _get.Running("Bill", branchid);
+
+            item.BillId = DocRunning;
+            item.TableId = table.TableId;
+            item.TableName = table.TableName;
+
+            decimal price = 0;
+            foreach (var i in _order)
+            {
+                if (i.Status != 4)
+                {
+                    price += i.Price * i.Amount;
+                }
+            }
+            item.OrderSub = _order;
+            // หาค่า Vat
+            var V = price * _setting.Tax / 107;
+            item.VatPersen = "0.00";
+            item.VatBath = "0.00";
+            // หาค่า ServiceCharge
+            var B = price * _setting.Service / 100;
+            item.ServicePersen = Share.Cnumber(Share.FormatDouble(_setting.Service), 2);
+            item.ServiceBath = Share.Cnumber(Share.FormatDouble(B), 2);
+            item.MemberPersen = "0.00";
+            item.MemberBath = "0.00";
+            item.Persen = "0.00";
+            item.PersenBath = "0.00";
+            var sum = price + B;
+            item.SumBalance = Share.Cnumber(Share.FormatDouble(sum), 2);
+            item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
+
+            return item;
+        }
+
         public ViewFrmPayment LoadData(string id, string branchid)
         {
             var item = new ViewFrmPayment();
@@ -246,110 +305,6 @@ namespace REST.Controllers
             return item;
         }        
 
-        public Boolean SaveData(ViewFrmPayment info, string branchid)
-        {         
-            var _Get = new GetRunningController(_db);
-            var _order = new SF_OrderController(_db);
-            string Doc = null;
-            try
-            {
-                /* Get Running */
-                Doc = _Get.Running("Payment", branchid);
-
-                // Save Payment
-                var item = new SF_Payment();
-                item.PaymentId = Doc;
-                item.TableId = info.TableId;
-                //item.Total = Share.FormatDecimal(info.Total);
-                //item.Persen = info.Persen;
-                item.MemberId = info.MemberId;
-                //item.Rebate = info.Rebate;
-                //item.Score = info.Score;
-                item.Balance = Share.FormatDecimal(info.Balance);
-                //item.PayType = info.PayType;
-                //item.MoneyPut = info.MoneyPut;
-                //item.MoneyChange = info.MoneyChange;
-                item.Dates = Share.FormatDate(DateTime.Now).Date;
-                /* DATA */
-                item.BranchId = branchid;
-                item.CreateUser = User.Identity.Name;
-                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
-                item.UpdateUser = User.Identity.Name;
-                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
-
-                _db.SF_Payment.Add(item);
-                _db.SaveChanges();
-
-                // Save Payment Sub
-                var result = _db.SF_OrderSub.Where(x => x.TableId == info.TableId && x.BranchId == branchid).ToList();
-                foreach (var row in result)
-                {
-                    var itemsub = new SF_PaymentSub();
-                    itemsub.PaymentId = Doc;
-                    itemsub.i = row.i;
-                    //itemsub.TableId = row.TableId;
-                    itemsub.FoodId = row.FoodId;
-                    itemsub.Amount = row.Amount;
-                    itemsub.Price = row.Price;
-                    //itemsub.Status = row.Status;
-                    itemsub.BranchId = branchid;
-
-                    _db.SF_PaymentSub.Add(itemsub);
-                    _db.SaveChanges();
-                }
-
-                // Set Running
-                _Get.SetRunning("Payment", Doc, branchid);
-
-                // Set Update Table Status 1
-                _order.UpdateTable(info.TableId, 1, branchid);
-
-                // Remove Order
-                var order = _db.SF_Order.Where(x => x.TableId == info.TableId && x.BranchId == branchid).ToList();
-                _db.SF_Order.RemoveRange(order);
-                _db.SaveChanges();
-
-                // Remove OrderSub
-                var ordersub = _db.SF_OrderSub.Where(x => x.TableId == info.TableId && x.BranchId == branchid).ToList();
-                _db.SF_OrderSub.RemoveRange(ordersub);
-                _db.SaveChanges();
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.InnerException.Message);
-                Alert("", "Error Data !", Enums.NotificationType.error);
-                return false;
-            }
-        }
-
-        public ViewFrmPayment info(ViewFrmPayment info)
-        {
-            var item = new ViewFrmPayment();
-
-            return item;
-        }
-
-        public IActionResult Payment1(string id)
-        {
-            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;            
-            var _Get1 = new GetCD_TableController(_db);
-            var _Get2 = new GetSF_OrderController(_db);
-            ViewBag.Table = _Get1.TableById(id, branchid);
-            ViewBag.OrderSub = _Get2.OrderSub(id, null, branchid);
-            var order = _db.SF_Order.Where(x => x.TableId == id && x.BranchId == branchid).ToList();
-            decimal Total = 0;
-            foreach (var row in order)
-            {
-                Total += row.PriceTotal;
-            }
-            var item = new ViewFrmPayment();
-            //item.Total = Total.ToString("N2");
-            item.Balance = Total.ToString("N2");
-            return View(item);
-        }
-
         [HttpPost]
         public IActionResult ShowMember(string id)
         {
@@ -363,81 +318,6 @@ namespace REST.Controllers
             item.Rebate = member.Rebate;
             item.Score = member.Score;
             return Json(new { data = item });
-        }
-
-        [Route("/Payment/{id}")]
-        public IActionResult Index(string id)
-        {
-            // ข้อมูล OrderSub
-            var OrderSub = GetOrderSub(id);
-            ViewBag.OrderSub = OrderSub;
-
-            // รหัส Table Id
-            ViewBag.TableId = id;
-
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult Paymenta(string TableId)
-        {
-            string Status = null;
-
-            var BranchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-
-            var DT = new DataTable();
-            var sql = $"SELECT * FROM SF_Order WHERE TableId = '{TableId}' AND BranchId = '{BranchId}'";
-            using (var command = _db.Database.GetDbConnection().CreateCommand())
-            {
-                command.CommandText = sql;
-                _db.Database.OpenConnection();
-                using (var data = command.ExecuteReader())
-                {
-                    DT.Load(data);
-                }
-            }
-
-            if(DT.Rows.Count > 0)
-            {
-                // Delete OrderSub
-                var Delete_OrderSub = $"DELETE FROM SF_OrderSub WHERE TableId = '{TableId}' AND BranchId = '{BranchId}'";
-                using (var command = _db.Database.GetDbConnection().CreateCommand())
-                {
-                    command.CommandText = Delete_OrderSub;
-                    _db.Database.OpenConnection();
-                    using (var data = command.ExecuteReader())
-                    {
-                        data.Read();
-                    }
-                }
-
-                // Delete Order
-                var Delete_Order = $"DELETE FROM SF_Order WHERE TableId = '{TableId}' AND BranchId = '{BranchId}'";
-                using (var command = _db.Database.GetDbConnection().CreateCommand())
-                {
-                    command.CommandText = Delete_Order;
-                    _db.Database.OpenConnection();
-                    using (var data = command.ExecuteReader())
-                    {
-                        data.Read();
-                    }
-                }
-
-                // Update Status Table
-                var Item = new CD_Table();
-                Item = _db.CD_Table.FirstOrDefault(x => x.TableId == TableId && x.BranchId == BranchId);
-
-                Item.TableST = 1;
-
-                _db.CD_Table.Update(Item);
-                _db.SaveChanges();
-                                
-            }
-
-            Status = "success";
-
-            AlertTop("ชำระเงินเรียบร้อยแล้ว !", NotificationType.success);
-            return Json(new { data = Status });
         }
 
         // ------

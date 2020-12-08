@@ -67,7 +67,7 @@ namespace REST.Controllers
             var item = _Get.TableById(id, branchid);
             ViewBag.Table = item;
             ViewBag.Food = _db.CD_Food.Where(x => x.BranchId == branchid).ToList();
-            ViewBag.Order = _Order.OrderSub(id, null, branchid);
+            ViewBag.Order = _Order.OrderSub(id, null, "1", branchid);
             if (mode == null)
             {
                 if (HttpContext.Session.GetString("Session_Order") != null)
@@ -238,9 +238,9 @@ namespace REST.Controllers
                 decimal PTotal = 0;
 
                 // ค้นหาออร์เดอร์ว่ามี ออร์เดอร์อยู่ไหม ถ้านับออร์เดอร์เพิ่ม ++
-                var Order = _db.SF_Order.Where(x => x.TableId == id && x.BranchId == branchid).ToList();
+                var Order = _db.SF_Order.Where(x => x.TableId == id && x.Success == 1 && x.BranchId == branchid).ToList();
 
-                i = Order.Count + 1;
+                //i = Order.Count + 1;
 
                 // หาจำนวนเงินทั่้งหมด
                 foreach (var row in Results)
@@ -267,6 +267,7 @@ namespace REST.Controllers
                 //Svae Order Sub
                 foreach (var row in Results)
                 {
+                    i++;
                     var ItemSub = new SF_OrderSub();
                     ItemSub.OrderId = DocRunning;
                     ItemSub.i = i;
@@ -426,14 +427,25 @@ namespace REST.Controllers
         // --                                       --
         // -------------------------------------------
 
-        public IActionResult receiveOrder(string OrderId, string FoodId)
+        public IActionResult receiveOrder(string OrderId, string FoodId, string Overview = null)
         {
             var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            // save data status ordersub 2 = กำลังดำเนินการ
+            // save data status ordersub 2 = กำลังดำเนินการ - ใส่ข้อมูลคนทำอาหารรายการนั้น
             var i_OrderSub = _db.SF_OrderSub.FirstOrDefault(x => x.OrderId == OrderId && x.FoodId == FoodId && x.BranchId == branch);
             i_OrderSub.Status = 2;
+            i_OrderSub.UserId = User.Identity.Name;
             _db.SF_OrderSub.Update(i_OrderSub);
             _db.SaveChanges();
+
+            // ใส่ข้อมูลคนครัว คนทำอาหาร
+            var i_order = _db.SF_Order.FirstOrDefault(x => x.OrderId == OrderId && x.BranchId == branch);
+            if(i_order.UserId == null)
+            {
+                i_order.UserId = User.Identity.Name;
+                _db.SF_Order.Update(i_order);
+                _db.SaveChanges();
+            }
+
             // check status order = 1, 2
             var list1 = _db.SF_OrderSub.Where(x => x.OrderId == OrderId && x.Status == 1 || x.Status == 2 && x.BranchId == branch).ToList();
             if(list1.Count > 0)
@@ -447,10 +459,19 @@ namespace REST.Controllers
                 UpdateStatusOrder(OrderId, 3, branch);
             }
 
-            return RedirectToAction("FrmKC_OrderSub", "Kitchen", new { id = OrderId });
+            // ถ้าทำรายการจากหน้า Overview ให้กลับไปหน้า Overview
+            if (Overview != null)
+            {
+                return RedirectToAction("FrmKC_OrderList", "Kitchen");
+            }
+            else
+            {
+                return RedirectToAction("FrmKC_OrderSub", "Kitchen", new { id = OrderId });
+            }
+            
         }
 
-        public IActionResult completeOrder(string OrderId, string FoodId)
+        public IActionResult completeOrder(string OrderId, string FoodId, string Overview)
         {
             var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             // search order sub
@@ -478,9 +499,18 @@ namespace REST.Controllers
             {
                 // if status not equal to status 2 not possible
                 Alert("", "ไม่สามารถยืนยันอาหารได้ กรุณารับรายการอาหารก่อน", Enums.NotificationType.warning);
-            }            
+            }
 
-            return RedirectToAction("FrmKC_OrderSub", "Kitchen", new { id = OrderId });
+
+            // ถ้าทำรายการจากหน้า Overview ให้กลับไปหน้า Overview
+            if (Overview != null)
+            {
+                return RedirectToAction("FrmKC_OrderList", "Kitchen");
+            }
+            else
+            {
+                return RedirectToAction("FrmKC_OrderSub", "Kitchen", new { id = OrderId });
+            }
         }
 
         public IActionResult cancelOrder(string OrderId, string FoodId)

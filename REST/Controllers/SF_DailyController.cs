@@ -35,7 +35,7 @@ namespace REST.Controllers
         {
             var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var _Order = new GetSF_OrderController(_db);
-            ViewBag.Data = _Order.OrderSub(null, id, branch);
+            ViewBag.Data = _Order.OrderSub(null, id, null, branch);
             ViewBag.Desc = _Order.OrderById(id, branch);
             return View();
         }

@@ -3,12 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - REST</title>
+    <title>@ViewData["Title"] - Restaurant System</title>
     <link rel="stylesheet" href="~/Plugins/Bootstrap-4.5.2/css/bootstrap.css" />
     <link rel="stylesheet" href="~/Plugins/Fontawesome-Free-5.14.0/css/all.min.css" />
     <link rel="stylesheet" href="~/Plugins/SlimScroll-1.3.8/libs/prettify/prettify.css" />
     <link rel="stylesheet" href="~/StyleSheet/Main.css" />
-    <link rel="stylesheet" href="~/StyleSheet/Layout/_StyleStoreBackDashboard.css" />
+    <link rel="stylesheet" href="~/StyleSheet/Layout/_Kitchen.css" />
     <link rel="stylesheet" href="~/Plugins/ToastrAlert/toastr.css" />
     @RenderSection("Styles", required: false)
 </head>
@@ -44,57 +44,34 @@
         </div>
     </div>
 
-    <div>
-
-        <div class="wrapper d-flex">
-            <div class="sidemenu">
-                <div class="sidebar" id="Scoll">
-                    <div class="nav_header">
-                        <div class="text-center mt-3">
-                            <div class="round_header">
-                                <a asp-controller="Kitchen" asp-action="Index">
-                                    <img src="~/Images/System/Svg/P-KC.svg" class="rounded picture_header" />
-                                </a>
-                            </div>
-                            <div class="text_header mt-2">
-                                <a asp-controller="Kitchen" asp-action="Index" class="nav-link link_header">ระบบห้องครัว</a>
-                            </div>
-                        </div>
-                    </div>
-                    <hr />
+        <div class="wrapper">
+            <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-white nav__bar">                
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <a class="navbar-brand" href="@Url.Action("FrmKC_Order", "Kitchen")">
+                        <img src="~/Images/System/Svg/P-KC.svg" width="30" height="30" alt="" class="d-inline-block align-top" loading="lazy">
+                        <span class="font-weight-bold">ระบบห้องครัว</span>
+                    </a>
                     <ul class="navbar-nav">
-                        <li class="nav-item item_click_OrderDate">
-                            <a asp-controller="Kitchen" asp-action="FrmKC_Order" class="nav-link px-2">
-                                <i class="far fa-clock nav_icon"></i>
-                                <span class="nav_text">ออเดอร์รายวัน</span>
-                            </a>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="@Url.Action("FrmKC_Order", "Kitchen")">ออเดอร์รายวัน</a>
                         </li>
-                    </ul>
+                        <li class="nav-item active">
+                            <a class="nav-link" href="@Url.Action("FrmKC_OrderList", "Kitchen")">รายการอาหารรายวัน</a>
+                        </li>
+                    </ul>                    
                 </div>
-            </div>
-
-            <div class="content">
-                <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-white nav__bar">
-                    <div class="container-fluid">
-                        <div class="d-flex justify-content-start">
-                            <a href="#" class="sidemenuClick button_hide navbar-text"><i class="fas fa-align-left"></i></a>
-                        </div>
-                        <div class="d-flex justify-content-center">
-                            @ViewData["System"] - Restaurant System
-                        </div>
-                        <div class="d-flex justify-content-end navbar-nav">
-                            <a class="nav-item nav-link active" href="#" data-toggle="modal" data-target=".bd-example-modal-sm"><i class="fas fa-user-cog"></i></a>
-                        </div>
-                    </div>
-                </nav>
-
-                <div class="container-fluid">
-                    @RenderBody()
+                <div class="d-flex justify-content-end navbar-nav">
+                    <a class="nav-item nav-link active" href="#" data-toggle="modal" data-target=".bd-example-modal-sm"><i class="fas fa-user-cog"></i></a>
                 </div>
+            </nav>
+
+            <div class="container-fluid">
+                @RenderBody()
             </div>
         </div>
-
-    </div>
 
     <script src="~/Plugins/Jquery-3.5.1/jquery-3.5.1.js"></script>
     <script src="~/Plugins/Bootstrap-4.5.2/js/bootstrap.bundle.min.js"></script>

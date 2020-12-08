@@ -16,6 +16,8 @@ namespace REST.ViewModels
         public decimal Amount { get; set; }
         public decimal Price { get; set; }
         public int Status { get; set; } // 1 = ยังไม่ได้ทำ, 2 = กำลังดำเนินการ, 3 = เสร็จแล้ว
+        public int Options { get; set; } // 1 = ทานที่ร้าน, 2 = กลับบ้าน
         public string BranchId { get; set; }
+        public string Name { get; set; }
     }
 }

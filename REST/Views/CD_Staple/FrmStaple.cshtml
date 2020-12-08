@@ -8,7 +8,7 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col-xl mx-auto">
                 <!-- Header -->
                 <section class="FrmHeader">
                     <div class="d-flex mb-2">
@@ -74,11 +74,11 @@
                                         <div class="form-group">
                                             <div class="form-check form-check-inline">
                                                 <input asp-for="Tax" type="radio" id="T1" name="Tax" value="1" class="form-check-input" checked>
-                                                <label class="form-check-label col-form-label col-form-label-sm" for="T1">ภาษี</label>
+                                                <label class="form-check-label col-form-label col-form-label-sm" for="T1">ภาษี <span class="text-danger">(V)</span></label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input asp-for="Tax" type="radio" id="T2" name="Tax" value="2" class="form-check-input">
-                                                <label class="form-check-label col-form-label col-form-label-sm " for="T2">ไม่คิดภาษี</label>
+                                                <label class="form-check-label col-form-label col-form-label-sm " for="T2">ไม่คิดภาษี <span class="text-danger">(N)</span></label>
                                             </div>
                                         </div>
                                     </div>
@@ -135,7 +135,7 @@
                 <section>
                     <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;ประวัติการซื้อ</p>
                     <table class="table table-md table-bordered">                        
-                        <thead class="thead-black">
+                        <thead class="thead-primary-light">
                             <tr>
                                 <th class="text-center" style="width:5%"><i class="fas fa-sort"></i></th>
                                 <th class="text-center">ชื่อ</th>

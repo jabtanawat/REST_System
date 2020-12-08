@@ -14,5 +14,6 @@ namespace REST.ViewModels
         public string Dates { get; set; }
         public decimal PriceTotal { get; set; }
         public int ST { get; set; }
+        public string Name { get; set; }
     }
 }

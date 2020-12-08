@@ -44,18 +44,26 @@ namespace REST.Controllers
 
         public IActionResult FrmKC_OrderSub(string id)
         {
-            var branch = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var _Order = new GetSF_OrderController(_db);
-            ViewBag.Data = _Order.OrderSub(null, id, branch);
-            ViewBag.Desc = _Order.OrderById(id, branch);
+            var LOrderSub = _Order.OrderSub(null, id, null, branchid);
+            ViewBag.Data = _Order.ListOrderSub(LOrderSub, branchid);
+            ViewBag.Desc = _Order.OrderById(id, branchid);
+            return View();
+        }
+
+        public IActionResult FrmKC_OrderList()
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var _Order = new GetSF_OrderController(_db);
+            var LOrderSub = _Order.OrderList(DateTime.Now.ToString("dd/MM/yyyy"), branchid);
+            ViewBag.Data = _Order.ListOrderSub(LOrderSub, branchid);
             return View();
         }
 
         // -----------------------------------
         // --           FUNCTION            --
         // -----------------------------------
-
-       
 
     }
 }

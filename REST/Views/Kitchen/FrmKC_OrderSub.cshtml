@@ -7,7 +7,7 @@
     var Order = ViewBag.Desc;
 }
 
-<div class="card">
+<div class="card rounded-0">
     <div class="card-body">
         <div class="row">
             <div class="col mx-auto">
@@ -64,6 +64,16 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">คนครัว :</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" value="@Order.Name" readonly class="form-control-plaintext form-control-sm border-bottom">
+                                        </div>
+                                    </div>
+                                </div>                                
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -76,10 +86,10 @@
                                 <thead class="thead-black">
                                     <tr>
                                         <th class="text-center" style="width:5%;">ลำดับ</th>
-                                        <th class="text-center">รหัส</th>
                                         <th class="text-center">ชื่ออาหาร</th>
                                         <th class="text-center text-info" style="width:5%;"><i class="fas fa-info-circle"></i></th>
-                                        <th class="text-center" style="width:12%;">จำนวน</th>
+                                        <th class="text-center" style="width:15%;">จำนวน</th>
+                                        <th class="text-center" style="width:20%;">คนครัว</th>
                                         <th class="text-center" colspan="2"><i class="fas fa-project-diagram"></i></th>
                                     </tr>
                                 </thead>
@@ -92,44 +102,37 @@
                                             {
                                                 x++;
                                                 <tr>
-                                                    <td class="text-center">@x</td>
-                                                    <td>@row.FoodId</td>
+                                                    <td class="text-center">@x</td>                                                    
                                                     <td>@row.FoodName</td>
                                                     @if (row.Status == 1)
                                                     {
                                                         <td class="text-center text-danger"><i class="far fa-times-circle"></i></td>
                                                         <td class="text-right">@row.Amount</td>
+                                                        <td class="text-center">@row.Name</td>
                                                         <td class="text-center bg-primary-light" style="width:6%;">
-                                                            @*<button class="btn btn-block btn-table-sm btn-primary" onclick="receiveOrder('@row.OrderId', '@row.FoodId')"><i class="fas fa-clipboard-check"></i></button>*@
                                                             <a href="@Url.Action("receiveOrder", "SF_Order", new { OrderId = row.OrderId, FoodId = row.FoodId})" class="text-primary"><i class="fas fa-mitten"></i> รับอาหาร</a>
                                                         </td>
                                                         <td class="text-center bg-success-light" style="width:6%;">
-                                                            @*<button class="btn btn-block btn-table-sm btn-success" onclick="completeOrder('@row.OrderId', '@row.FoodId')"><i class="far fa-thumbs-up"></i></button>*@
                                                             <a href="@Url.Action("completeOrder", "SF_Order", new { OrderId = row.OrderId, FoodId = row.FoodId})" class="text-success"><i class="fas fa-check"></i> เสร็จแล้ว</a>
                                                         </td>
-                                                        @*<td style="width:4%;">
-                                                <button class="btn btn-block btn-table-sm btn-danger" onclick="cancelOrder('@row.OrderId', '@row.FoodId')"><i class="fas fa-ban"></i></button>
-                                            </td>*@
                                                     }
                                                     else if (row.Status == 2)
                                                     {
                                                         <td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>
                                                         <td class="text-right">@row.Amount</td>
+                                                        <td class="text-center">@row.Name</td>
                                                         <td class="text-center text-primary bg-primary-light" style="width:6%;">
                                                             <i class="fas fa-mitten"></i>
                                                         </td>
                                                         <td class="text-center bg-success-light" style="width:6%;">
                                                             <a href="@Url.Action("completeOrder", "SF_Order", new { OrderId = row.OrderId, FoodId = row.FoodId})" class="text-success"><i class="fas fa-check"></i> เสร็จแล้ว</a>
-                                                            @*<button class="btn btn-block btn-table-sm btn-success" onclick="completeOrder('@row.OrderId', '@row.FoodId')"><i class="far fa-thumbs-up"></i></button>*@
                                                         </td>
-                                                        @*<td style="width:4%;">
-                                                <button class="btn btn-block btn-table-sm btn-danger" onclick="cancelOrder('@row.OrderId', '@row.FoodId')"><i class="fas fa-ban"></i></button>
-                                            </td>*@
                                                     }
                                                     else if (row.Status == 3)
                                                     {
                                                         <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                                                         <td class="text-right">@row.Amount</td>
+                                                        <td class="text-center">@row.Name</td>
                                                         <td class="text-center text-success bg-success-light" colspan="3" style="width:12%;">
                                                             <i class="fas fa-check"></i>
                                                         </td>
@@ -138,6 +141,7 @@
                                                     {
                                                         <td class="text-center text-danger">ยกเลิก</td>
                                                         <td class="text-right">@row.Amount</td>
+                                                        <td class="text-center">@row.Name</td>
                                                         <td class="text-center text-danger" colspan="2" style="width:12%;">
                                                             <i class="fas fa-ban"></i>
                                                         </td>

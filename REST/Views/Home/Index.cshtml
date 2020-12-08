@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Home";
+    ViewData["Title"] = "หน้าหลัก";
     Layout = "_LayoutHome";
 }
 
@@ -9,7 +9,7 @@
 
 <div class="container">    
     <section class="form-system">
-        <h3 class="text-center text-white mb-4">@User.Claims.FirstOrDefault(c => c.Type == "BranchName")?.Value</h3>
+        <h3 class="text-center mb-4">@User.Claims.FirstOrDefault(c => c.Type == "BranchName")?.Value</h3>
         <div class="row">
             <div class="col-lg-4 col-md-6 mb-3">
                 <a href="@Url.Action("Index", "StoreFront")" class="text-decoration-none">
@@ -24,7 +24,7 @@
                 </a>                
             </div>
             <div class="col-lg-4 col-md-6 mb-3">
-                <a href="@Url.Action("Index", "Stock")" class="text-decoration-none">
+                <a href="@Url.Action("Index", "ST_Store")" class="text-decoration-none">
                     <div class="card h-100" id="Stock">
                         <div class="text-center">
                             <i class="fas fa-truck-loading icon-home"></i>
@@ -60,7 +60,7 @@
                 </a>                
             </div>
             <div class="col-lg-4 col-md-6 mb-3">
-                <a href="@Url.Action("Index", "Kitchen")" class="text-decoration-none">
+                <a href="@Url.Action("FrmKC_Order", "Kitchen")" class="text-decoration-none">
                     <div class="card h-100" id="Kitchen">
                         <div class="text-center">
                             <i class="fas fa-utensils icon-home"></i>

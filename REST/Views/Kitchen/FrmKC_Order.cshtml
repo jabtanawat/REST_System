@@ -11,7 +11,7 @@
     <link href="~/Plugins/Datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 }
 
-<div class="card">
+<div class="card rounded-0">
     <div class="card-body">
         <div class="row">
             <div class="col mx-auto">
@@ -86,7 +86,7 @@
 
                     <div class="d-flex mb-3">
                         <div class="mr-auto">
-                            <div hidden><button class="btn btn-sm btn-info" type="button"><i class="fas fa-globe-europe"></i>&nbsp;ทั้งหมด</button></div>
+                            <div class="font-weight-bold"><i class="fas fa-greater-than"></i>&nbsp;ออเดอร์รายวัน</div>
                         </div>
                         <div class="ml-2">
                             <div class="input-group input-group-sm">
@@ -107,7 +107,7 @@
                     <div class="card border-0">
                         <div class="card-body table-responsive p-0" scroll>
                             <table class="table table-md table-bordered table-head-fixed text-nowrap">
-                                <thead class="thead-black">
+                                <thead class="thead-primary-light">
                                     <tr>
                                         <th class="text-center" style="width:5%;">ลำดับ</th>
                                         <th class="text-center">เลขที่ออเดอร์</th>
@@ -199,7 +199,7 @@
             });
         });
 
-        $('#txtdate').on('change', function () {
+        document.getElementById('btnSearch').addEventListener('click', () => {
             const date = $('#txtdate').val()
             const tp = $('#table-body')
             tp.empty()
@@ -215,7 +215,7 @@
                                 + `<td class="text-center">${x}</td>`
                                 + `<td>${val.orderId}</td>`
                                 + `<td class="text-center">${val.dates}</td>`
-                                + `<td class="text-center">${val.tableName}</td>`
+                                + `<td>${val.tableName}</td>`
                                 if (val.st == 1) {
                                     t += `<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>`
                                 } else if (val.st == 2) {
@@ -224,13 +224,13 @@
                                     t += `<td class="text-center text-success"><i class="far fa-check-circle"></i></td>`
                                 }
                                 t += `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
-                                + `<td class="text-center"><a href="${link}" class="btn btn-table-sm btn-info"><i class="far fa-eye"></i></td>`
+                                + `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-eye"></i></td>`
                                 + '</tr>';
 
                             $('#table-body').append(t)
                         })
                     } else {
-                        t = '<tr><td colspan="7" class="text-center"> no order</td></tr>';
+                        t = '<tr><td colspan="7" class="text-center text-danger">ไม่มีรายการ</td></tr>';
                         $('#table-body').append(t)
                     }
 
@@ -238,43 +238,43 @@
             )
         })
 
-        //function Scroll() {
-        //    //var height_P = $(window).height() - $('.navbar').height() - 140
-        //    $('[scroll]').slimScroll({
-        //        height: $(window).height() - $('.navbar').height() - 140,
-        //        railBorderRadius: 0,
-        //        railVisible: true
-        //    });
-        //}
+        document.getElementById('btnSearchAll').addEventListener('click', () => {
+            const date = $('#txtdate').val()
+            const tp = $('#table-body')
+            tp.empty()
+            let x = 0;
+            var t;
+            $.get("@Url.Action("GetSF_Order", "api")" + "/AOrder",
+                function (data, status) {
+                    if (data.length > 0) {
+                        $.each(data, function (index, val) {
+                            x++;
+                            var link = `@Url.Action("FrmKC_OrderSub", "Kitchen")` + `/` + `${val.orderId}`;
+                            t = '<tr>'
+                                + `<td class="text-center">${x}</td>`
+                                + `<td>${val.orderId}</td>`
+                                + `<td class="text-center">${val.dates}</td>`
+                                + `<td>${val.tableName}</td>`
+                                if (val.st == 1) {
+                                    t += `<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>`
+                                } else if (val.st == 2) {
+                                    t += `<td class="text-center text-warning"><i class="fas fa-diagnoses"></i></td>`
+                                } else {
+                                    t += `<td class="text-center text-success"><i class="far fa-check-circle"></i></td>`
+                                }
+                                t += `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
+                                + `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-eye"></i></td>`
+                                + '</tr>';
 
-        $(".dropdown-item").on("click", function () {
-            $(this).addClass("active").siblings().removeClass("active");
+                            $('#table-body').append(t)
+                        })
+                    } else {
+                        t = '<tr><td colspan="7" class="text-center text-danger">ไม่มีรายการ</td></tr>';
+                        $('#table-body').append(t)
+                    }
 
-            var t = '<tr>'
-                + '<td class="text-center">10</td>'
-                + '<td>1111</td>'
-                + '<td class="text-center">16/07/2539</td>'
-                + '<td class="text-center">Z1</td>'
-                + '<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>'
-                + '<td class="text-right">200</td>'
-                + '<td class="text-center"><a href="#" class="btn btn-table-sm btn-info"><i class="fas fa-search"></i></a></td>'
-                + '</tr>';
-
-            $('#table-body').append(t)
-
-            var t = '<tr>'
-                + '<td class="text-center">11</td>'
-                + '<td>1111</td>'
-                + '<td class="text-center">16/07/2539</td>'
-                + '<td class="text-center">Z1</td>'
-                + '<td class="text-center text-danger"><i class="far fa-times-circle"></i></td>'
-                + '<td class="text-right">200</td>'
-                + '<td class="text-center"><a href="#" class="btn btn-table-sm btn-info"><i class="fas fa-search"></i></a></td>'
-                + '</tr>';
-
-            $('#table-body').append(t)
-        });
-
-
+                }
+            )
+        })      
     </script>
 }

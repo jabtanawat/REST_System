@@ -14,6 +14,8 @@ namespace REST.ViewModels
         public string MemberId { get; set; }
         public string MemberName { get; set; }
         public string Balance { get; set; }
+        public string VatPersen { get; set; }
+        public string VatBath { get; set; }
         public string ServicePersen { get; set; }
         public string ServiceBath { get; set; }
         public string MemberPersen { get; set; }
@@ -36,5 +38,7 @@ namespace REST.ViewModels
 
 
         public List<ViewSF_BillSub> BillSub { get; set; }
+
+        public List<ViewSF_OrderSub> OrderSub { get; set; }
     }
 }

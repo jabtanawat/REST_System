@@ -167,7 +167,7 @@
         });
 
         document.querySelector("[btn-bill]").addEventListener('click', () => {
-             Swal.fire({
+             @*Swal.fire({
                 text: "ต้องการเช็คบิลหรือไม่ ?",
                 icon: 'warning',
                 showCancelButton: true,
@@ -177,9 +177,11 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href = '@Url.Action("CheckBill", "StoreFront", new { id = _table.TableName })'
+                    //window.location.href = '@Url.Action("CheckBill", "StoreFront", new { id = _table.TableName })'
+                    window.location.href = '@Url.Action("FrmBill", "SF_Payment", new { id = _table.TableName })'
                 }
-            })
+            })*@
+            window.location.href = '@Url.Action("FrmBill", "SF_Payment", new { id = _table.TableName })'
         })
     </script>
 }

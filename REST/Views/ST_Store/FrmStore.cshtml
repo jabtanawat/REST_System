@@ -1,7 +1,6 @@
 ﻿@model REST.ViewModels.ViewST_Trans;
 @{
-    ViewData["Title"] = "Store";
-    ViewData["System"] = "บันทึกรายการสั่งซื้อ";
+    ViewData["Title"] = "บันทึกรายการสั่งซื้อ";
     Layout = "_Stock";
 }
 
@@ -10,18 +9,18 @@
     <link href="~/Plugins/Datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 }
 
-<div class="card">
+<div class="card rounded-0">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col-xl mx-auto">
                 <!-- Header -->
                 <section>
-                    <div class="d-flex mb-2">
+                    @*<div class="d-flex mb-2">
                         <div class="mr-auto">
                             <a href="@Url.Action("FrmStore", "ST_Store", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
                         </div>
                     </div>
-                    <hr />
+                    <hr />*@
                 </section>
                 <!-- Header Form -->
                 <section>
@@ -35,16 +34,16 @@
                                     {
                                         if (ViewData["DocRunning"].ToString() != "")
                                         {
-                                            <input asp-for="Document" id="txtDocument" type="text" value="@ViewData["DocRunning"].ToString()" class="form-control form-control-sm" readonly />
+                                            <input asp-for="Document" id="txtDocument" type="text" value="@ViewData["DocRunning"].ToString()" class="form-control-plaintext form-control-sm border-bottom" readonly />
                                         }
                                         else
                                         {
-                                            <input asp-for="Document" id="txtDocument" type="text" class="form-control form-control-sm" readonly />
+                                            <input asp-for="Document" id="txtDocument" type="text" class="form-control-plaintext form-control-sm border-bottom" readonly />
                                         }
                                     }
                                     else
                                     {
-                                        <input asp-for="Document" id="txtDocument" type="text" class="form-control form-control-sm" />
+                                        <input asp-for="Document" id="txtDocument" type="text" class="form-control-plaintext form-control-sm border-bottom" />
                                     }
                                 </div>
                             </div>
@@ -57,7 +56,7 @@
                                         <div class="input-group-prepend">
                                             <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
                                         </div>
-                                        <input asp-for="DateDocument" id="txtDateDocument" type="text" class="form-control datepicker" placeholder="dd/mm/yyyy">
+                                        <input asp-for="DateDocument" id="txtDateDocument" type="text" class="form-control-plaintext form-control border-bottom datepicker" placeholder="dd/mm/yyyy">
                                     </div>
                                 </div>
                             </div>
@@ -67,22 +66,22 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">เลขที่ใบกำกับภาษี :</label>
+                                <div class="col-sm-7">
+                                    <input asp-for="TaxNumber" id="txtTaxNumber" type="text" class="form-control-plaintext form-control-sm border-bottom" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">วันที่ใบกำกับภาษี :</label>
                                 <div class="col-sm-7">
                                     <div class="input-group input-group-sm">
                                         <div class="input-group-prepend">
                                             <span class="btn btn-primary"><i class="far fa-calendar-alt"></i></span>
                                         </div>
-                                        <input asp-for="DateTax" id="txtDateTax" type="text" class="form-control datepicker" placeholder="dd/mm/yyyy">
+                                        <input asp-for="DateTax" id="txtDateTax" type="text" class="form-control-plaintext form-control border-bottom datepicker" placeholder="dd/mm/yyyy">
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">เลขที่ใบกำกับภาษี :</label>
-                                <div class="col-sm-7">
-                                    <input asp-for="TaxNumber" id="txtTaxNumber" type="text" class="form-control form-control-sm" />
                                 </div>
                             </div>
                         </div>
@@ -95,7 +94,7 @@
                                 <div class="col-sm-7">
                                     <div class="input-group input-group-sm">
                                         <input asp-for="SupplierId" id="txtSupplierId" type="hidden" />
-                                        <input asp-for="SupplierName" id="txtSupplierName" type="text" class="form-control">
+                                        <input asp-for="SupplierName" id="txtSupplierName" type="text" class="form-control-plaintext form-control border-bottom">
                                         <div class="input-group-append">
                                             <button class="btn btn-danger" type="button" onclick="clearSupplier()"><i class="fas fa-redo-alt"></i></button>
                                             <a class="btn btn-info" data-toggle="ajax-modal" data-target="#popupStaple" data-url="@Url.Action("_popupSupplier", "Modal")"><i class="fas fa-search"></i></a>
@@ -108,7 +107,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">เลขที่อ้างอิง :</label>
                                 <div class="col-sm-7">
-                                    <input asp-for="Reference" id="txtReference" type="text" class="form-control form-control-sm" />
+                                    <input asp-for="Reference" id="txtReference" type="text" class="form-control-plaintext form-control-sm border-bottom" />
                                 </div>
                             </div>
                         </div>
@@ -116,11 +115,11 @@
                 </section>
                 <!-- Table Form -->
                 <section>
-                    <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;รายการสั่งซื้อ</p>
+                    <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;รายการ</p>
                     <div class="card border-0">
                         <div class="card-body table-responsive p-0" scroll>
                             <table class="table table-md table-bordered table-head-fixed" id="tableStaple">
-                                <thead class="thead-black">
+                                <thead class="thead-primary-light">
                                     <tr>
                                         <th class="text-center" style="width:15%;">รหัส</th>
                                         <th class="text-center">ชื่อ</th>
@@ -176,7 +175,7 @@
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ยอดรวมสุทธิ :</label>
                                 <div class="col-sm-7">
                                     <div class="input-group input-group-sm">
-                                        <input asp-for="SumBalance" id="txtSumBalance" type="text" class="form-control text-right" placeholder="0.00" readonly>
+                                        <input asp-for="SumBalance" id="txtSumBalance" type="text" class="form-control-plaintext form-control-sm border-bottom text-right pr-3" placeholder="0.00">
                                         <div class="input-group-append">
                                             <span class="input-group-text">บาท</span>
                                         </div>
@@ -222,7 +221,7 @@
             });
 
             $('[scroll]').slimScroll({
-                height: $(window).height() - 514,
+                height: 300,
                 railBorderRadius: 0,
                 railVisible: true,
                 distance: '-10px'

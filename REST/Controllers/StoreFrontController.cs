@@ -45,7 +45,7 @@ namespace REST.Controllers
             var _Table = new GetCD_TableController(_db);
             ViewBag.Table = _Table.TableById(id, branchid);
             var _OrderSub = new GetSF_OrderController(_db);
-            var OrderSub = _OrderSub.OrderSub(id, null, branchid);
+            var OrderSub = _OrderSub.OrderSub(id, null, null, branchid);
             if (OrderSub.Count > 0)
             {
                 ViewBag.OrderSub = OrderSub;
@@ -85,7 +85,13 @@ namespace REST.Controllers
             var _OrderSub = new GetSF_OrderController(_db);
             try
             {
-                var ordersub = _OrderSub.OrderSub(id, null, branchid);
+                var ordersub = _OrderSub.OrderSub(id, null, "1", branchid);
+
+                if(ordersub.Count == 0)
+                {
+                    Alert("", "ไม่มีรายการอาหาร !", Enums.NotificationType.warning);
+                    return RedirectToAction("FrmDataTable", "StoreFront", new { id = id });
+                }
 
                 var _get = new GetRunningController(_db);
                 string DocRunning = _get.Running("Bill", branchid);
@@ -103,6 +109,7 @@ namespace REST.Controllers
                 var item = new SF_Bill();
                 item.BillId = DocRunning;
                 item.TableId = id;
+                item.St = 1;
                 item.BillDt = Share.FormatDate(DateTime.Now).Date;
                 item.PriceTotal = PTotal;
                 item.BranchId = branchid;
@@ -135,13 +142,13 @@ namespace REST.Controllers
                 {
                     var itemSub = _db.SF_Order.FirstOrDefault(x => x.OrderId == row.OrderId && x.BranchId == branchid);
                     itemSub.Success = 2;
-                    _db.SF_Order.Add(itemSub);
+                    _db.SF_Order.Update(itemSub);
                     _db.SaveChanges();
                 }
 
-                // Updata Status Table = 3 อยู่ระหว่างรอชำระเงิน
+                // Updata Status Table = 1 สถานะว่าง
                 var table = _db.CD_Table.FirstOrDefault(x => x.TableId == id && x.BranchId == branchid);
-                table.TableST = 3;
+                table.TableST = 1;
                 _db.CD_Table.Update(table);
                 _db.SaveChanges();
 
