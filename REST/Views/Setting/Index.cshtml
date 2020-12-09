@@ -13,16 +13,16 @@
                     <div class="col-xl-10 mx-auto">
                         <form name="FrmSetting" method="post">
                             <div class="form-group row">
-                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">อัตราภาษีขาย :</label>
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ภาษีมูลค่าเพิ่ม <span class="text-danger">(ขาย)</span> :</label>
                                 <div class="col-sm-4">
-                                    <input asp-for="Tax" type="text" class="form-control form-control-sm text-right numberonly">
+                                    <input asp-for="TaxSell" type="text" class="form-control form-control-sm text-right numberonly">
                                 </div>
                                 <label class="col-sm-3 col-form-label col-form-label-sm">%</label>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">อัตราภาษีซื้อ :</label>
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ภาษีมูลค่าเพิ่ม <span class="text-danger">(ซื้อ)</span> :</label>
                                 <div class="col-sm-4">
-                                    <input type="text" class="form-control form-control-sm text-right numberonly">
+                                    <input asp-for="TaxBuy" type="text" class="form-control form-control-sm text-right numberonly">
                                 </div>
                                 <label class="col-sm-3 col-form-label col-form-label-sm">%</label>
                             </div>

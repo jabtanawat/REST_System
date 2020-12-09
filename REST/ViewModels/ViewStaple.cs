@@ -11,5 +11,7 @@ namespace REST.ViewModels
         public string StapleName { get; set; }
         public decimal Amount { get; set; }
         public string Unit { get; set; }
+        public int Tax { get; set; }
+        public string QtyBalance { get; set; }
     }
 }

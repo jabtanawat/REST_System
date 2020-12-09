@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "รายการที่ต้องสั่งซื้อ";
+    Layout = "_Stock";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" />
+}
+
+<div class="card rounded-0">
+    <div class="card-body" scroll>
+        <div class="row">
+            <div class="col-xl mx-auto">
+                <!-- Header -->
+                <section>
+                    <div class="d-flex justify-content-start mb-3">
+                        <div class="font-weight-bold">รายการที่ต้องสั่งซื้อ</div>
+                    </div>
+                </section>
+                <!-- Table -->
+                <section>
+                    <table id="DT_Table" class="table table-md table-hover table-bordered">
+                        <thead class="thead-primary-light">
+                            <tr>
+                                <th class="text-center" style="width:5%;"> ลำดับ </th>
+                                <th class="text-center" style="width:10%;"> รหัส </th>
+                                <th class="text-center"> ชื่อวัตถุดิบ และอุปกรณ์ </th>
+                                <th class="text-center" style="width:10%;"> จำนวนปัจจุบัน </th>
+                                <th class="text-center" style="width:10%;"> หน่วย </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                if (ViewBag.DataTable != null && ViewBag.DataTable.Count > 0)
+                                {
+                                    var x = 0;
+                                    foreach (var row in ViewBag.DataTable)
+                                    {
+                                        x++;
+                                        <tr>
+                                            <td class="text-center">@x</td>
+                                            <td>@row.StapleId</td>
+                                            <td>@row.StapleName</td>
+                                            <td class="text-right">@row.QtyBalance</td>
+                                            <td class="text-center">@row.Unit</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-center text-danger">ไม่มีรายการ</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Plugins/DataTables/datatables.min.js"></script>
+    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('[scroll]').slimScroll({
+                height: $(window).height() - $('.navbar').height() - 50,
+                railBorderRadius: 0,
+                railVisible: true,
+                distance: '-10px'
+            });
+        });
+    </script>
+}

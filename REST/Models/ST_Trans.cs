@@ -15,6 +15,8 @@ namespace REST.Models
         public string TaxNumber { get; set; }
         public string SupplierId { get; set; }
         public string Reference { get; set; }
+        public decimal SumTax { get; set; }
+        public decimal Tax { get; set; }
         public decimal SumBalance { get; set; }
         // -------------------------------------------------------
         public string BranchId { get; set; }

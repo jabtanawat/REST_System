@@ -10256,6 +10256,7 @@ a.text-dark:hover, a.text-dark:focus {
     .table-bordered td {
         /*border: 1px solid #dee2e6 !important;*/
         border: 1px solid #E3EBF6 !important;
+        /*border: 1px solid black !important;*/
     }
   .table-dark {
     color: inherit;

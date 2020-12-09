@@ -62,7 +62,7 @@ namespace REST.ApiControllers
         {
             var item = new ViewStaple();
             string sqlWhrer = null;
-            string sql = $"SELECT StapleId, StapleName, Unit "
+            string sql = $"SELECT StapleId, StapleName, Unit, Tax "
                     + $"FROM CD_Staple ";
 
             if (branchid != null)
@@ -90,7 +90,10 @@ namespace REST.ApiControllers
                     {
                         item.StapleId = data.GetString(0);
                         item.StapleName = data.GetString(1);
-                        item.Unit = data.GetString(2);
+                        if (!data.IsDBNull(2))
+                            item.Unit = data.GetString(2);
+                        if (!data.IsDBNull(3))
+                            item.Tax = data.GetInt32(3);
                     }
                 }
             }

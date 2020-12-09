@@ -40,6 +40,14 @@ namespace REST.Controllers
             return View();
         }
 
+        public IActionResult ViewStore()
+        {
+            var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
+            var _trans = new GetST_TransController(_db);
+            ViewBag.DataTable = _trans.StapleStore(branchid);
+            return View();
+        }
+
         public IActionResult FrmStore(string mode, string id = null)
         {
             var branchid = User.Claims.FirstOrDefault(b => b.Type == "BranchId").Value;
@@ -152,6 +160,8 @@ namespace REST.Controllers
                             item.TaxNumber = info.TaxNumber;
                             item.SupplierId = info.SupplierId;
                             item.Reference = info.Reference;
+                            item.SumTax = Share.FormatDecimal(info.SumTax);
+                            item.Tax = Share.FormatDecimal(info.Tax);
                             item.SumBalance = Share.FormatDecimal(info.SumBalance);
                             /* DATA */
                             item.BranchId = branchid;
@@ -172,15 +182,21 @@ namespace REST.Controllers
                                 {
                                     string id = result.StapleId;
                                     decimal amount = result.Amount;
+                                    string unit = result.Unit;
                                     decimal price = result.Price;
+                                    decimal discount = result.Discount;
                                     decimal total = result.Total;
+                                    string vat = result.Vat;
 
                                     var sub = new ST_TranSub();
                                     sub.Documents = info.Document;
                                     sub.StapleId = id;
                                     sub.Amount = amount;
+                                    sub.Unit = unit;
                                     sub.Price = price;
+                                    sub.Discount = discount;
                                     sub.Total = total;
+                                    sub.Vat = vat;
                                     sub.i = i;
                                     /* DATA */
                                     sub.BranchId = branchid;
@@ -206,10 +222,16 @@ namespace REST.Controllers
                         item = _db.ST_Trans.FirstOrDefault(x => x.Documents == info.Document);
 
                         // Save Trans                     
-                        item.DateTax = Share.FormatDate(info.DateTax).Date;
+                        if (info.DateTax != null)
+                            item.DateTax = Share.FormatDate(info.DateTax).Date;
+                        else
+                            item.DateTax = Share.FormatDate("25/08/2539").Date;
+
                         item.TaxNumber = info.TaxNumber;
                         item.SupplierId = info.SupplierId;
                         item.Reference = info.Reference;
+                        item.SumTax = Share.FormatDecimal(info.SumTax);
+                        item.Tax = Share.FormatDecimal(info.Tax);
                         item.SumBalance = Share.FormatDecimal(info.SumBalance);
                         /* DATA */
                         item.UpdateUser = User.Identity.Name;
@@ -235,15 +257,21 @@ namespace REST.Controllers
                             {
                                 string id = result.StapleId;
                                 decimal amount = result.Amount;
+                                string unit = result.Unit;
                                 decimal price = result.Price;
+                                decimal discount = result.Discount;
                                 decimal total = result.Total;
+                                string vat = result.Vat;
 
                                 var sub = new ST_TranSub();
                                 sub.Documents = info.Document;
                                 sub.StapleId = id;
                                 sub.Amount = amount;
+                                sub.Unit = unit;
                                 sub.Price = price;
+                                sub.Discount = discount;
                                 sub.Total = total;
+                                sub.Vat = vat;
                                 sub.i = i;
                                 /* DATA */
                                 sub.BranchId = branchid;
@@ -434,6 +462,8 @@ namespace REST.Controllers
             item.SupplierName = supplier.Title + " " + supplier.FirstName + " " + supplier.LastName;
 
             item.Reference = ST_Trans.Reference;
+            item.SumTax = Share.Cnumber(Share.FormatDouble(ST_Trans.SumTax), 2);
+            item.Tax = Share.Cnumber(Share.FormatDouble(ST_Trans.Tax), 2);
             item.SumBalance = Share.Cnumber(Share.FormatDouble(ST_Trans.SumBalance), 2);
 
             var _transub = new GetST_TransController(_db);

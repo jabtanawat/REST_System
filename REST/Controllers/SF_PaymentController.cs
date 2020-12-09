@@ -250,7 +250,7 @@ namespace REST.Controllers
             }
             item.OrderSub = _order;
             // หาค่า Vat
-            var V = price * _setting.Tax / 107;
+            var V = price * _setting.TaxSell / 107;
             item.VatPersen = "0.00";
             item.VatBath = "0.00";
             // หาค่า ServiceCharge

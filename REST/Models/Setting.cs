@@ -10,7 +10,8 @@ namespace REST.Models
     {
         [Key]
         public string id { get; set; }
-        public decimal Tax { get; set; }
+        public decimal TaxSell { get; set; }
+        public decimal TaxBuy { get; set; }
         public decimal Service { get; set; }
         public decimal Point { get; set; }
         public Boolean Perbunch { get; set; }

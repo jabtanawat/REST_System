@@ -9,19 +9,10 @@
     <link href="~/Plugins/Datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 }
 
-<div class="card rounded-0">
+<div class="card rounded-0 mb-3">
     <div class="card-body">
         <div class="row">
             <div class="col-xl mx-auto">
-                <!-- Header -->
-                <section>
-                    @*<div class="d-flex mb-2">
-                        <div class="mr-auto">
-                            <a href="@Url.Action("FrmStore", "ST_Store", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
-                        </div>
-                    </div>
-                    <hr />*@
-                </section>
                 <!-- Header Form -->
                 <section>
                     <!-- row -->
@@ -122,11 +113,14 @@
                                 <thead class="thead-primary-light">
                                     <tr>
                                         <th class="text-center" style="width:15%;">รหัส</th>
-                                        <th class="text-center">ชื่อ</th>
-                                        <th class="text-center" style="width:15%;">จำนวน</th>
-                                        <th class="text-center" style="width:15%;">ราคา/หน่วย</th>
+                                        <th class="text-center" style="width:25%;">ชื่อ</th>
+                                        <th class="text-center" style="width:10%;">จำนวน</th>
+                                        <th class="text-center" style="width:5%">หน่วย</th>
+                                        <th class="text-center" style="width:10%;">ราคา</th>
+                                        <th class="text-center" style="width:10%;">ส่วนลด%</th>
                                         <th class="text-center" style="width:15%;">ราคารวม</th>
-                                        <th class="text-center" style="width:5%;"><i class="fas fa-ellipsis-h"></i></th>
+                                        <th class="text-center" style="width:5%;">V/N</th>
+                                        <th class="text-center" style="width:5%;"> </th>
                                     </tr>
                                 </thead>
                                 <tbody id="bodyt">
@@ -138,19 +132,25 @@
                                             x++;
                                             string A = "A" + x;
                                             string P = "P" + x;
+                                            string D = "D" + x;
                                             string T = "T" + x;
                                             <tr>
                                                 <td>@row.StapleId</td>
                                                 <td>@row.StapleName</td>
                                                 <td>
-                                                    <input id="@A" type="text" value="@row.Amount" class="form-table-control form-table-control-sm text-right numberonly Amount">
+                                                    <input id="@A" type="text" value="@row.Amount" class="form-control-plaintext form-table-control-sm text-right numberonly Amount">
+                                                </td>
+                                                <td class="text-center">@row.Unit</td>
+                                                <td>
+                                                    <input id="@P" type="text" value="@row.Price" class="form-control-plaintext form-table-control-sm text-right numberonly Price">
                                                 </td>
                                                 <td>
-                                                    <input id="@P" type="text" value="@row.Price" class="form-table-control form-table-control-sm text-right numberonly Price">
+                                                    <input id="@D" type="text" value="@row.Discount" class="form-control-plaintext form-table-control-sm text-right text-danger numberonly Price">
                                                 </td>
                                                 <td>
-                                                    <input id="@T" type="text" value="@row.Total" class="form-table-control form-table-control-sm text-right numberonly Total">
+                                                    <input id="@T" type="text" value="@row.Total" class="form-control-plaintext form-table-control-sm text-right numberonly Total">
                                                 </td>
+                                                <td class="text-center">@row.Vat</td>
                                                 <td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>
                                             </tr>
                                         }
@@ -158,7 +158,7 @@
                                     else
                                     {
                                         <tr id="NoResults">
-                                            <td class="text-center text-danger" colspan="6">ไม่มีรายการ</td>
+                                            <td class="text-center text-danger" colspan="9">ไม่มีรายการ</td>
                                         </tr>
                                     }
                                 </tbody>
@@ -172,7 +172,29 @@
                     <div class="row justify-content-end">
                         <div class="col-md-6">
                             <div class="form-group row">
-                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ยอดรวมสุทธิ :</label>
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">มูลค่าสินค้าก่อนภาษีมูลค่าเพิ่ม :</label>
+                                <div class="col-sm-7">
+                                    <div class="input-group input-group-sm">
+                                        <input asp-for="SumTax" id="txtSumTax" type="text" class="form-control-plaintext form-control-sm border-bottom text-right pr-3" placeholder="0.00">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">บาท</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ภาษีมูลค่าเพิ่ม :</label>
+                                <div class="col-sm-7">
+                                    <div class="input-group input-group-sm">
+                                        <input asp-for="Tax" id="txtTax" type="text" class="form-control-plaintext form-control-sm border-bottom text-right pr-3" placeholder="0.00">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">บาท</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">มูลค่ารวม :</label>
                                 <div class="col-sm-7">
                                     <div class="input-group input-group-sm">
                                         <input asp-for="SumBalance" id="txtSumBalance" type="text" class="form-control-plaintext form-control-sm border-bottom text-right pr-3" placeholder="0.00">
@@ -209,8 +231,6 @@
     <script src="~/Plugins/Numeral/numeral.js"></script>
     <script>
         $(document).ready(function () {
-            $(".item_click_Store").addClass("active");
-
             $('.datepicker').datepicker({
                 language: 'th-th',
                 format: 'dd/mm/yyyy',
@@ -258,6 +278,13 @@
         })
 
         let x = 1;
+        let Tax = 0;
+        // ค้นหา Setting System
+        $.get("@Url.Action("GetSetting", "api")" + "/ASetting",
+            function (data, status) {
+                Tax = data.taxBuy;
+            }
+        )
 
         function show(id) {
 
@@ -277,21 +304,32 @@
 
                     var A = "A" + x;
                     var P = "P" + x;
+                    var D = "D" + x;
                     var T = "T" + x;
 
                     var rowItem = `<tr>`
                         + `<td>${data.stapleId}</td>`
                         + `<td>${data.stapleName}</td>`
                         + `<td>`
-                        + `<input id="${A}" type="text" class="form-table-control form-table-control-sm text-right numberonly Amount" placeholder="0.00" >`
+                        + `<input id="${A}" type="text" class="form-control-plaintext form-table-control-sm text-right numberonly Amount" placeholder="0.00" >`
+                        + `</td>`
+                        + `<td class="text-center">${data.unit}</td>`
+                        + `<td>`
+                        + `<input id="${P}" type="text" class="form-control-plaintext form-table-control-sm text-right numberonly Price" placeholder="0.00" >`
                         + `</td>`
                         + `<td>`
-                        + `<input id="${P}" type="text" class="form-table-control form-table-control-sm text-right numberonly Price" placeholder="0.00" >`
+                        + `<input id="${D}" type="text" class="form-control-plaintext form-table-control-sm text-right text-danger numberonly Discount" placeholder="0.00" >`
                         + `</td>`
                         + `<td>`
-                        + `<input id="${T}" type="text" readonly class="form-control-plaintext form-table-control form-table-control-sm text-right numberonly Total" placeholder="0.00" >`
+                        + `<input id="${T}" type="text" readonly class="form-control-plaintext form-table-control-sm text-right numberonly Total" placeholder="0.00" >`
                         + `</td>`
-                        + `<td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>`
+                    // ข้อมูลภาษี
+                    if (data.tax == 1) {
+                        rowItem += `<td class="text-center">V</td>`
+                    } else {
+                        rowItem += `<td class="text-center">N</td>`
+                    }
+                        rowItem += `<td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>`
                         + `</tr>`;
                     $("#bodyt").append(rowItem)
 
@@ -303,6 +341,7 @@
             $('#popupStaple').modal('hide')
         }
 
+        // Amount
         $(document).on('blur', '.Amount', function () {
             const id = $(this).attr("id")
             const number = id.substring(1)
@@ -313,19 +352,95 @@
 
             $(`#T${number}`).val(numeral(Total).format('0,0.00'))
 
-            // Sum
-
+            // Sum Data
             const table = document.getElementById('tableStaple')
             var sum = 0;
+            var vat = 0;
+            var vatSum = 0;
 
             for (let i = 1; i < table.rows.length; i++) {
-                const A_Total = table.rows[i].cells[4].getElementsByTagName("input")[0].value
+                const A_Total = table.rows[i].cells[6].getElementsByTagName("input")[0].value
+                const V = table.rows[i].cells[7].innerHTML
                 sum += parseFloat(A_Total.replace(/,/g, ''))
+                if (V == 'V') {
+                    vat += parseFloat(A_Total.replace(/,/g, '') * parseFloat(Tax) / 100)
+                }
             }
 
+            vatSum = sum - vat
+
+            // Footer
+            $('#txtSumTax').val(numeral(vatSum).format('0,0.00'))
+            $('#txtTax').val(numeral(vat).format('0,0.00'))
             $('#txtSumBalance').val(numeral(sum).format('0,0.00'))
         })
 
+        // Discount
+        $(document).on('blur', '.Discount', function () {
+            const id = $(this).attr("id")
+            const number = id.substring(1)
+
+            const Amount = parseFloat($(`#A${number}`).val().replace(/,/g, ''))
+            const Price = parseFloat($(`#P${number}`).val().replace(/,/g, ''))
+            const Discount = parseFloat($(`#D${number}`).val().replace(/,/g, ''))
+            const Totals = Price - Discount
+            const Total = Amount * Price
+
+            if (Totals < 0) {
+                Swal.fire({ text: "ส่วนลดมากกว่า จำนวนเงินสินค้า", icon: 'warning' })
+
+                $(`#D${number}`).val(numeral(0).format('0,0.00'))
+                $(`#T${number}`).val(numeral(Total).format('0,0.00'))
+
+                // Sum Data
+                const table = document.getElementById('tableStaple')
+                var sum = 0;
+                var vat = 0;
+                var vatSum = 0;
+
+                for (let i = 1; i < table.rows.length; i++) {
+                    const A_Total = table.rows[i].cells[6].getElementsByTagName("input")[0].value
+                    const V = table.rows[i].cells[7].innerHTML
+                    sum += parseFloat(A_Total.replace(/,/g, ''))
+                    if (V == 'V') {
+                        vat += parseFloat(A_Total.replace(/,/g, '') * parseFloat(Tax) / 100)
+                    }
+                }
+
+                vatSum = sum - vat
+
+                $('#txtSumTax').val(numeral(vatSum).format('0,0.00'))
+                $('#txtTax').val(numeral(vat).format('0,0.00'))
+                $('#txtSumBalance').val(numeral(sum).format('0,0.00'))
+                return;
+
+            } else {
+                $(`#T${number}`).val(numeral(Totals).format('0,0.00'))
+
+                // Sum Data
+                const table = document.getElementById('tableStaple')
+                var sum = 0;
+                var vat = 0;
+                var vatSum = 0;
+
+                for (let i = 1; i < table.rows.length; i++) {
+                    const A_Total = table.rows[i].cells[6].getElementsByTagName("input")[0].value
+                    const V = table.rows[i].cells[7].innerHTML
+                    sum += parseFloat(A_Total.replace(/,/g, ''))
+                    if (V == 'V') {
+                        vat += parseFloat(A_Total.replace(/,/g, '') * parseFloat(Tax) / 100)
+                    }
+                }
+
+                vatSum = sum - vat
+
+                $('#txtSumTax').val(numeral(vatSum).format('0,0.00'))
+                $('#txtTax').val(numeral(vat).format('0,0.00'))
+                $('#txtSumBalance').val(numeral(sum).format('0,0.00'))
+            }
+        })
+
+        // Price
         $(document).on('blur', '.Price', function () {
             const id = $(this).attr("id")
             const number = id.substring(1)
@@ -336,42 +451,67 @@
 
             $(`#T${number}`).val(numeral(Total).format('0,0.00'))
 
-            // Sum
-
+            // Sum Data
             const table = document.getElementById('tableStaple')
             var sum = 0;
+            var vat = 0;
+            var vatSum = 0;
 
             for (let i = 1; i < table.rows.length; i++) {
                 const A_Total = table.rows[i].cells[4].getElementsByTagName("input")[0].value
+                const V = table.rows[i].cells[7].innerHTML
                 sum += parseFloat(A_Total.replace(/,/g, ''))
+                if (V == 'V') {
+                    vat += parseFloat(A_Total.replace(/,/g, '') * parseFloat(Tax) / 100)
+                }
             }
 
+            vatSum = sum - vat
+
+            $('#txtSumTax').val(numeral(vatSum).format('0,0.00'))
+            $('#txtTax').val(numeral(vat).format('0,0.00'))
             $('#txtSumBalance').val(numeral(sum).format('0,0.00'))
         })
 
+        // Remove
         $('body').on('click', '#remove', function () {
             $(this).parents('tr').remove();
 
             var tbody = document.getElementById('bodyt')
 
-            if (tbody.rows.length == 0) {
-                var t = '<tr id="NoData">'
-                    + '<td class="text-center" colspan="6">ไม่มีข้อมูล</td>'
-                    + '</tr>';
-                $('#TB').append(t)
+            console.log(tbody.rows.length)
 
+            if (tbody.rows.length === 0) {
+                var t = '<tr id="NoResults">'
+                    + '<td class="text-center text-danger" colspan="9">ไม่มีข้อมูล</td>'
+                    + '</tr>';
+                $('#bodyt').append(t)
+
+                $('#txtSumTax').val(numeral(0).format('0,0.00'))
+                $('#txtTax').val(numeral(0).format('0,0.00'))
                 $('#txtSumBalance').val(numeral(0).format('0,0.00'))
             } else {
-                // Sum
 
-                var sum = 0;
+                // Sum Data
                 var table = document.getElementById('tableStaple')
 
+                var sum = 0;
+                var vat = 0;
+                var vatSum = 0;
+
                 for (let i = 1; i < table.rows.length; i++) {
-                    const A_Total = table.rows[i].cells[4].getElementsByTagName("input")[0].value
+                    const A_Total = table.rows[i].cells[6].getElementsByTagName("input")[0].value
+                    const V = table.rows[i].cells[7].innerHTML
                     sum += parseFloat(A_Total.replace(/,/g, ''))
+                    if (V == 'V') {
+                        vat += parseFloat(A_Total.replace(/,/g, '') * parseFloat(Tax) / 100)
+                    }
                 }
 
+                vatSum = sum - vat
+
+                $('#txtVatTotal').val(numeral(vatSum).format('0,0.00'))
+                $('#txtVat').val(numeral(vat).format('0,0.00'))
                 $('#txtSumbalance').val(numeral(sum).format('0,0.00'))
             }
         })
@@ -401,11 +541,13 @@
             $('#popupSupplier').modal('hide')
         }
 
+        // Clear Supplier
         function clearSupplier() {
             $('#txtSupplierId').val('')
             $('#txtSupplierName').val('')
         }
 
+        // Btn-Save
         document.querySelector("[btn-save]").addEventListener('click', () => {
              Swal.fire({
                 text: "ต้องการบันทึกข้อมูลหรือไม่ ?",
@@ -447,10 +589,13 @@
                             for (let i = 0; i < t.rows.length; i++) {
                                 var id = t.rows[i].cells[0].innerHTML
                                 var amount = t.rows[i].cells[2].getElementsByTagName("input")[0].value
-                                var price = t.rows[i].cells[3].getElementsByTagName("input")[0].value
-                                var total = t.rows[i].cells[4].getElementsByTagName("input")[0].value
+                                var unit = t.rows[i].cells[3].innerHTML
+                                var price = t.rows[i].cells[4].getElementsByTagName("input")[0].value
+                                var discount = t.rows[i].cells[5].getElementsByTagName("input")[0].value
+                                var total = t.rows[i].cells[6].getElementsByTagName("input")[0].value
+                                var vat = t.rows[i].cells[7].innerHTML
 
-                                var obj = { StapleId: id, Amount: amount, Price: price, Total: total }
+                                var obj = { StapleId: id, Amount: amount, Unit: unit, Price: price, Discount: discount, Total: total, Vat: vat }
                                 tdata.push(obj)
                             }
                         }
@@ -463,6 +608,8 @@
                     data.append('TaxNumber', $('#txtTaxNumber').val());
                     data.append('SupplierId', $('#txtSupplierId').val());
                     data.append('Reference', $('#txtReference').val());
+                    data.append('SumTax', $('#txtSumTax').val());
+                    data.append('Tax', $('#txtTax').val());
                     data.append('SumBalance', $('#txtSumBalance').val());
                     data.append('Sub', JSON.stringify(tdata));
 

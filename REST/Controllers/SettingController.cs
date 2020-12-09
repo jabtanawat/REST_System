@@ -28,7 +28,8 @@ namespace REST.Controllers
         {
             var info = new ViewSetting();
             var item = _db.Setting.FirstOrDefault();
-            info.Tax = item.Tax;
+            info.TaxSell = item.TaxSell;
+            info.TaxBuy = item.TaxBuy;
             info.Service = item.Service;
             info.PointNumber = Share.Cnumber(Share.FormatDouble(item.Point), 2);
             info.Perbunch = item.Perbunch;
@@ -56,7 +57,8 @@ namespace REST.Controllers
             try
             {
                 item = _db.Setting.FirstOrDefault();
-                item.Tax = info.Tax;
+                item.TaxSell = info.TaxSell;
+                item.TaxBuy = info.TaxBuy;
                 item.Service = info.Service;
                 item.Point = Share.FormatDecimal(info.PointNumber);
                 item.Perbunch = info.Perbunch;
