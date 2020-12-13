@@ -50,6 +50,9 @@ namespace REST.Data
         // ***Manage MG
         public DbSet<MG_Branch> MG_Branch { get; set; }
 
+        // ***Account GL
+        public DbSet<GL_Book> GL_Book { get; set; }
+
         // ***Setting
         public DbSet<Setting> Setting { get; set; }
 
@@ -91,6 +94,9 @@ namespace REST.Data
 
             // ***บริหาร MG
             modelBuilder.Entity<MG_Branch>().HasKey(x => new { x.BranchId });
+
+            // ***Account GL
+            modelBuilder.Entity<GL_Book>().HasKey(x => new { x.BookId });
 
             // ***Setting
             modelBuilder.Entity<Setting>().HasKey(x => new { x.id });

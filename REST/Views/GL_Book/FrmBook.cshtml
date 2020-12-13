@@ -1,0 +1,133 @@
+﻿@model GL_Book;
+@{
+    ViewData["Title"] = "สมุดบัญชี";
+    ViewData["System"] = "สมุดบัญชี";
+    Layout = "_Manage";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <!-- Form -->
+            <div class="col-md-5">
+                <section>
+                    <div class="d-flex justify-content-end">
+                        <a href="@Url.Action("FrmBook", "GL_Book", new { mode = "Add"})" class="text-success"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มสมุดบัญชี</a>
+                    </div>
+                </section>
+
+                <form name="FrmBook" method="post">
+                    <div class="form-group">
+                        <label class="col-form-label col-form-label-sm">รหัสสมุดบัญชี :</label>
+                        @if (ViewData["Readonly"].ToString() != "")
+                        {
+                            <input asp-for="BookId" type="text" class="form-control form-control-sm" readonly>
+                        }
+                        else
+                        {
+                            <input asp-for="BookId" type="text" class="form-control form-control-sm">
+                        }
+                        <span asp-validation-for="BookId" class="text-danger col-form-label-sm"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label col-form-label-sm">ชื่อสมุดบัญชี :</label>
+                        <input asp-for="BookName" type="text" class="form-control form-control-sm">
+                        <span asp-validation-for="BookName" class="text-danger col-form-label-sm"></span>
+                    </div>
+                </form>
+
+                <section>
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="#" class="btn btn-sm btn-blue mr-3 @ViewData["Disible-save"]" btn-save><i class="far fa-save"></i>&nbsp;&nbsp;บันทึก</a>
+                        <a href="#" class="btn btn-sm btn-danger @ViewData["Disible-delete"]" btn-delete><i class="far fa-trash-alt"></i>&nbsp;&nbsp;ลบ</a>
+                    </div>
+                </section>
+
+            </div>
+            <!-- Table -->
+            <div class="col-md-7">
+                <div class="card border-0 mt-md-0 mt-3 ">
+                    <div class="card-body table-responsive p-0" scroll>
+                        <table class="table table-md table-bordered table-head-fixed" id="tableStaple">
+                            <thead class="thead-primary-light">
+                                <tr>
+                                    <th class="text-center" style="width:15%;">รหัสสมุดบัญชี</th>
+                                    <th class="text-center" style="width:25%;">ชื่อสมุดบัญชี</th>
+                                    <th class="text-center" style="width:5%;"> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    if (ViewBag.DataTable != null && ViewBag.DataTable.Count > 0)
+                                    {
+                                        foreach (var row in ViewBag.DataTable)
+                                        {
+                                            <tr>
+                                                <td>@row.BookId</td>
+                                                <td>@row.BookName</td>
+                                                <td class="text-center"><a href="@Url.Action("FrmBook", "GL_Book", new { mode = "Edit", id = row.BookId})" class="text-info"><i class="fas fa-edit"></i></a></td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center text-danger" colspan="3">ไม่มีรายการ</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[scroll]').slimScroll({
+                height: $(window).height() - $('.navbar').height() - 92,
+                railBorderRadius: 0,
+                railVisible: true,
+                distance: '-10px'
+            });
+        });
+
+        document.querySelector("[btn-save]").addEventListener('click', () => {
+             Swal.fire({
+                text: "ต้องการบันทึกข้อมูลหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    document.FrmBook.action = '@Url.Action("FrmBook")'
+                    document.FrmBook.submit();
+                }
+            })
+        })
+
+        document.querySelector("[btn-delete]").addEventListener('click', () => {
+             Swal.fire({
+                text: "ต้องการลบข้อมูลหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+                    document.FrmBook.action = '@Url.Action("Delete")'
+                    document.FrmBook.submit();
+                }
+            })
+        })
+    </script>
+}
