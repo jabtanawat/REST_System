@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace REST.Models
 {
-    public class GL_Book
+    public class GL_AccountBook
     {
         [Key]
         [Required(ErrorMessage = "กรุณากรอกข้อมูล")]

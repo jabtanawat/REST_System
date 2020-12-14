@@ -125,5 +125,11 @@ namespace REST.Controllers
         {
            return PartialView("_popupCalculate");
         }
+
+        public IActionResult _popupAccountChart()
+        {
+            ViewBag.AccountChart = _db.GL_AccountChart.ToList();
+            return PartialView("_popupAccountChart");
+        }
     }
 }

@@ -1,0 +1,92 @@
+﻿<!-- Modal AccountChart -->
+<div class="modal fade bd-example-modal-lg" id="popupAccountChart" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="popupAccountChartTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <h6 class="font-weight-bold" id="exampleModalCenterTitle"><i class="fas fa-database mr-2"></i>ข้อมูล AccountChart</h6>
+                    </div>
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-sm btn-danger py-0" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+                <hr />
+                <div class="card border-0">
+                    <div class="card-body table-responsive p-0" popupScroll>
+                        <table class="table table-md table-head-fixed table-bordered table-hover">
+                            <thead class="thead-primary-light">
+                                <tr>
+                                    <th class="text-center" style="width:2rem;"></th>
+                                    <th class="text-center" style="width:10rem;">หมวด</th>
+                                    <th class="text-center" style="width:10rem;">รหัส</th>
+                                    <th class="text-center">ชื่อ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="TB_Staple">
+                                @{
+                                    if (ViewBag.AccountChart != null && ViewBag.AccountChart.Count > 0)
+                                    {
+                                        foreach (var row in ViewBag.AccountChart)
+                                        {
+                                            string type = null;
+                                            if (row.Type == 1)
+                                            {
+                                                type = "1 : สินทรัพย์";
+                                            }
+                                            else if (row.Type == 2)
+                                            {
+                                                type = "2 : หนี้สิน";
+                                            }
+                                            else if (row.Type == 3)
+                                            {
+                                                type = "3 : ทุน";
+                                            }
+                                            else if (row.Type == 4)
+                                            {
+                                                type = "4 : รายได้";
+                                            }
+                                            else if (row.Type == 5)
+                                            {
+                                                type = "5 : ค่าใช้จ่าย";
+                                            }
+                                            <tr>
+                                                <td class="text-center bg-info-light"><a href="#" onclick="showAccountChart('@row.AccNo')" class="text-info">เลือก</a></td>
+                                                <td>@type</td>
+                                                <td>@row.AccNo</td>
+                                                <td>@row.AccName</td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="text-center text-danger" colspan="4">ไม่มีรายการ</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#popupAccountChart').on('shown.bs.modal', function () {
+        $('[popupScroll]').slimScroll({
+            height: 300,
+            railBorderRadius: 0,
+            railVisible: true,
+            distance: '-10px'
+        });
+    })
+    //$(document).ready(function () {
+    //    $('#DT_Staple').DataTable({
+    //        "info": false,
+    //        "ordering": false
+    //    });
+    //})
+</script>

@@ -1,4 +1,4 @@
-﻿@model GL_Book;
+﻿@model GL_AccountBook;
 @{
     ViewData["Title"] = "สมุดบัญชี";
     ViewData["System"] = "สมุดบัญชี";
@@ -11,28 +11,32 @@
             <!-- Form -->
             <div class="col-md-5">
                 <section>
-                    <div class="d-flex justify-content-end">
-                        <a href="@Url.Action("FrmBook", "GL_Book", new { mode = "Add"})" class="text-success"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มสมุดบัญชี</a>
+                    <div class="d-flex justify-content-end mb-3">
+                        <a href="@Url.Action("FrmBook", "GL_Book", new { mode = "Add"})" class="text-success col-form-label-sm"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มสมุดบัญชี</a>
                     </div>
                 </section>
 
                 <form name="FrmBook" method="post">
-                    <div class="form-group">
-                        <label class="col-form-label col-form-label-sm">รหัสสมุดบัญชี :</label>
-                        @if (ViewData["Readonly"].ToString() != "")
-                        {
-                            <input asp-for="BookId" type="text" class="form-control form-control-sm" readonly>
-                        }
-                        else
-                        {
-                            <input asp-for="BookId" type="text" class="form-control form-control-sm">
-                        }
-                        <span asp-validation-for="BookId" class="text-danger col-form-label-sm"></span>
+                    <div class="form-group row">
+                        <label class="col-xl-4 col-sm-5 text-sm-right col-form-label col-form-label-sm">รหัสสมุดบัญชี :</label>
+                        <div class="col-xl-8 col-sm-7">
+                            @if (ViewData["Readonly"].ToString() != "")
+                            {
+                                <input asp-for="BookId" type="text" class="form-control form-control-sm" readonly>
+                            }
+                            else
+                            {
+                                <input asp-for="BookId" type="text" class="form-control form-control-sm">
+                            }
+                            <span asp-validation-for="BookId" class="text-danger col-form-label-sm"></span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-form-label col-form-label-sm">ชื่อสมุดบัญชี :</label>
-                        <input asp-for="BookName" type="text" class="form-control form-control-sm">
-                        <span asp-validation-for="BookName" class="text-danger col-form-label-sm"></span>
+                    <div class="form-group row">
+                        <label class="col-xl-4 col-sm-5 text-sm-right col-form-label col-form-label-sm">ชื่อสมุดบัญชี :</label>
+                        <div class="col-xl-8 col-sm-7">
+                            <input asp-for="BookName" type="text" class="form-control form-control-sm">
+                            <span asp-validation-for="BookName" class="text-danger col-form-label-sm"></span>
+                        </div>
                     </div>
                 </form>
 

@@ -51,7 +51,9 @@ namespace REST.Data
         public DbSet<MG_Branch> MG_Branch { get; set; }
 
         // ***Account GL
-        public DbSet<GL_Book> GL_Book { get; set; }
+        public DbSet<GL_AccountBook> GL_AccountBook { get; set; }
+        public DbSet<GL_AccountChart> GL_AccountChart { get; set; }
+        public DbSet<GL_Pattern> GL_Pattern { get; set; }
 
         // ***Setting
         public DbSet<Setting> Setting { get; set; }
@@ -96,7 +98,9 @@ namespace REST.Data
             modelBuilder.Entity<MG_Branch>().HasKey(x => new { x.BranchId });
 
             // ***Account GL
-            modelBuilder.Entity<GL_Book>().HasKey(x => new { x.BookId });
+            modelBuilder.Entity<GL_AccountBook>().HasKey(x => new { x.BookId });
+            modelBuilder.Entity<GL_AccountChart>().HasKey(x => new { x.Type, x.AccNo });
+            modelBuilder.Entity<GL_Pattern>().HasKey(x => new { x.M_ID });
 
             // ***Setting
             modelBuilder.Entity<Setting>().HasKey(x => new { x.id });

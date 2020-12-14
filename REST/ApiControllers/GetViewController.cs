@@ -217,5 +217,11 @@ namespace REST.ApiControllers
             var item = _db.CD_Zone.FirstOrDefault(x => x.ZoneId == id);
             return Json(item);
         }
+
+        public JsonResult AShowAccountChart(string id)
+        {
+            var item = _db.GL_AccountChart.FirstOrDefault(x => x.AccNo == id);
+            return Json(item);
+        }
     }
 }
