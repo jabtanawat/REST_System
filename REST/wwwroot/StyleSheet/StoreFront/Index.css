@@ -111,6 +111,10 @@
     cursor: pointer;
 }
 
+.content-table-body .card-link:hover {
+    border: 2px solid red;
+}
+
 .content-table-body .c-table .card-body {
     padding: 16px 10px;
 }

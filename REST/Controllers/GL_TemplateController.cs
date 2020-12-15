@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 namespace REST.Controllers
 {
     [Authorize]
-    public class GL_PatternController : BaseController
+    public class GL_TemplateController : BaseController
     {
         #region Connect db / Data System
         private readonly DbConnection _db;
         public static string _mode = Comp.FormMode.ADD;
 
-        public GL_PatternController(DbConnection db)
+        public GL_TemplateController(DbConnection db)
         {
             _db = db;
         }
@@ -28,19 +28,19 @@ namespace REST.Controllers
 
         public IActionResult Index()
         {
-            var _Get = new GetGL_PatternController(_db);
-            ViewBag.DataTable = _Get.GetPattern();
+            var _Get = new GetGL_TemplateController(_db);
+            ViewBag.DataTable = _Get.GetTemplate();
             return View();
         }
 
-        public IActionResult FrmPattern(string mode, string id = null)
+        public IActionResult FrmTemplate(string mode, string id = null)
         {
             
             if (mode == "Add")
             {
                 _mode = Comp.FormMode.ADD;
                 FrmMode();
-                var item = new ViewGL_Pattern();
+                var item = new ViewGL_Template();
                 return View(item);
             }
             else
@@ -53,12 +53,12 @@ namespace REST.Controllers
         }
 
         [HttpPost]
-        public IActionResult FrmPattern(ViewGL_Pattern info)
+        public IActionResult FrmTemplate(ViewGL_Template info)
         {
             string status = null;
             if (SaveData(info))
             {
-                toastrAlert("รูปแบบบัญชี 2", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
+                toastrAlert("ผังบัญชี", "บันทึกข้อมูลเรียบร้อย", Enums.NotificationToastr.success);
                 status = "success";
             }
             else
@@ -68,50 +68,49 @@ namespace REST.Controllers
             return Json(new { data = status });
         }
 
-        public Boolean SaveData(ViewGL_Pattern info)
+        public Boolean SaveData(ViewGL_Template info)
         {
-            var item = new GL_Pattern();
-            dynamic PatternSub = JsonConvert.DeserializeObject(info.Sub);
+            var item = new GL_Template();
+            dynamic TemplateSub = JsonConvert.DeserializeObject(info.Sub);
             try
             {
                 switch (_mode)
                 {
                     case Comp.FormMode.ADD:
 
-                        var IsNull = _db.GL_Pattern.Where(x => x.P_ID == info.P_ID).ToList();
+                        var IsNull = _db.GL_Template.Where(x => x.M_ID == info.M_ID).ToList();
                         if (IsNull.Count > 0)
                         {
                             return false;
                         }
                         else
                         {
-                            item.P_ID = info.P_ID;
-                            item.P_Name = info.P_Name;
+                            item.M_ID = info.M_ID;
+                            item.M_Name = info.M_Name;
+                            item.M_DesCription = info.M_DesCription;
                             item.BookId = info.BookId;
-                            item.MenuId = info.MenuId;
-                            item.Description = info.Description;
+                            item.M_PType = Share.FormatInteger(info.M_PType);
                             /* DATA */
                             item.CreateUser = User.Identity.Name;
                             item.CreateDate = Share.FormatDate(DateTime.Now).Date;
                             item.UpdateUser = User.Identity.Name;
                             item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                            _db.GL_Pattern.Add(item);
+                            _db.GL_Template.Add(item);
                             _db.SaveChanges();
 
                             // Save Template Sub
-                            if (PatternSub.Count > 0)
+                            if (TemplateSub.Count > 0)
                             {
                                 int i = 1;
-                                foreach (dynamic result in PatternSub)
+                                foreach (dynamic result in TemplateSub)
                                 {
                                     var id = result.AccNo;
                                     var Dr = result.Dr;
                                     var Cr = result.Cr;
-                                    var St = result.Status;
 
-                                    var sub = new GL_PatternSub();
-                                    sub.P_ID = info.P_ID;
+                                    var sub = new GL_TemplateSub();
+                                    sub.M_ID = info.M_ID;
                                     sub.AccNo = id;
                                     if(Dr > 0)
                                     {
@@ -123,10 +122,9 @@ namespace REST.Controllers
                                         sub.Amount = Cr;
                                         sub.DrCr = 2;
                                     }
-                                    sub.Status = St;
                                     sub.i = i;
 
-                                    _db.GL_PatternSub.Add(sub);
+                                    _db.GL_TemplateSub.Add(sub);
                                     _db.SaveChanges();
 
                                     i++;
@@ -138,36 +136,35 @@ namespace REST.Controllers
 
                     case Comp.FormMode.EDIT:
 
-                        item = _db.GL_Pattern.FirstOrDefault(x => x.P_ID == info.P_ID);
-                        item.P_Name = info.P_Name;
+                        item = _db.GL_Template.FirstOrDefault(x => x.M_ID == info.M_ID);
+                        item.M_Name = info.M_Name;
+                        item.M_DesCription = info.M_DesCription;
                         item.BookId = info.BookId;
-                        item.MenuId = info.MenuId;
-                        item.Description = item.Description;
+                        item.M_PType = Share.FormatInteger(info.M_PType);
                         /* DATA */
                         item.UpdateUser = User.Identity.Name;
                         item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
 
-                        _db.GL_Pattern.Update(item);
+                        _db.GL_Template.Update(item);
                         _db.SaveChanges();
 
                         // Save Template Sub
-                        if (PatternSub.Count > 0)
+                        if (TemplateSub.Count > 0)
                         {
-                            var delete = _db.GL_PatternSub.Where(x => x.P_ID == info.P_ID).ToList();
-                            _db.GL_PatternSub.RemoveRange(delete);
+                            var delete = _db.GL_TemplateSub.Where(x => x.M_ID == info.M_ID).ToList();
+                            _db.GL_TemplateSub.RemoveRange(delete);
                             _db.SaveChanges();
 
                             int i = 1;
 
-                            foreach (dynamic result in PatternSub)
+                            foreach (dynamic result in TemplateSub)
                             {
                                 var id = result.AccNo;
                                 var Dr = result.Dr;
                                 var Cr = result.Cr;
-                                var St = result.Status;
 
-                                var sub = new GL_PatternSub();
-                                sub.P_ID = info.P_ID;
+                                var sub = new GL_TemplateSub();
+                                sub.M_ID = info.M_ID;
                                 sub.AccNo = id;
                                 if (Dr > 0)
                                 {
@@ -179,10 +176,9 @@ namespace REST.Controllers
                                     sub.Amount = Cr;
                                     sub.DrCr = 2;
                                 }
-                                sub.Status = St;
                                 sub.i = i;
 
-                                _db.GL_PatternSub.Add(sub);
+                                _db.GL_TemplateSub.Add(sub);
                                 _db.SaveChanges();
 
                                 i++;
@@ -202,26 +198,27 @@ namespace REST.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(ViewGL_Pattern info)
+        public IActionResult Delete(ViewGL_Template info)
         {
             string status = null;
             try
             {
+
                 _mode = Comp.FormMode.DELETE;
 
-                // Delete Pattern
-                var Pattern = _db.GL_Pattern.FirstOrDefault(x => x.P_ID == info.P_ID);
+                // Delete Template
+                var Template = _db.GL_Template.FirstOrDefault(x => x.M_ID == info.M_ID);
 
-                _db.GL_Pattern.Remove(Pattern);
+                _db.GL_Template.Remove(Template);
                 _db.SaveChanges();
 
-                // Delete PatternSub
-                var PatternSub = _db.GL_PatternSub.Where(x => x.P_ID == info.P_ID);
+                // Delete TemplateSub
+                var TemplateSub = _db.GL_TemplateSub.Where(x => x.M_ID == info.M_ID);
 
-                _db.GL_PatternSub.RemoveRange(PatternSub);
+                _db.GL_TemplateSub.RemoveRange(TemplateSub);
                 _db.SaveChanges();
 
-                toastrAlert("รูปแบบบัญชี 2", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
+                toastrAlert("ผังบัญชี", "ลบข้อมูลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
                 status = "success";
             }
             catch (Exception)
@@ -232,18 +229,18 @@ namespace REST.Controllers
             return Json(new { data = status });
         }
 
-        public ViewGL_Pattern LoadData(string id)
+        public ViewGL_Template LoadData(string id)
         {
-            var item = new ViewGL_Pattern();
+            var item = new ViewGL_Template();
 
-            var GL_Pattern = _db.GL_Pattern.FirstOrDefault(x => x.P_ID == id);
-            item.P_ID = GL_Pattern.P_ID;
-            item.P_Name = GL_Pattern.P_Name;
-            item.BookId = GL_Pattern.BookId;
-            item.MenuId = GL_Pattern.MenuId;
-            item.Description = GL_Pattern.Description;
-            var _Get = new GetGL_PatternController(_db);
-            item.GL_PatternSub = _Get.GetPatternSubById(id);
+            var GL_Template = _db.GL_Template.FirstOrDefault(x => x.M_ID == id);
+            item.M_ID = GL_Template.M_ID;
+            item.M_Name = GL_Template.M_Name;
+            item.M_DesCription = GL_Template.M_DesCription;
+            item.BookId = GL_Template.BookId;
+            item.M_PType = Share.FormatString(GL_Template.M_PType);
+            var _Get = new GetGL_TemplateController(_db);
+            item.GL_TemplateSub = _Get.GetTemplateSubById(id);
 
             return item;
         }

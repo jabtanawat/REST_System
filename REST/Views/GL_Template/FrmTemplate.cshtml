@@ -1,7 +1,7 @@
-﻿@model REST.ViewModels.ViewGL_Pattern;
+﻿@model REST.ViewModels.ViewGL_Template;
 @{
-    ViewData["Title"] = "รูปแบบบัญชี 2";
-    ViewData["System"] = "รูปแบบบัญชี 2";
+    ViewData["Title"] = "รูปแบบบัญชี 1";
+    ViewData["System"] = "รูปแบบบัญชี 1";
     Layout = "_Manage";
 }
 
@@ -12,6 +12,20 @@
             <div class="row">
                 <div class="col-xl-11 mx-auto">
                     <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="col-xl-4 col-sm-5 text-sm-right col-form-label col-form-label-sm">รูปแบบบัญชี :</label>
+                                <div class="col-xl-8 col-sm-7">
+                                    <select asp-for="M_DesCription" id="txtDesCription" class="form-control form-control-sm">
+                                        <option value="1">รายการรับเงิน</option>
+                                        <option value="2">รายการจ่ายเงิน</option>
+                                        <option value="3">รายการขาย</option>
+                                        <option value="4">รายการซื้อ</option>
+                                        <option value="5">รายการปรับปรุง</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group row">
                                 <label class="col-xl-4 col-sm-5 text-sm-right col-form-label col-form-label-sm">สมุดรายวัน :</label>
@@ -27,17 +41,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="col-xl-4 col-sm-5 text-sm-right col-form-label col-form-label-sm">รายการ :</label>
-                                <div class="col-xl-8 col-sm-7">
-                                    <select asp-for="MenuId" id="txtMenuId" class="form-control form-control-sm">
-                                        <option value="ชำระเงิน">ชำระเงิน</option>
-                                        <option value="สั่งซื้อ">สั่งซื้อ</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
@@ -46,12 +49,12 @@
                                 <div class="col-xl-8 col-sm-7">
                                     @if (ViewData["Readonly"].ToString() != "")
                                     {
-                                        <input asp-for="P_ID" id="txtP_ID" type="text" class="form-control form-control-sm" readonly>
+                                        <input asp-for="M_ID" id="txtM_ID" type="text" class="form-control form-control-sm" readonly>
                                     }
                                     else
                                     {
-                                        <input asp-for="P_ID" id="txtP_ID" type="text" class="form-control form-control-sm">
-                                    }
+                                        <input asp-for="M_ID" id="txtM_ID" type="text" class="form-control form-control-sm">
+                                    }                                    
                                 </div>
                             </div>
                         </div>
@@ -59,21 +62,54 @@
                             <div class="form-group row">
                                 <label class="col-xl-4 col-sm-5 text-sm-right col-form-label col-form-label-sm">ชื่อรูปแบบ :</label>
                                 <div class="col-xl-8 col-sm-7">
-                                    <input asp-for="P_Name" id="txtP_Name" type="text" class="form-control form-control-sm">
+                                    <input asp-for="M_Name" id="txtM_Name" type="text" class="form-control form-control-sm">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-xl-8 col-lg-10 col-md-10">
                             <div class="form-group row">
-                                <label class="col-xl-4 col-sm-5 text-sm-right col-form-label col-form-label-sm">รายละเอียด :</label>
-                                <div class="col-xl-8 col-sm-7">
-                                    <textarea asp-for="Description" id="txtDescription" class="form-control form-control-sm" rows="3"></textarea>
+                                <label class="col-xl-3 col-lg-3 col-md-3 col-sm-5 text-sm-right col-form-label col-form-label-sm"></label>
+                                <div class="col-xl-9 col-sm-7">
+                                    <div class="form-check form-check-inline">
+                                        <input asp-for="M_PType" class="form-check-input" type="radio" name="M_PType" id="M_PType1" value="1" checked>
+                                        <label class="form-check-label col-form-label-sm" for="M_PType1">คิดเป็นเปอร์เซ็นต์</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input asp-for="M_PType" class="form-check-input" type="radio" name="M_PType" id="M_PType2" value="2">
+                                        <label class="form-check-label col-form-label-sm" for="M_PType2">กำหนดจำนวนเงินเอง</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @*<div class="row">
+                        <div class="col-xl-8 col-lg-10 col-md-10">
+                            <div class="form-group row">
+                                <label class="col-xl-3 col-lg-3 col-md-3 col-sm-5 text-sm-right col-form-label col-form-label-sm"></label>
+                                <div class="col-xl-9 col-sm-7">
+                                    <div class="form-row align-items-center">
+                                        <div class="col-auto">
+                                            <div class="form-check">
+                                                <input id="CHSystem" class="form-check-input mt-2" type="checkbox" name="Bch">
+                                                <label class="form-check-label col-form-label-sm" for="CHSystem">
+                                                    ใช้งานกับระบบอื่น
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <select id="txtSystem" class="form-control form-control-sm">
+                                                <option value="" selected>--เลือกระบบ--</option>
+                                                <option value="ชำระเงิน">ชำระเงิน</option>
+                                                <option value="สั่งซื้อ">สั่งซื้อ</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
                 </div>
             </div>
         </section>
@@ -88,15 +124,14 @@
                                 <th class="text-center">ชื่อผังบัญชี</th>
                                 <th class="text-center" style="width:15%;">เดบิต</th>
                                 <th class="text-center" style="width:15%">เครดิต</th>
-                                <th class="text-center" style="width:10%">แยกผัง</th>
                                 <th class="text-center" style="width:5%;"> </th>
                             </tr>
                         </thead>
                         <tbody id="bodyt">
                             @{
-                                if (Model.GL_PatternSub != null && Model.GL_PatternSub.Count() > 0)
+                                if (Model.GL_TemplateSub != null && Model.GL_TemplateSub.Count() > 0)
                                 {
-                                    foreach (var row in Model.GL_PatternSub)
+                                    foreach (var row in Model.GL_TemplateSub)
                                     {
                                         <tr>
                                             <td>@row.AccNo</td>
@@ -111,15 +146,14 @@
                                                 <td><input type="text" class="form-control-plaintext form-table-control-sm text-right numberonly" value="0" placeholder="0.00"></td>
                                                 <td><input type="text" class="form-control-plaintext form-table-control-sm text-right numberonly" value="@row.Amount" placeholder="0.00"></td>
                                             }
-                                            <td><input type="text" class="form-control-plaintext form-table-control-sm text-center" value="@row.Status"></td>
-                                            <td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>
+                                        <td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>
                                         </tr>
                                     }
                                 }
                                 else
                                 {
                                     <tr id="NoResults">
-                                        <td class="text-center text-danger" colspan="6">ไม่มีรายการ</td>
+                                        <td class="text-center text-danger" colspan="5">ไม่มีรายการ</td>
                                     </tr>
                                 }
                             }
@@ -141,7 +175,23 @@
             <div class="alert alert-danger" role="alert">
                 <h6 class="alert-heading">หมายเหตุ !</h6>
                 <hr>
-                <p class="col-form-label-sm mb-0">***แยกผัง C = เงินสด, H = เช็ค/ตั๋ว, T = เงินโอน, N = ใช้ผังที่กำหนดไว้/ไม่แยกผัง, P = แยกบัญชีประเภทเงินฝาก/กู้/หุ้น/รายรับ/รายจ่าย, A = ดอกเบี้ยค้างรับ</p>
+                <div class="row">
+                    <div class="col-xl-4 col-lg-6 col-md-6 pr-xl-0">
+                        <p class="col-form-label-sm mb-0">1 : รหัสขึ้นต้นด้วยหมายเลข 1 หมายถึง รายการรับเงิน</p>
+                    </div>
+                    <div class="col-auto">
+                        <p class="col-form-label-sm mb-0">2 : รหัสขึ้นต้นด้วยหมายเลข 2 หมายถึง รายการจ่ายเงิน</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4 col-lg-6 col-md-6 pr-xl-0">
+                        <p class="col-form-label-sm mb-0">3 : รหัสขึ้นต้นด้วยหมายเลข 3 หมายถึง รายการขาย</p>
+                    </div>
+                    <div class="col-auto">
+                        <p class="col-form-label-sm mb-0">4 : รหัสขึ้นต้นด้วยหมายเลข 4 หมายถึง รายการซื้อ</p>
+                    </div>
+                </div>                
+                <p class="col-form-label-sm mb-0">5 : รหัสขึ้นต้นด้วยหมายเลข 5 หมายถึง รายการปรับปรุง</p>
             </div>
         </section>
     </div>
@@ -153,7 +203,7 @@
     <script src="~/Plugins/Numeral/numeral.js"></script>
     <script>
         $(document).ready(function () {
-            //SelectDesCription()
+            SelectDesCription()
             //CheckSystem()
         });
 
@@ -161,9 +211,9 @@
         //    CheckSystem()
         //})
 
-        //document.getElementById("txtDesCription").addEventListener("click", () => {
-        //    SelectDesCription()
-        //})
+        document.getElementById("txtDesCription").addEventListener("click", () => {
+            SelectDesCription()
+        })
 
         //function CheckSystem() {
         //    if ($('#CHSystem').prop("checked") == true) {
@@ -173,19 +223,19 @@
         //    }
         //}
 
-        //function SelectDesCription() {
-        //    if ($('#txtDesCription').val() == '1') {
-        //        $('#txtBookId').val('02')
-        //    } else if ($('#txtDesCription').val() == '2') {
-        //        $('#txtBookId').val('03')
-        //    } else if ($('#txtDesCription').val() == '3') {
-        //        $('#txtBookId').val('04')
-        //    } else if ($('#txtDesCription').val() == '4') {
-        //        $('#txtBookId').val('05')
-        //    } else if ($('#txtDesCription').val() == '5') {
-        //        $('#txtBookId').val('01')
-        //    }
-        //}
+        function SelectDesCription() {
+            if ($('#txtDesCription').val() == '1') {
+                $('#txtBookId').val('02')
+            } else if ($('#txtDesCription').val() == '2') {
+                $('#txtBookId').val('03')
+            } else if ($('#txtDesCription').val() == '3') {
+                $('#txtBookId').val('04')
+            } else if ($('#txtDesCription').val() == '4') {
+                $('#txtBookId').val('05')
+            } else if ($('#txtDesCription').val() == '5') {
+                $('#txtBookId').val('01')
+            }
+        }
 
         var PlaceHolderElement = $('#PlaceHolderHere')
         $('a[data-toggle="ajax-modal"]').click(function (event) {
@@ -227,9 +277,6 @@
                         + `<td>`
                         + `<input type="text" class="form-control-plaintext form-table-control-sm text-right numberonly" value="0" placeholder="0.00" >`
                         + `</td>`
-                        + `<td>`
-                        + `<input type="text" class="form-control-plaintext form-table-control-sm text-center">`
-                        + `</td>`
                         + `<td class="text-center"><a href="#" id="remove" class="text-danger">ลบ</a></td>`
                         + `</tr>`;
                     $("#bodyt").append(rowItem)
@@ -247,7 +294,7 @@
 
             if (tbody.rows.length === 0) {
                 var t = '<tr id="NoResults">'
-                    + '<td class="text-center text-danger" colspan="6">ไม่มีรายการ</td>'
+                    + '<td class="text-center text-danger" colspan="5">ไม่มีรายการ</td>'
                     + '</tr>';
                 $('#bodyt').append(t)
             }
@@ -265,12 +312,12 @@
             }).then((result) => {
                 if (result.value) {
 
-                    if ($('#txtP_ID').val() == '') {
+                    if ($('#txtM_ID').val() == '') {
                         Swal.fire({ text: "กรุณากรอกรหัสรูปแบบ", icon: 'warning' })
                         return;
                     }
 
-                    if ($('#txtP_Name').val() == '') {
+                    if ($('#txtM_Name').val() == '') {
                         Swal.fire({ text: "กรุณากรอกชื่อรูปแบบ", icon: 'warning' })
                         return;
                     }
@@ -285,9 +332,8 @@
                                 var id = t.rows[i].cells[0].innerHTML
                                 var dr = t.rows[i].cells[2].getElementsByTagName("input")[0].value
                                 var cr = t.rows[i].cells[3].getElementsByTagName("input")[0].value
-                                var st = t.rows[i].cells[4].getElementsByTagName("input")[0].value
 
-                                var obj = { AccNo: id, Dr: dr, Cr: cr, Status: st }
+                                var obj = { AccNo: id, Dr: dr, Cr: cr }
                                 tdata.push(obj)
                             }
                         } else {
@@ -300,23 +346,27 @@
                     }
 
                     var data = new FormData();
-                    data.append('P_ID', $('#txtP_ID').val());
-                    data.append('P_Name', $('#txtP_Name').val());
-                    data.append('BookId', $('#txtBookId').val());                    
-                    data.append('MenuId', $('#txtMenuId').val());
-                    data.append('Description', $('#txtDescription').val());
+                    data.append('M_ID', $('#txtM_ID').val());
+                    data.append('BookId', $('#txtBookId').val());
+                    data.append('M_Name', $('#txtM_Name').val());
+                    data.append('M_DesCription', $('#txtDesCription').val());
+                    if ($('#M_PType1').prop("checked") == true) {
+                        data.append('M_PType', '1');
+                    } else {
+                        data.append('M_PType', '2');
+                    }
                     data.append('Sub', JSON.stringify(tdata));
 
                     $.ajax({
                         type: 'POST',
-                        url: '@Url.Action("FrmPattern", "GL_Pattern")',
+                        url: '@Url.Action("FrmTemplate", "GL_Template")',
                         contentType: false,
                         processData: false,
                         data: data,
                         success: function (data) {
                             $.each(data, function (index, val) {
                                 if (val == "success") {
-                                    window.location.href = '@Url.Action("Index", "GL_Pattern")'
+                                    window.location.href = '@Url.Action("Index", "GL_Template")'
                                 } else {
                                     Swal.fire({ text: "ไม่สามารถบันทึกข้อมูลได้", icon: 'warning'} )
                                 }
@@ -341,18 +391,18 @@
                 if (result.value) {
 
                     var data = new FormData();
-                    data.append('P_ID', $('#txtP_ID').val());
+                    data.append('M_ID', $('#txtM_ID').val());
 
                     $.ajax({
                         type: 'POST',
-                        url: '@Url.Action("Delete", "GL_Pattern")',
+                        url: '@Url.Action("Delete", "GL_Template")',
                         contentType: false,
                         processData: false,
                         data: data,
                         success: function (data) {
                             $.each(data, function (index, val) {
                                 if (val == "success") {
-                                    window.location.href = '@Url.Action("Index", "GL_Pattern")'
+                                    window.location.href = '@Url.Action("Index", "GL_Template")'
                                 } else {
                                     Swal.fire({ text: "ไม่สามารถบันทึกข้อมูลได้", icon: 'warning'} )
                                 }

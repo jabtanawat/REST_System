@@ -1,6 +1,6 @@
 ﻿@{
-    ViewData["Title"] = "รูปแบบบัญชี 2";
-    ViewData["System"] = "รูปแบบบัญชี 2";
+    ViewData["Title"] = "รูปแบบบัญชี 1";
+    ViewData["System"] = "รูปแบบบัญชี 1";
     Layout = "_Manage";
 }
 
@@ -9,7 +9,7 @@
         <section>
             <div class="d-flex mb-2">
                 <div class="mr-2">
-                    <a href="@Url.Action("FrmPattern", "GL_Pattern", new { mode = "Add"})" class="col-form-label-sm text-success"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มรูปแบบบัญชี 2</a>
+                    <a href="@Url.Action("FrmTemplate", "GL_Template", new { mode = "Add"})" class="col-form-label-sm text-success"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มรูปแบบบัญชี 1</a>
                 </div>
             </div>
             <hr />
@@ -23,7 +23,8 @@
                             <tr>
                                 <th class="text-center">รหัสรูปแบบ</th>
                                 <th class="text-center">ชื่อรูปแบบ</th>
-                                <th class="text-center">รายการ</th>
+                                <th class="text-center" style="width:15%;">รหัสสมุดบัญชี</th>
+                                <th class="text-center">ชื่อสมุดบัญชี</th>
                                 <th class="text-center" style="width:5%;"> </th>
                             </tr>
                         </thead>
@@ -31,20 +32,21 @@
                             @{
                                 if (ViewBag.DataTable != null && ViewBag.DataTable.Count > 0)
                                 {
-                                    foreach (var row in ViewBag.DataTable)
+                                    foreach(var row in ViewBag.DataTable)
                                     {
                                         <tr>
-                                            <td>@row.P_ID</td>
-                                            <td>@row.P_Name</td>
-                                            <td>@row.MenuId</td>
-                                            <td class="text-center"><a href="@Url.Action("FrmPattern", "GL_Pattern", new { mode = "Edit", id = row.P_ID})" class="text-info"><i class="fas fa-edit"></i></a></td>
+                                            <td>@row.M_ID</td>
+                                            <td>@row.M_Name</td>
+                                            <td>@row.BookId</td>
+                                            <td>@row.BookName</td>
+                                            <td class="text-center"><a href="@Url.Action("FrmTemplate", "GL_Template", new { mode = "Edit", id = row.M_ID})" class="text-info"><i class="fas fa-edit"></i></a></td>
                                         </tr>
                                     }
                                 }
                                 else
                                 {
                                     <tr id="NoResults">
-                                        <td class="text-center text-danger" colspan="4">ไม่มีรายการ</td>
+                                        <td class="text-center text-danger" colspan="5">ไม่มีรายการ</td>
                                     </tr>
                                 }
                             }

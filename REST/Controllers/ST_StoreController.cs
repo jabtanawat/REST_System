@@ -109,7 +109,7 @@ namespace REST.Controllers
                 StapleAmount(info, branchid);
 
                 // Delete TranSub
-                var itemTranSub = _db.ST_TranSub.FirstOrDefault(x => x.Documents == info.Document && x.BranchId == branchid);
+                var itemTranSub = _db.ST_TranSub.Where(x => x.Documents == info.Document && x.BranchId == branchid).ToList();
 
                 _db.ST_TranSub.RemoveRange(itemTranSub);
                 _db.SaveChanges();

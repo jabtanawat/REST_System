@@ -53,7 +53,10 @@ namespace REST.Data
         // ***Account GL
         public DbSet<GL_AccountBook> GL_AccountBook { get; set; }
         public DbSet<GL_AccountChart> GL_AccountChart { get; set; }
+        public DbSet<GL_Template> GL_Template { get; set; }
+        public DbSet<GL_TemplateSub> GL_TemplateSub { get; set; }
         public DbSet<GL_Pattern> GL_Pattern { get; set; }
+        public DbSet<GL_PatternSub> GL_PatternSub { get; set; }
 
         // ***Setting
         public DbSet<Setting> Setting { get; set; }
@@ -100,7 +103,10 @@ namespace REST.Data
             // ***Account GL
             modelBuilder.Entity<GL_AccountBook>().HasKey(x => new { x.BookId });
             modelBuilder.Entity<GL_AccountChart>().HasKey(x => new { x.Type, x.AccNo });
-            modelBuilder.Entity<GL_Pattern>().HasKey(x => new { x.M_ID });
+            modelBuilder.Entity<GL_Template>().HasKey(x => new { x.M_ID });
+            modelBuilder.Entity<GL_TemplateSub>().HasKey(x => new { x.M_ID, x.AccNo, x.i });
+            modelBuilder.Entity<GL_Pattern>().HasKey(x => new { x.P_ID });
+            modelBuilder.Entity<GL_PatternSub>().HasKey(x => new { x.P_ID, x.AccNo, x.i });
 
             // ***Setting
             modelBuilder.Entity<Setting>().HasKey(x => new { x.id });

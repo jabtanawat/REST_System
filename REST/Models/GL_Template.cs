@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace REST.Models
 {
-    public class GL_Pattern
+    public class GL_Template
     {
         [Key]
-        public string P_ID { get; set; }
-        public string P_Name { get; set; }
+        public string M_ID { get; set; }
         public string BookId { get; set; }
-        public string MenuId { get; set; }
-        public string Description { get; set; }
+        public string M_Name { get; set; }
+        public string M_DesCription { get; set; }
+        public int M_PType { get; set; }
         // -------------------------------------------------------
         public string CreateUser { get; set; }
         public DateTime CreateDate { get; set; }

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/StyleSheet/StoreFront/Index.css" />
 }
 <!-- heard-row -->
-<section class="heard-row">
+@*<section class="heard-row">
     <div class="row">
         <div class="col-md-4 col-xl-3 mb-3">
             <div class="card order-card">
@@ -47,13 +47,13 @@
             </div>
         </div>
     </div>
-</section>
+</section>*@
 <!-- content-table -->
 <section class="content-table">
-    <div class="card">
+    <div class="card rounded-0">
         <div class="card-body">
             <!-- content-table-heard -->
-            <section class="content-table-heard">
+            @*<section class="content-table-heard">
                 <div class="card border-0 bg-light mb-3">
                     <div class="card-body px-2 py-2">
                         <div class="d-flex">
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                 </div>
-            </section>
+            </section>*@
             <!-- content-table-body -->
             <section class="content-table-body" scroll>
                 <div class="row" panel-table>
@@ -101,7 +101,7 @@
                         string bg = null;
                         if (row.TableST == 1)
                         {
-                            bg = "bg-c-green";
+                            bg = "bg-storefore";
                         }
                         else if (row.TableST == 2)
                         {
@@ -113,7 +113,7 @@
                         }
                         <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
                             <a class="card-link" onclick="showModal('@Url.Action("_ModalST", "Modal", new { id = row.TableId})')" data-toggle="ajax-modal" data-target="#MadalST">
-                                <div class="card border-0 @bg c-table">
+                                <div class="card border-0 rounded-0 @bg c-table">
                                     <div class="card-body">
                                         <div class="text-center">
                                             <p class="mb-1">@row.TableName</p>
@@ -221,7 +221,7 @@
         }
 
         function screenScroll() {
-            var height_P = $(window).height() - $('.heard-row').height() - $('.content-table-heard').height() - 150
+            var height_P = $(window).height() - 132
             $('[scroll]').slimScroll({
                 height: height_P,
                 railBorderRadius: 0,
