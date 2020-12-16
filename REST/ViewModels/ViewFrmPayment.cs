@@ -13,15 +13,17 @@ namespace REST.ViewModels
         public string TableST { get; set; }
         public string MemberId { get; set; }
         public string MemberName { get; set; }
-        public string Balance { get; set; }
-        public string VatPersen { get; set; }
-        public string VatBath { get; set; }
+        public string Balance { get; set; }        
         public string ServicePersen { get; set; }
         public string ServiceBath { get; set; }
         public string MemberPersen { get; set; }
         public string MemberBath { get; set; }
         public string Persen { get; set; }
         public string PersenBath { get; set; }
+        public string VatPersen { get; set; }
+        public string VatBath { get; set; }
+        public string BeforeVat { get; set; }
+        public string AfterVat { get; set; }
         public string Sum { get; set; }
         public string Coupon { get; set; }
         public string Total { get; set; }

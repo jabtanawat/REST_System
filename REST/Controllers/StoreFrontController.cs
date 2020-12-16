@@ -110,8 +110,7 @@ namespace REST.Controllers
                 item.BillId = DocRunning;
                 item.TableId = id;
                 item.St = 1;
-                item.BillDt = Share.FormatDate(DateTime.Now).Date;
-                item.PriceTotal = PTotal;
+                item.Dates = Share.FormatDate(DateTime.Now).Date;
                 item.BranchId = branchid;
                 item.CreateUser = User.Identity.Name;
                 item.CreateDate = Share.FormatDate(DateTime.Now).Date;
@@ -128,7 +127,6 @@ namespace REST.Controllers
                     var itemSub = new SF_BillSub();
                     itemSub.BillId = DocRunning;
                     itemSub.i = i;
-                    itemSub.TableId = id;
                     itemSub.FoodId = row.FoodId;
                     itemSub.Amount = row.Amount;
                     itemSub.Price = row.Price;

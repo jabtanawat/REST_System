@@ -60,7 +60,86 @@ namespace REST.Controllers
                 item.SumBalance = "0.00";
             }
             return View(item);
-        }        
+        }
+
+        [HttpPost]
+        public IActionResult FrmBill(ViewFrmPayment info)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var item = new SF_Bill();
+            int i = 0;
+            try
+            {
+                // เลข running
+                var _Running = new GetRunningController(_db);
+                string DocRunning = _Running.Running("Bill", branchid);
+
+                // Updata Status Table = 1 ว่าง
+                var table = _db.CD_Table.FirstOrDefault(x => x.TableId == info.TableId && x.BranchId == branchid);
+                table.TableST = 1;
+                _db.CD_Table.Update(table);
+                _db.SaveChanges();
+
+                // รายการอาหาร
+                var _GetOrder = new GetSF_OrderController(_db);
+                var _order = _GetOrder.OrderSubTable(info.TableId, null, branchid);
+
+                // Save Bill
+                item.BillId = DocRunning;
+                item.TableId = info.TableId;
+                item.MemberId = info.MemberId;
+                item.St = 1;
+                item.Dates = Share.FormatDate(DateTime.Now).Date;
+                item.Total = Share.FormatDecimal(info.Total);
+                item.VatPersen = Share.FormatDecimal(info.VatPersen);
+                item.VatBath = Share.FormatDecimal(info.VatBath);
+                item.ServicePersen = Share.FormatDecimal(info.ServicePersen);
+                item.ServiceBath = Share.FormatDecimal(info.ServiceBath);
+                item.MemberPersen = Share.FormatDecimal(info.MemberPersen);
+                item.MemberBath = Share.FormatDecimal(info.MemberBath);
+                item.Persen = Share.FormatDecimal(info.Persen);
+                item.PersenBath = Share.FormatDecimal(info.PersenBath);
+                item.Balance = Share.FormatDecimal(info.Balance);
+                item.SumBalance = Share.FormatDecimal(info.SumBalance);
+                // -------------------------------------------------------
+                item.BranchId = branchid;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                _db.SF_Bill.Add(item);
+                _db.SaveChanges();
+
+                //Svae Payment Sub
+                foreach (var row in _order)
+                {
+                    i++;
+
+                    var itemSub = new SF_BillSub();
+                    itemSub.BillId = DocRunning;
+                    itemSub.i = i;
+                    itemSub.FoodId = row.FoodId;
+                    itemSub.Status = 1;
+                    itemSub.Amount = row.Amount;
+                    itemSub.Price = row.Price;
+                    itemSub.BranchId = branchid;
+                    _db.SF_BillSub.Add(itemSub);
+                    _db.SaveChanges();
+                }
+
+                // Set Runnig
+                _Running.SetRunning("Bill", DocRunning, branchid);
+
+                toastrAlert("เช็คบิล", "เรียบร้อยแล้ว", Enums.NotificationToastr.success);
+                return Json(new { data = "success" });
+            }
+            catch (Exception)
+            {
+                return Json(new { data = "error" });
+            }
+
+        }
 
         [HttpPost]
         public IActionResult FrmPayment(ViewFrmPayment info)
@@ -248,20 +327,25 @@ namespace REST.Controllers
                     price += i.Price * i.Amount;
                 }
             }
-            item.OrderSub = _order;
-            // หาค่า Vat
-            var V = price * _setting.TaxSell / 107;
-            item.VatPersen = "0.00";
-            item.VatBath = "0.00";
             // หาค่า ServiceCharge
             var B = price * _setting.Service / 100;
+            // รวม
+            var sum = price + B;
+            item.OrderSub = _order;
+            // หาค่า Vat
+            var V = sum * 7 / 107;
+            
             item.ServicePersen = Share.Cnumber(Share.FormatDouble(_setting.Service), 2);
             item.ServiceBath = Share.Cnumber(Share.FormatDouble(B), 2);
             item.MemberPersen = "0.00";
             item.MemberBath = "0.00";
             item.Persen = "0.00";
             item.PersenBath = "0.00";
-            var sum = price + B;
+            item.BeforeVat = Share.Cnumber(Share.FormatDouble(sum - V), 2);
+            item.VatPersen = Share.Cnumber(Share.FormatDouble(7), 2);
+            item.VatBath = Share.Cnumber(Share.FormatDouble(V), 2);
+            item.AfterVat = Share.Cnumber(Share.FormatDouble(sum), 2);
+
             item.SumBalance = Share.Cnumber(Share.FormatDouble(sum), 2);
             item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
 

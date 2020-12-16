@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using REST.Data;
 using REST.Models;
 using REST.ViewModels;
+using REST.Service;
 
 namespace REST.ApiControllers
 {
@@ -68,10 +69,11 @@ namespace REST.ApiControllers
             return List;
         }
 
-        public List<CD_Table> TableZoneStatus(string ZoneId, string Status, string branchid)
+        public List<ViewTable> TableZoneStatus(string ZoneId, string Status, string branchid)
         {
-            var List = new List<CD_Table>();
-            var sql = $"SELECT TableId, TableName, Personal, Description, TableST "
+            var List = new List<ViewTable>();
+            var sql = $"SELECT TableId, TableName, Personal, Description, TableST, "
+                    + $"(SELECT ISNULL(SUM(Amount * Price), 0) FROM SF_OrderSub LEFT JOIN SF_Order ON SF_OrderSub.OrderId = SF_Order.OrderId WHERE SF_OrderSub.BranchId = '{branchid}' AND SF_Order.Success = '1' AND SF_OrderSub.TableId = CD_Table.TableId) AS Total "
                     + $"FROM CD_Table "
                     + $"WHERE BranchId = '{branchid}' ";
             if (Status != null)
@@ -87,7 +89,7 @@ namespace REST.ApiControllers
                 {
                     while (data.Read())
                     {
-                        var Item = new CD_Table();
+                        var Item = new ViewTable();
                         Item.TableId = data.GetString(0);
                         Item.TableName = data.GetString(1);
                         if (!data.IsDBNull(2))
@@ -95,6 +97,8 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(3))
                             Item.Description = data.GetString(3);
                         Item.TableST = data.GetInt32(4);
+                        if (!data.IsDBNull(5))
+                            Item.Total = Share.Cnumber(Share.FormatDouble(data.GetDecimal(5)), 0);
                         List.Add(Item);
                     }
                 }

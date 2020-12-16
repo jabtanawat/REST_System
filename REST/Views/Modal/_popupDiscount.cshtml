@@ -5,17 +5,34 @@
             <div class="modal-body">
                 <div class="row mt-2">
                     <div class="col-md-6 mx-auto text-center">
-                        <label class="font-weight-bold">ส่วนลด % </label>
+                        <label class="font-weight-bold">ส่วนลด</label>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="col-md-6 mx-auto">
-                        <input type="text" class="form-control numberonly text-right" id="txtDiscount" />
+                        @*<input type="text" class="form-control form-control-sm numberonly text-right" id="txtDiscount" />*@
+
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control numberonly text-right" id="txtDiscount" placeholder="0">
+                            <div class="input-group-append">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mx-auto">
+                        @*<input type="text" class="form-control form-control-sm numberonly text-right" id="txtDiscountBath" />*@
+
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control numberonly text-right" id="txtDiscountBath" placeholder="0.00">
+                            <div class="input-group-append">
+                                <span class="input-group-text">บาท</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="text-center mt-3 mb-2">
-                    <button type="button" class="btn btn-success" btn-select>ตกลง</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-sm btn-success" btn-select>ตกลง</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">ยกเลิก</button>
                 </div>
             </div>
         </div>
@@ -24,11 +41,24 @@
 
 <script>
     $('#popupDiscount').on('shown.bs.modal', function () {
-        $('#txtDiscount').trigger('focus')
-    })
+        // Calculate
+        const Balance = $('#txtBalance').val()
 
-    document.querySelector("[btn-select]").addEventListener("click", () => {
-        const discount = document.getElementById("txtDiscount").value
-        Discount(discount)
-    })
+        document.getElementById("txtDiscount").addEventListener("blur", () => {
+            const Discount = $('#txtDiscount').val()
+            const TotalDiscount = parseFloat(Balance.replace(/,/g, '')) * parseFloat(Discount.replace(/,/g, '')) / 100
+            $('#txtDiscountBath').val(numeral(TotalDiscount).format('0,0.00'))
+        })
+
+        document.getElementById("txtDiscountBath").addEventListener("blur", () => {
+            const DiscountBath = $('#txtDiscountBath').val()
+            const TotalDiscount = parseFloat(DiscountBath.replace(/,/g, '')) / parseFloat(Balance.replace(/,/g, '')) * 100
+            $('#txtDiscount').val(numeral(TotalDiscount).format('0,0.00'))
+        })
+
+        document.querySelector("[btn-select]").addEventListener("click", () => {
+            const discount = document.getElementById("txtDiscount").value
+            Discount(discount)
+        })
+    })    
 </script>

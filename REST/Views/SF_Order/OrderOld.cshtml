@@ -53,7 +53,7 @@
         </div>*@
     </section>
 
-    <div class="card mt-3">
+    <div class="card rounded-0 mt-3">
         <div class="card-body" scroll-card>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 @{
@@ -207,7 +207,7 @@
             </div>            
         </section>
         <section class="order-footer">
-            <div class="card bg-card-order">
+            <div class="card rounded-0 bg-card-order">
                 <div class="card-body">
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label">รายการ :</label>
@@ -223,10 +223,10 @@
                     </div>
                     <div class="row mt-4">
                         <div class="col">
-                            <button type="button" class="btn btn-block btn-success" btn-save><i class="fas fa-cart-arrow-down"></i>&nbsp;บันทึก</button>
+                            <button type="button" class="btn btn-sm btn-block btn-success" btn-save><i class="fas fa-cart-arrow-down"></i>&nbsp;บันทึก</button>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-block btn-outline-danger" btn-cancel><i class="fas fa-ban"></i>&nbsp;ยกเลิก</button>
+                            <button type="button" class="btn btn-sm btn-block btn-outline-danger" btn-cancel><i class="fas fa-ban"></i>&nbsp;ยกเลิก</button>
                         </div>
                     </div>
                 </div>
@@ -286,15 +286,19 @@
                 function (data, status) {
                     $.each(data, function (index, val) {
                         if (val != "") {
+                            let option = ''
                             let sum = @price;
                             let count = @amount;
                             val.forEach(function (value) {
                                 sum += value.price * value.amount;
                                 count += value.amount;
+                                if (value.option == "2") {
+                                    option = '(สั่งกลับบ้าน)'
+                                }
                                 var p = '<tr>'
                                     + `<td hidden>${value.foodId}</td>`
                                     + '<td>'
-                                    + `<div>${value.foodName}</div>`
+                                    + `<div>${value.foodName} <span class="text-primary col-form-label-sm">${option}</span></div>`
                                     + `<div><strong>ราคา: </strong>${numeral(value.price).format('0,0.00')}</div>`
                                     + '</td>'
                                     + `<td class="text-right pr-4" style="width:20%;"><strong>${value.amount}</strong></td>`
@@ -313,25 +317,29 @@
             )
         }
 
-        function Add(id, amount) {
+        function Add(id, amount, options) {
             const table = $('[table-body]')
             const img = $('[img-no-order]')
             const txtcount = $('#txtcount')
             const txtsum = $('#txtsum')
             table.empty()
-            $.post("@Url.Action("Add", "SF_Order")", { id: id, amount: amount },
+            $.post("@Url.Action("Add", "SF_Order")", { id: id, amount: amount, option: options },
                 function (data, status) {
                     $.each(data, function (index, val) {
-                        if (val != "") {
+                        if (val != "") {                            
                             let sum = @price;
                             let count = @amount;
                             val.forEach(function (value) {
+                                let option = ''
                                 sum += value.price * value.amount
                                 count += value.amount
+                                if (value.option == "2") {
+                                    option = '(สั่งกลับบ้าน)'
+                                }
                                 var p = '<tr>'
                                     + `<td hidden>${value.foodId}</td>`
                                     + '<td>'
-                                    + `<div>${value.foodName}</div>`
+                                    + `<div>${value.foodName} <span class="text-primary col-form-label-sm">${option}</span></div>`
                                     + `<div><strong>ราคา: </strong>${numeral(value.price).format('0,0.00')}</div>`
                                     + '</td>'
                                     + `<td class="text-right pr-4" style="width:20%;"><strong>${value.amount}</strong></td>`
@@ -374,12 +382,16 @@
                                     let sum = @price;
                                     let count = @amount;
                                     val.forEach(function (value) {
+                                        let option = ''
                                         sum += value.price * value.amount;
                                         count += value.amount;
+                                        if (value.option == "2") {
+                                            option = '(สั่งกลับบ้าน)'
+                                        }
                                         var p = '<tr>'
                                             + `<td hidden>${value.foodId}</td>`
                                             + '<td>'
-                                            + `<div>${value.foodName}</div>`
+                                            + `<div>${value.foodName} <span class="text-primary col-form-label-sm">${option}</span></div>`
                                             + `<div><strong>ราคา: </strong>${numeral(value.price).format('0,0.00')}</div>`
                                             + '</td>'
                                             + `<td class="text-right pr-4" style="width:20%;"><strong>${value.amount}</strong></td>`

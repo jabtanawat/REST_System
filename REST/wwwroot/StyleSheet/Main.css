@@ -18,16 +18,13 @@ body {
     background-color: #F9F9FD;
 }
 
-.bg-storefore {
-    background-color: #ECEDF1;
-    color: #5E6E82;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 1.1px;
-}
-
 .bg-blue {
     background-color: #58baf9;
+}
+
+.bg-yellow {
+    background-color: #FDD741;
+    color: #5E6E82;
 }
 
 .bg-black {
@@ -62,9 +59,9 @@ body {
     background-color: #F8D7DA;
 }
 
-.bg-yellow {
+/*.bg-yellow {
     background-color: #FFF3CD;
-}
+}*/
 
 .text-yellow {
     color: #FFF3CD;

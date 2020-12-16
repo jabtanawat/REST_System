@@ -5,126 +5,191 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/StyleSheet/StoreFront/Index.css" />
+    @*<link rel="stylesheet" href="~/StyleSheet/StoreFront/Index.css" />*@
+    <style>
+        .bg-status-1 {
+            background-color: #ECEDF1;
+            color: #5E6E82;
+        }
+
+        .bg-status-2 {
+            background-color: #58BAF9;
+            color: #fff;
+        }
+
+        .c-table {
+            cursor: pointer;
+            border: none;
+        }
+
+        .c-table:hover {
+            border: 3px solid #3B3C40;
+        }
+
+        .c-table .text-tablename {
+            font-size: 20px;
+            font-weight: 600;
+        }
+    </style>
 }
 <!-- heard-row -->
 @*<section class="heard-row">
-    <div class="row">
-        <div class="col-md-4 col-xl-3 mb-3">
-            <div class="card order-card">
-                <div class="card-block">
-                    <span class="side-stick-blue"></span>
-                    <h6>จำนวนโต๊ะ</h6>
-                    <h2 class="text-right"><i class="fas fa-dice-d6 f-left"></i><span>@ViewBag.TableCount</span></h2>
+        <div class="row">
+            <div class="col-md-4 col-xl-3 mb-3">
+                <div class="card order-card">
+                    <div class="card-block">
+                        <span class="side-stick-blue"></span>
+                        <h6>จำนวนโต๊ะ</h6>
+                        <h2 class="text-right"><i class="fas fa-dice-d6 f-left"></i><span>@ViewBag.TableCount</span></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xl-3 mb-3">
+                <div class="card order-card">
+                    <div class="card-block">
+                        <span class="side-stick-green"></span>
+                        <h6>จำนวนโต๊ะที่ว่าง</h6>
+                        <h2 class="text-right"><i class="fas fa-utensils f-left"></i><span>@ViewBag.TableST_1</span></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xl-3 mb-3">
+                <div class="card order-card">
+                    <div class="card-block">
+                        <span class="side-stick-yellow"></span>
+                        <h6>จำนวนโต๊ะที่ไม่ว่าง</h6>
+                        <h2 class="text-right"><i class="fas fa-book-reader f-left"></i><span>@ViewBag.TableST_2</span></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xl-3 mb-3">
+                <div class="card order-card">
+                    <div class="card-block">
+                        <span class="side-stick-red"></span>
+                        <h6>จำนวนโต๊ะที่จอง</h6>
+                        <h2 class="text-right"><i class="fas fa-ban f-left"></i><span>@ViewBag.TableST_3</span></h2>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-4 col-xl-3 mb-3">
-            <div class="card order-card">
-                <div class="card-block">
-                    <span class="side-stick-green"></span>
-                    <h6>จำนวนโต๊ะที่ว่าง</h6>
-                    <h2 class="text-right"><i class="fas fa-utensils f-left"></i><span>@ViewBag.TableST_1</span></h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-xl-3 mb-3">
-            <div class="card order-card">
-                <div class="card-block">
-                    <span class="side-stick-yellow"></span>
-                    <h6>จำนวนโต๊ะที่ไม่ว่าง</h6>
-                    <h2 class="text-right"><i class="fas fa-book-reader f-left"></i><span>@ViewBag.TableST_2</span></h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 col-xl-3 mb-3">
-            <div class="card order-card">
-                <div class="card-block">
-                    <span class="side-stick-red"></span>
-                    <h6>จำนวนโต๊ะที่จอง</h6>
-                    <h2 class="text-right"><i class="fas fa-ban f-left"></i><span>@ViewBag.TableST_3</span></h2>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>*@
+    </section>*@
 <!-- content-table -->
 <section class="content-table">
     <div class="card rounded-0">
         <div class="card-body">
             <!-- content-table-heard -->
             @*<section class="content-table-heard">
-                <div class="card border-0 bg-light mb-3">
-                    <div class="card-body px-2 py-2">
-                        <div class="d-flex">
-                            <div class="flex-grow-1">
-                                <h6 class="font-weight-bold mb-0 mt-1">ข้อมูลโต๊ะ</h6>
-                            </div>
-                            <div>
-                                <div class="input-group input-group-sm">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text text-info" for="Zone"><i class="fas fa-th-list"></i></label>
-                                    </div>
-                                    <select class="form-control" id="Zone">
-                                        <option value="">Show All</option>
-                                        @{
-                                            foreach (var row in ViewBag.SL_Zone)
-                                            {
-                                                <option value="@row.ZoneId">@row.ZoneName</option>
+                    <div class="card border-0 bg-light mb-3">
+                        <div class="card-body px-2 py-2">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <h6 class="font-weight-bold mb-0 mt-1">ข้อมูลโต๊ะ</h6>
+                                </div>
+                                <div>
+                                    <div class="input-group input-group-sm">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text text-info" for="Zone"><i class="fas fa-th-list"></i></label>
+                                        </div>
+                                        <select class="form-control" id="Zone">
+                                            <option value="">Show All</option>
+                                            @{
+                                                foreach (var row in ViewBag.SL_Zone)
+                                                {
+                                                    <option value="@row.ZoneId">@row.ZoneName</option>
+                                                }
                                             }
-                                        }
-                                    </select>
-                                </div>                                
-                            </div>
-                            <div class="ml-2">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-primary-light dropdown-toggle" id="tabledropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-align-justify"></i>
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="tabledropdown">
-                                        <button class="dropdown-item active" type="button" value="">Show All</button>
-                                        <button class="dropdown-item" type="button" value="1"><span class="color-green"><i class="fas fa-circle"></i>&nbsp;</span>ว่าง</button>
-                                        <button class="dropdown-item" type="button" value="2"><span class="color-red"><i class="fas fa-circle"></i>&nbsp;</span>ไม่ว่าง</button>
-                                        <button class="dropdown-item" type="button" value="3"><span class="color-yellow"><i class="fas fa-circle"></i>&nbsp;</span>จอง</button>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="ml-2">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-primary-light dropdown-toggle" id="tabledropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-align-justify"></i>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="tabledropdown">
+                                            <button class="dropdown-item active" type="button" value="">Show All</button>
+                                            <button class="dropdown-item" type="button" value="1"><span class="color-green"><i class="fas fa-circle"></i>&nbsp;</span>ว่าง</button>
+                                            <button class="dropdown-item" type="button" value="2"><span class="color-red"><i class="fas fa-circle"></i>&nbsp;</span>ไม่ว่าง</button>
+                                            <button class="dropdown-item" type="button" value="3"><span class="color-yellow"><i class="fas fa-circle"></i>&nbsp;</span>จอง</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>*@
+                </section>*@
             <!-- content-table-body -->
             <section class="content-table-body" scroll>
-                <div class="row" panel-table>
+                <div class="d-flex flex-wrap">
                     @foreach (var row in ViewBag.Table)
                     {
                         string bg = null;
                         if (row.TableST == 1)
                         {
-                            bg = "bg-storefore";
+                            bg = "bg-status-1";
                         }
                         else if (row.TableST == 2)
                         {
-                            bg = "bg-c-red";
+                            bg = "bg-status-2";
                         }
                         else if (row.TableST == 3)
                         {
                             bg = "bg-c-yellow";
                         }
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 mb-3">
-                            <a class="card-link" onclick="showModal('@Url.Action("_ModalST", "Modal", new { id = row.TableId})')" data-toggle="ajax-modal" data-target="#MadalST">
-                                <div class="card border-0 rounded-0 @bg c-table">
+                        <div>
+                            <a class="card-link" onclick="showModal('@Url.Action("_popupMenuTable", "Modal", new { id = row.TableId})')" data-toggle="ajax-modal" data-target="#MadalST">
+                                <div class="card rounded-0 @bg c-table mr-1" style="width: 11rem;">
                                     <div class="card-body">
                                         <div class="text-center">
-                                            <p class="mb-1">@row.TableName</p>
-                                            <p class="mb-0">จำนวนที่นั่ง : @row.Personal</p>
+                                            <p class="mb-1 text-tablename">@row.TableName</p>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-0"><i class="fas fa-user"></i> @row.Personal</p>
+                                            <p class="mb-0">@row.Total</p>
                                         </div>
                                     </div>
                                 </div>
-                            </a>                            
+                            </a>
                         </div>
-                    }                   
-                </div>                
+                    }
+                </div>
+
+
+
+
+                @*<div class="row" panel-table>
+                    @foreach (var row in ViewBag.Table)
+                    {
+                        string bg = null;
+                        if (row.TableST == 1)
+                        {
+                            bg = "bg-status-1";
+                        }
+                        else if (row.TableST == 2)
+                        {
+                            bg = "bg-status-2";
+                        }
+                        else if (row.TableST == 3)
+                        {
+                            bg = "bg-c-yellow";
+                        }
+                        <div class="col-xl-2 col-md-3 col-sm-4 mb-3 pr-sm-0">
+                            <a class="card-link" onclick="showModal('@Url.Action("_popupMenuTable", "Modal", new { id = row.TableId})')" data-toggle="ajax-modal" data-target="#MadalST">
+                                <div class="card rounded-0 @bg c-table">
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <p class="mb-1 text-tablename">@row.TableName</p>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <p class="mb-0"><i class="fas fa-user"></i> @row.Personal</p>
+                                            <p class="mb-0">0</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    }
+                </div>*@
             </section>
         </div>
     </div>

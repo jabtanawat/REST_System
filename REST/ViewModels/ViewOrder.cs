@@ -16,5 +16,6 @@ namespace REST.ViewModels
         public decimal Amount { get; set; }
         public int Status { get; set; }
         public string StatusName { get; set; }
+        public string Option { get; set; }
     }
 }

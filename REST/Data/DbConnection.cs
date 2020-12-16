@@ -83,7 +83,7 @@ namespace REST.Data
             modelBuilder.Entity<SF_Order>().HasKey(x => new { x.OrderId, x.BranchId });
             modelBuilder.Entity<SF_OrderSub>().HasKey(x => new { x.OrderId, x.TableId, x.FoodId, x.BranchId });
             modelBuilder.Entity<SF_Bill>().HasKey(x => new { x.BillId, x.BranchId });
-            modelBuilder.Entity<SF_BillSub>().HasKey(x => new { x.BillId, x.i,x.TableId, x.FoodId, x.BranchId });
+            modelBuilder.Entity<SF_BillSub>().HasKey(x => new { x.BillId, x.i, x.FoodId, x.BranchId });
             modelBuilder.Entity<SF_Payment>().HasKey(x => new { x.PaymentId, x.BranchId });
             modelBuilder.Entity<SF_PaymentSub>().HasKey(x => new { x.PaymentId, x.i, x.FoodId, x.BranchId });
 

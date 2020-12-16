@@ -92,7 +92,7 @@
     font-size: 16px;
     font-weight: 600;
     letter-spacing: 1.1px;
-    background: linear-gradient(45deg,#FF5370,#ff869a);
+    background: #58baf9;
 }
 
 .color-green {
@@ -109,11 +109,12 @@
 
 .content-table-body .c-table {
     cursor: pointer;
+    border: none;
 }
 
-.content-table-body .card-link:hover {
-    border: 2px solid red;
-}
+    .content-table-body .c-table:hover {
+        border: 3px solid #3B3C40;
+    }
 
 .content-table-body .c-table .card-body {
     padding: 16px 10px;

@@ -8,18 +8,32 @@
             <div class="modal-body">
                 <div class="row mt-2">
                     <div class="col-md-6 mx-auto text-center">
-                        <label class="font-weight-bold">จำนวน</label>
+                        <label class="font-weight-bold">@Food.FoodName</label>
                     </div>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-md-6 mx-auto">
+                    <div class="col-md-6 pl-5 my-auto">
                         <input type="hidden" value="@Food.FoodId" id="txtFoodId" />
                         <input type="number" class="form-control text-right" value="1" id="txtAmount" />
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-check">
+                            <input class="form-check-input mt-2" type="radio" name="Options" id="R1" value="1" checked>
+                            <label class="form-check-label col-form-label-sm" for="R1">
+                                ทานที่ร้าน
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input mt-2" type="radio" name="Options" id="R2" value="2">
+                            <label class="form-check-label col-form-label-sm" for="R2">
+                                สั่งกลับบ้าน
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div class="text-center mt-3 mb-2">
-                    <button type="button" class="btn btn-success" btn-select>ตกลง</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                    <button type="button" class="btn btn-sm btn-success" btn-select>ตกลง</button>
+                    <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">ยกเลิก</button>
                 </div>
             </div>
         </div>
@@ -30,7 +44,13 @@
     document.querySelector("[btn-select]").addEventListener("click", () => {
         const amount = document.getElementById("txtAmount").value
         const foodid = document.getElementById("txtFoodId").value
-        Add(foodid, amount)
+        let options;
+        if ($('#R1').prop('checked') == true) {
+            options = $('#R1').val()
+        } else {
+            options = $('#R2').val()
+        }
+        Add(foodid, amount, options)
     })
 
 </script>

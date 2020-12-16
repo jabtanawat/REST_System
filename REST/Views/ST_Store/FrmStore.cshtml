@@ -278,13 +278,13 @@
         })
 
         let x = 1;
-        let Tax = 0;
+        @*let Tax = 0;
         // ค้นหา Setting System
         $.get("@Url.Action("GetSetting", "api")" + "/ASetting",
             function (data, status) {
                 Tax = data.taxBuy;
             }
-        )
+        )*@
 
         function show(id) {
 
@@ -363,7 +363,7 @@
                 const V = table.rows[i].cells[7].innerHTML
                 sum += parseFloat(A_Total.replace(/,/g, ''))
                 if (V == 'V') {
-                    vat += parseFloat(A_Total.replace(/,/g, '') * parseFloat(Tax) / 100)
+                    vat += parseFloat(A_Total.replace(/,/g, '') * 7 / 107)
                 }
             }
 
@@ -403,7 +403,7 @@
                     const V = table.rows[i].cells[7].innerHTML
                     sum += parseFloat(A_Total.replace(/,/g, ''))
                     if (V == 'V') {
-                        vat += parseFloat(A_Total.replace(/,/g, '') * parseFloat(Tax) / 100)
+                        vat += parseFloat(A_Total.replace(/,/g, '') * 7 / 107)
                     }
                 }
 
@@ -428,7 +428,7 @@
                     const V = table.rows[i].cells[7].innerHTML
                     sum += parseFloat(A_Total.replace(/,/g, ''))
                     if (V == 'V') {
-                        vat += parseFloat(A_Total.replace(/,/g, '') * parseFloat(Tax) / 100)
+                        vat += parseFloat(A_Total.replace(/,/g, '') * 7 / 107)
                     }
                 }
 
@@ -462,7 +462,7 @@
                 const V = table.rows[i].cells[7].innerHTML
                 sum += parseFloat(A_Total.replace(/,/g, ''))
                 if (V == 'V') {
-                    vat += parseFloat(A_Total.replace(/,/g, '') * parseFloat(Tax) / 100)
+                    vat += parseFloat(A_Total.replace(/,/g, '') * 7 / 107)
                 }
             }
 
@@ -504,7 +504,7 @@
                     const V = table.rows[i].cells[7].innerHTML
                     sum += parseFloat(A_Total.replace(/,/g, ''))
                     if (V == 'V') {
-                        vat += parseFloat(A_Total.replace(/,/g, '') * parseFloat(Tax) / 100)
+                        vat += parseFloat(A_Total.replace(/,/g, '') * 7 / 107)
                     }
                 }
 

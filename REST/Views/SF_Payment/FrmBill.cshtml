@@ -12,10 +12,10 @@
 
 <form name="FrmPayment" method="post">
     <div class="row">
-        <div class="col-xl-8 col-lg-8 col-md-8 pr-md-0 order-md-first order-last">
+        <div class="col-xl-8 col-lg-8 pr-md-0 order-lg-first order-last">
             <!-- 2 -->
             <section>
-                <div class="card">
+                <div class="card rounded-0">
                     <div class="card-body">
                         <section class="bill-header">
                             <div class="row">
@@ -138,10 +138,10 @@
             </section>
         </div>
 
-        <div class="col-xl-4 col-lg-4 col-md-4">
+        <div class="col-xl-4 col-lg-4 mb-lg-0 mb-3">
             <!-- 3 -->
             <section>
-                <div class="card">
+                <div class="card rounded-0">
                     <div class="card-body">
                         <section class="bill-payment">
                             <div class="alert alert-primary text-center py-1 mb-0" role="alert">
@@ -157,24 +157,14 @@
                         <section scroll-payment>
                             <!-- ราคารวม -->
                             <div class="form-group mb-0 row">
-                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">ราคารวม :</label>
-                                <div class="col-xl-8 col-lg-7 col-sm-8">
+                                <label class="col-xl-4 col-lg-6 col-sm-4 col-form-label col-form-label-sm">ราคารวม :</label>
+                                <div class="col-xl-8 col-lg-6 col-sm-8">
                                     <input asp-for="Balance" id="txtBalance" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
-                                </div>
-                            </div>
-                            <!-- Vat -->
-                            <div class="form-group mb-0 row">
-                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">Vat :</label>
-                                <div class="col-sm">
-                                    <input asp-for="VatPersen" id="txtVatPersen" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0">
-                                </div>
-                                <div class="col-xl-5 col-lg-3 col-sm-6">
-                                    <input asp-for="VatBath" id="txtVatBath" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
                             <!-- Service Charge -->
                             <div class="form-group mb-0 row">
-                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">SC :</label>
+                                <label class="col-xl-4 col-lg-6 col-sm-4 col-form-label col-form-label-sm">SC :</label>
                                 <div class="col-sm">
                                     <input asp-for="ServicePersen" id="txtServiceP" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0">
                                 </div>
@@ -184,7 +174,7 @@
                             </div>
                             <!-- Member % -->
                             <div class="form-group mb-0 row">
-                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">MB :</label>
+                                <label class="col-xl-4 col-lg-6 col-sm-4 col-form-label col-form-label-sm">MB :</label>
                                 <div class="col-sm">
                                     <input asp-for="MemberPersen" id="txtMemP" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0.00">
                                 </div>
@@ -194,12 +184,36 @@
                             </div>
                             <!-- ส่วนลด % -->
                             <div class="form-group mb-0 row">
-                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">DC <span class="text-danger">(F10)</span> :</label>
+                                <label class="col-xl-4 col-lg-6 col-sm-4 col-form-label col-form-label-sm">DC <span class="text-danger">(F10)</span> :</label>
                                 <div class="col-sm">
                                     <input asp-for="Persen" id="txtPersP" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0.00">
                                 </div>
                                 <div class="col-xl-5 col-lg-3 col-sm-6">
                                     <input asp-for="PersenBath" id="txtPersB" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                </div>
+                            </div>
+                            <!-- ก่อนภาษีมูลค่าเพิ่ม -->
+                            <div class="form-group mb-0 row">
+                                <label class="col-xl-4 col-lg-6 col-sm-4 col-form-label col-form-label-sm">ก่อนภาษีมูลค่าเพิ่ม :</label>
+                                <div class="col-xl-8 col-lg-6 col-sm-8">
+                                    <input asp-for="BeforeVat" id="txtBeforeVat"  type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                </div>
+                            </div>
+                            <!-- Vat -->
+                            <div class="form-group mb-0 row">
+                                <label class="col-xl-4 col-lg-6 col-sm-4 col-form-label col-form-label-sm">ภาษีมูลค่าเพิ่ม :</label>
+                                <div class="col-sm">
+                                    <input asp-for="VatPersen" id="txtVatPersen" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0">
+                                </div>
+                                <div class="col-xl-5 col-lg-3 col-sm-6">
+                                    <input asp-for="VatBath" id="txtVatBath" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                </div>
+                            </div>
+                            <!-- ยอดรวมสุทธิ -->
+                            <div class="form-group mb-0 row">
+                                <label class="col-xl-4 col-lg-6 col-sm-4 col-form-label col-form-label-sm">ยอดรวมสุทธิ :</label>
+                                <div class="col-xl-8 col-lg-6 col-sm-8">
+                                    <input asp-for="AfterVat" id="txtAfterVat" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
                         </section>
@@ -362,7 +376,39 @@
                 cancelButtonText: 'No'
             }).then((result) => {
                 if (result.value) {
-                    
+
+                    document.FrmPayment.action = '@Url.Action("FrmBill")'
+                    document.FrmPayment.submit();
+
+                    @*var data = new FormData();
+                    data.append('TableId', tableId);
+                    data.append('MemberId', memberId);
+                    data.append('SumBalance', balance);
+                    data.append('ServicePersen', servicePersen);
+                    data.append('ServiceBath', serviceBath);
+                    data.append('MemberPersen', memberPersen);
+                    data.append('MemberBath', memberBath);
+                    data.append('Persen', persen);
+                    data.append('PersenBath', persenBath);
+                    data.append('Balance', txtsum.value);
+                    data.append('Total', txttotal.value);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("FrmBill", "SF_Payment")',
+                        contentType: false,
+                        processData: false,
+                        data: data,
+                        success: function (data) {
+                            $.each(data, function (index, val) {
+                                if (val == "success") {
+                                    window.location.href = '@Url.Action("Index", "StoreFront")'
+                                } else {
+                                    Swal.fire({ text: "ไม่สามารถบันทึกข้อมูลได้", icon: 'warning'} )
+                                }
+                            })
+                        }
+                    })*@
                 }
             })
         })

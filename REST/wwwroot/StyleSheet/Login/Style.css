@@ -2,8 +2,9 @@
     /*background-image: url('../../Images/System/bg.jpg');
     background-position: center top;
     background-repeat: no-repeat;
-    background-attachment: fixed;*/
-    background-color: #F9F9FD;
+    background-attachment: fixed;
+    background-color: #F9F9FD;*/
+    background-color: #ECEDF1;
 }
 
 .form-login .card {
@@ -16,10 +17,10 @@
     width: 20rem;
     border-radius: 0px;
     border: none;
-    -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+/*    -moz-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     -webkit-box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-    opacity: 1;
+    opacity: 1;*/
 }
 
 .form-login .card .card-img-top {

@@ -104,7 +104,7 @@ namespace REST.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(string id, decimal amount)
+        public IActionResult Add(string id, decimal amount, string option)
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var List = new List<ViewOrder>();
@@ -130,6 +130,7 @@ namespace REST.Controllers
                         FoodName = Food.FoodName,
                         Price = Food.Price,
                         Amount = amount,
+                        Option = option,
                     };
 
                     List.Add(item);
@@ -142,6 +143,7 @@ namespace REST.Controllers
                         FoodName = Food.FoodName,
                         Price = Food.Price,
                         Amount = amount,
+                        Option = option,
                     };
 
                     List.Add(item);
@@ -276,6 +278,7 @@ namespace REST.Controllers
                     ItemSub.Amount = row.Amount;
                     ItemSub.Price = row.Price;
                     ItemSub.Status = 1;
+                    ItemSub.Options = Share.FormatInteger(row.Option);
                     ItemSub.BranchId = branchid;
                     _db.SF_OrderSub.Add(ItemSub);
                     _db.SaveChanges();

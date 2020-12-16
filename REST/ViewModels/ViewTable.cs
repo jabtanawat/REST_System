@@ -19,6 +19,7 @@ namespace REST.ViewModels
         public string Description { get; set; }
         public int TableST { get; set; }
         public string Status { get; set; }
+        public string Total { get; set; }
         // -------------------------------------------------------
         public int Bch { get; set; } // 1 = ใช้ได้ทุกสาขา, 2 = เลือกสาขา
         public string BchName { get; set; }

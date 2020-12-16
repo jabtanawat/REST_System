@@ -131,5 +131,15 @@ namespace REST.Controllers
             ViewBag.AccountChart = _db.GL_AccountChart.ToList();
             return PartialView("_popupAccountChart");
         }
+
+        public IActionResult _popupMenuTable(string id)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var item = _db.CD_Table.FirstOrDefault(x => x.TableId == id && x.BranchId == branchid);
+            ViewBag.TableId = item.TableId;
+            ViewBag.TableName = item.TableName;
+            ViewBag.TableST = item.TableST;
+            return PartialView("_popupMenuTable");
+        }
     }
 }
