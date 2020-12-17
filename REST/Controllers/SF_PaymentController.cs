@@ -72,13 +72,7 @@ namespace REST.Controllers
             {
                 // เลข running
                 var _Running = new GetRunningController(_db);
-                string DocRunning = _Running.Running("Bill", branchid);
-
-                // Updata Status Table = 1 ว่าง
-                var table = _db.CD_Table.FirstOrDefault(x => x.TableId == info.TableId && x.BranchId == branchid);
-                table.TableST = 1;
-                _db.CD_Table.Update(table);
-                _db.SaveChanges();
+                string DocRunning = _Running.Running("Bill", branchid);                
 
                 // รายการอาหาร
                 var _GetOrder = new GetSF_OrderController(_db);
@@ -89,18 +83,21 @@ namespace REST.Controllers
                 item.TableId = info.TableId;
                 item.MemberId = info.MemberId;
                 item.St = 1;
-                item.Dates = Share.FormatDate(DateTime.Now).Date;
-                item.Total = Share.FormatDecimal(info.Total);
-                item.VatPersen = Share.FormatDecimal(info.VatPersen);
-                item.VatBath = Share.FormatDecimal(info.VatBath);
+                item.Dates = Share.FormatDate(DateTime.Now).Date;                
+                item.SumBalance = Share.FormatDecimal(info.SumBalance);
+                item.Balance = Share.FormatDecimal(info.Balance);
                 item.ServicePersen = Share.FormatDecimal(info.ServicePersen);
                 item.ServiceBath = Share.FormatDecimal(info.ServiceBath);
                 item.MemberPersen = Share.FormatDecimal(info.MemberPersen);
                 item.MemberBath = Share.FormatDecimal(info.MemberBath);
                 item.Persen = Share.FormatDecimal(info.Persen);
                 item.PersenBath = Share.FormatDecimal(info.PersenBath);
-                item.Balance = Share.FormatDecimal(info.Balance);
-                item.SumBalance = Share.FormatDecimal(info.SumBalance);
+                item.VatPersen = Share.FormatDecimal(info.VatPersen);
+                item.VatBath = Share.FormatDecimal(info.VatBath);
+                item.VatPersen = Share.FormatDecimal(info.VatPersen);
+                item.VatBath = Share.FormatDecimal(info.VatBath);
+                item.BeforeVat = Share.FormatDecimal(info.BeforeVat);
+                item.AfterVat = Share.FormatDecimal(info.AfterVat);
                 // -------------------------------------------------------
                 item.BranchId = branchid;
                 item.CreateUser = User.Identity.Name;
@@ -131,12 +128,28 @@ namespace REST.Controllers
                 // Set Runnig
                 _Running.SetRunning("Bill", DocRunning, branchid);
 
+                // Updata Status Table = 1 ว่าง
+                var table = _db.CD_Table.FirstOrDefault(x => x.TableId == info.TableId && x.BranchId == branchid);
+                table.TableST = 1;
+                _db.CD_Table.Update(table);
+                _db.SaveChanges();
+
+                // Update Success Order = 2 เช็คบิลออเดอร์เรียบร้อยแล้ว
+                var ordersub = _GetOrder.OrderSub(info.TableId, null, "1", branchid);                
+                foreach (var row in ordersub)
+                {
+                    var itemSub = _db.SF_Order.FirstOrDefault(x => x.OrderId == row.OrderId && x.BranchId == branchid);
+                    itemSub.Success = 2;
+                    _db.SF_Order.Update(itemSub);
+                    _db.SaveChanges();
+                }
+
                 toastrAlert("เช็คบิล", "เรียบร้อยแล้ว", Enums.NotificationToastr.success);
-                return Json(new { data = "success" });
+                return RedirectToAction("Index", "StoreFront");
             }
             catch (Exception)
             {
-                return Json(new { data = "error" });
+                return View(info);
             }
 
         }
@@ -356,35 +369,75 @@ namespace REST.Controllers
         {
             var item = new ViewFrmPayment();
 
-            var _Get = new GetSF_BillController(_db);
-            var _bill = _Get.BillById(id, branchid);
-            var _setting = _db.Setting.FirstOrDefault();
+            //var _Get = new GetSF_BillController(_db);
+            //var _bill = _Get.BillById(id, branchid);
+            //var _setting = _db.Setting.FirstOrDefault();
 
-            item.BillId = _bill.BillId;
-            item.TableId = _bill.TableId;
-            item.TableName = _bill.TableName;
-            // รายการอาหาร
-            var billsub = _Get.BillSubById(id, branchid);
-            decimal price = 0;
-            foreach (var i in billsub)
+            //item.BillId = _bill.BillId;
+            //item.TableId = _bill.TableId;
+            //item.TableName = _bill.TableName;
+            //// รายการอาหาร
+            //var billsub = _Get.BillSubById(id, branchid);
+            //decimal price = 0;
+            //foreach (var i in billsub)
+            //{
+            //    if (i.Status != 4)
+            //    {
+            //        price += i.Price * i.Amount;
+            //    }
+            //}
+            //item.BillSub = billsub;
+            //// หาค่า ServiceCharge
+            //var B = price * _setting.Service / 100;
+            //item.ServicePersen = Share.Cnumber(Share.FormatDouble(_setting.Service), 2);
+            //item.ServiceBath = Share.Cnumber(Share.FormatDouble(B), 2);
+            //item.MemberPersen = "0.00";
+            //item.MemberBath = "0.00";
+            //item.Persen = "0.00";
+            //item.PersenBath = "0.00";
+            //var sum = price + B;
+            //item.SumBalance = Share.Cnumber(Share.FormatDouble(sum), 2);
+            //item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
+
+            var Bill = _db.SF_Bill.FirstOrDefault(x => x.BillId == id && x.BranchId == branchid);
+
+            item.BillId = Bill.BillId;
+            item.TableId = Bill.TableId;
+
+            var Table = _db.CD_Table.FirstOrDefault(x => x.TableId == Bill.TableId && x.BranchId == branchid);
+            item.TableName = Table.TableName;
+
+            if(Bill.MemberId != null)
             {
-                if (i.Status != 4)
+                var Member = _db.MB_Member.FirstOrDefault(x => x.MemberId == Bill.MemberId && x.BranchId == branchid);
+                item.MemberId = Bill.MemberId;
+                item.MemberName = Member.Title + " " + Member.FirstName + " " + Member.LastName;
+                if(Member.Type == 1)
                 {
-                    price += i.Price * i.Amount;
+                    item.MemberType = "ทั่วไป";
                 }
+                else
+                {
+                    item.MemberType = "สมาชิก";
+                }                
             }
-            item.BillSub = billsub;
-            // หาค่า ServiceCharge
-            var B = price * _setting.Service / 100;
-            item.ServicePersen = Share.Cnumber(Share.FormatDouble(_setting.Service), 2);
-            item.ServiceBath = Share.Cnumber(Share.FormatDouble(B), 2);
-            item.MemberPersen = "0.00";
-            item.MemberBath = "0.00";
-            item.Persen = "0.00";
-            item.PersenBath = "0.00";
-            var sum = price + B;
-            item.SumBalance = Share.Cnumber(Share.FormatDouble(sum), 2);
-            item.Balance = Share.Cnumber(Share.FormatDouble(price), 2);
+
+            item.Balance = Share.Cnumber(Share.FormatDouble(Bill.Balance), 2);
+            item.ServicePersen = Share.Cnumber(Share.FormatDouble(Bill.ServicePersen), 2);
+            item.ServiceBath = Share.Cnumber(Share.FormatDouble(Bill.ServiceBath), 2);
+            item.MemberPersen = Share.Cnumber(Share.FormatDouble(Bill.MemberPersen), 2);
+            item.MemberBath = Share.Cnumber(Share.FormatDouble(Bill.MemberBath), 2);
+            item.Persen = Share.Cnumber(Share.FormatDouble(Bill.Persen), 2);
+            item.PersenBath = Share.Cnumber(Share.FormatDouble(Bill.PersenBath), 2);
+            item.VatPersen = Share.Cnumber(Share.FormatDouble(Bill.VatPersen), 2);
+            item.VatBath = Share.Cnumber(Share.FormatDouble(Bill.VatBath), 2);
+            item.BeforeVat = Share.Cnumber(Share.FormatDouble(Bill.BeforeVat), 2);
+            item.AfterVat = Share.Cnumber(Share.FormatDouble(Bill.AfterVat), 2);
+            item.SumBalance = Share.Cnumber(Share.FormatDouble(Bill.SumBalance), 2);
+
+            var _Get = new GetSF_BillController(_db);
+            var _Bill = _Get.GetBillSub_ById(id, branchid);
+            item.BillSub = _Bill;
 
             return item;
         }        

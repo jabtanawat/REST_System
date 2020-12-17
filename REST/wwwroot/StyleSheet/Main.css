@@ -187,7 +187,7 @@ body {
 .form-table-control-sm {
     height: calc(1.2em + 0.2rem + 2px);
     padding: 0.1rem 0.3rem;
-    font-size: 1rem;
+    font-size: 0.96rem;
     line-height: 1.3;
     border-radius: 0.2rem;
     color: #5E6E82;
@@ -203,8 +203,8 @@ body {
 
 /* Table sm Button */
 .btn-table-sm {
-    padding: 0.2rem 0.4rem;
-    font-size: 0.87rem;
+    padding: 0.09rem 0.3rem;
+    font-size: 0.7rem;
     line-height: 1.3;
     border-radius: 0.2rem;
 }

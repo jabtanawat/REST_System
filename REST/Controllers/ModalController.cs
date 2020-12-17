@@ -141,5 +141,13 @@ namespace REST.Controllers
             ViewBag.TableST = item.TableST;
             return PartialView("_popupMenuTable");
         }
+
+        public IActionResult _popupEditFood(string BillId, int i, string FoodId)
+        {
+            var _Get = new GetSF_BillController(_db);
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            var item = _Get.GetBillSub_ByFood(BillId, i, FoodId, branchid);
+            return PartialView("_popupEditFood", item);
+        }
     }
 }

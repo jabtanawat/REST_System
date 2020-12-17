@@ -13,6 +13,7 @@ namespace REST.ViewModels
         public string TableST { get; set; }
         public string MemberId { get; set; }
         public string MemberName { get; set; }
+        public string MemberType { get; set; }
         public string Balance { get; set; }        
         public string ServicePersen { get; set; }
         public string ServiceBath { get; set; }

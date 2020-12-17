@@ -25,6 +25,117 @@ namespace REST.ApiControllers
         }
         #endregion 
 
+        public List<ViewSF_Bill> GetBill_ByDate(string Date, string branchid)
+        {
+            var List = new List<ViewSF_Bill>();
+            var sql = $"SELECT BillId, Dates, TableName, SumBalance "
+                    + $"FROM SF_Bill "
+                    + $"LEFT JOIN CD_Table ON SF_Bill.TableId = CD_Table.TableId "
+                    + $"WHERE SF_Bill.BranchId = '{branchid}' ";
+            if (Date != null)
+                sql += $"AND SF_Bill.Dates = '{Share.ConvertFieldDate(Date)}' ";
+
+            using (var command = _db.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = sql;
+                _db.Database.OpenConnection();
+                using (var data = command.ExecuteReader())
+                {
+                    while (data.Read())
+                    {
+                        var Item = new ViewSF_Bill();
+                        if (!data.IsDBNull(0))
+                            Item.BillId = data.GetString(0);
+                        if (!data.IsDBNull(1))
+                            Item.Dates = data.GetDateTime(1).ToString("dd/MM/yyyy");
+                        if (!data.IsDBNull(2))
+                            Item.TableName = data.GetString(2);
+                        if (!data.IsDBNull(3))
+                            Item.SumBalance = Share.Cnumber(Share.FormatDouble(data.GetDecimal(3)), 2);
+                        List.Add(Item);
+                    }
+                }
+            }
+
+            return List;
+        }
+
+        public List<ViewSF_BillSub> GetBillSub_ById(string id, string branchid)
+        {
+            var List = new List<ViewSF_BillSub>();
+            var sql = $"SELECT BillId, i, SF_BillSub.FoodId, FoodName, Status, Amount, SF_BillSub.Price "
+                    + $"FROM SF_BillSub "
+                    + $"LEFT JOIN CD_Food ON SF_BillSub.FoodId = CD_Food.FoodId "
+                    + $"WHERE SF_BillSub.BranchId = '{branchid}' AND BillId = '{id}' ORDER BY i ASC ";
+
+            using (var command = _db.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = sql;
+                _db.Database.OpenConnection();
+                using (var data = command.ExecuteReader())
+                {
+                    while (data.Read())
+                    {
+                        var Item = new ViewSF_BillSub();
+                        if (!data.IsDBNull(0))
+                            Item.BillId = data.GetString(0);
+                        if (!data.IsDBNull(1))
+                            Item.i = data.GetInt32(1);
+                        if (!data.IsDBNull(2))
+                            Item.FoodId = data.GetString(2);
+                        if (!data.IsDBNull(3))
+                            Item.FoodName = data.GetString(3);
+                        if (!data.IsDBNull(4))
+                            Item.Status = data.GetInt32(4);
+                        if (!data.IsDBNull(5))
+                            Item.Amount = data.GetDecimal(5);
+                        if (!data.IsDBNull(6))
+                            Item.Price = data.GetDecimal(6);
+                        List.Add(Item);
+                    }
+                }
+            }
+
+            return List;
+        }
+
+        public ViewSF_BillSub GetBillSub_ByFood(string id, int i, string FoodId, string branchid)
+        {
+            var Item = new ViewSF_BillSub();
+            var sql = $"SELECT BillId, i, SF_BillSub.FoodId, FoodName, Status, Amount, SF_BillSub.Price "
+                    + $"FROM SF_BillSub "
+                    + $"LEFT JOIN CD_Food ON SF_BillSub.FoodId = CD_Food.FoodId "
+                    + $"WHERE SF_BillSub.BranchId = '{branchid}' AND BillId = '{id}' AND i = '{i}' AND SF_BillSub.FoodId = '{FoodId}' ";
+
+            using (var command = _db.Database.GetDbConnection().CreateCommand())
+            {
+                command.CommandText = sql;
+                _db.Database.OpenConnection();
+                using (var data = command.ExecuteReader())
+                {
+                    while (data.Read())
+                    {                        
+                        if (!data.IsDBNull(0))
+                            Item.BillId = data.GetString(0);
+                        if (!data.IsDBNull(1))
+                            Item.i = data.GetInt32(1);
+                        if (!data.IsDBNull(2))
+                            Item.FoodId = data.GetString(2);
+                        if (!data.IsDBNull(3))
+                            Item.FoodName = data.GetString(3);
+                        if (!data.IsDBNull(4))
+                            Item.Status = data.GetInt32(4);
+                        if (!data.IsDBNull(5))
+                            Item.Amount = data.GetDecimal(5);
+                        if (!data.IsDBNull(6))
+                            Item.Price = data.GetDecimal(6);
+                    }
+                }
+            }
+
+            return Item;
+        }
+
         public ViewSF_Bill BillById(string id, string branchid)
         {
             var Item = new ViewSF_Bill();
@@ -201,7 +312,7 @@ namespace REST.ApiControllers
         public JsonResult ABill(string OrderDt = null)
         {
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            var List = Bill(null, OrderDt, branchid);
+            var List = GetBill_ByDate(OrderDt, branchid);
             return Json(List);
         }
 

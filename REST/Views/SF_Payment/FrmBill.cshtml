@@ -1,7 +1,8 @@
 ﻿@using REST.Service;
 @model REST.ViewModels.ViewFrmPayment;
 @{
-    ViewData["Title"] = "เช็คบิล";
+    ViewData["Title"] = "ระบบหน้าร้าน";
+    ViewData["System"] = "ข้อมูลเช็คบิล";
     ViewData["link"] = Url.Action("FrmDataTable", "StoreFront", new { id = Model.TableId});
     Layout = "_Payment";
 }
@@ -80,6 +81,7 @@
                                             <th class="text-center" style="width:12%;">จำนวน</th>
                                             <th class="text-center" style="width:12%;">ราคา</th>
                                             <th class="text-center" style="width:12%;">ราคารวม</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -144,14 +146,14 @@
                 <div class="card rounded-0">
                     <div class="card-body">
                         <section class="bill-payment">
-                            <div class="alert alert-primary text-center py-1 mb-0" role="alert">
-                                <h6>ยอดบิล</h6>
+                            <div class="alert alert-primary text-center py-1 mb-0 rounded-0" role="alert">
+                                <h6 class="mb-0">ยอดบิล</h6>
                             </div>
                             <div class="form-group mb-0">
                                 <input asp-for="SumBalance" id="txtSumBalance" type="text" readonly class="form-control-plaintext form-control-lg text-right text-danger" style="font-size: 2rem;font-weight: bold;">
                             </div>
-                            <div class="alert alert-primary text-center py-1 mb-1" role="alert">
-                                <h6>รายละเอียดบิล</h6>
+                            <div class="alert alert-primary text-center py-1 mb-1 rounded-0" role="alert">
+                                <h6 class="mb-0">รายละเอียดบิล</h6>
                             </div>
                         </section>
                         <section scroll-payment>
@@ -299,7 +301,12 @@
                         $('#txtMemP').val(numeral(val.rebate).format('0,0.00'))
                         $('#txtMemB').val(numeral(MemP).format('0,0.00'))
 
+                        const v = price * 7 / 107
+
                         $('#txtSumBalance').val(numeral(price).format('0,0.00'))
+                        $('#txtBeforeVat').val(numeral(price - v).format('0,0.00'))
+                        $('#txtVatBath').val(numeral(v).format('0,0.00'))
+                        $('#txtAfterVat').val(numeral(price).format('0,0.00'))
                     })
                     $('#popupMember').modal('hide')
                 }
@@ -322,7 +329,12 @@
 
             const price = balance + serviceB - persenB - memberB
 
+            const v = price * 7 / 107
+
             $('#txtSumBalance').val(numeral(price).format('0,0.00'))
+            $('#txtBeforeVat').val(numeral(price - v).format('0,0.00'))
+            $('#txtVatBath').val(numeral(v).format('0,0.00'))
+            $('#txtAfterVat').val(numeral(price).format('0,0.00'))
         }
 
         // Load Window
@@ -357,9 +369,14 @@
             const bs = balance + serviceB - persB
             const price = bs - memB
 
+            const v = price * 7 / 107
+
             $('#txtPersP').val(numeral(dis).format('0,0.00'))
             $('#txtPersB').val(numeral(persB).format('0,0.00'))
             $('#txtSumBalance').val(numeral(price).format('0,0.00'))
+            $('#txtBeforeVat').val(numeral(price - v).format('0,0.00'))
+            $('#txtVatBath').val(numeral(v).format('0,0.00'))
+            $('#txtAfterVat').val(numeral(price).format('0,0.00'))
 
             $('#popupDiscount').modal('hide')
         }

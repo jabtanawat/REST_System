@@ -13,5 +13,7 @@ namespace REST.ViewModels
         public DateTime BillDt { get; set; }
         public string Dates { get; set; }
         public decimal PriceTotal { get; set; }
+        public string SumBalance { get; set; }
     }
+
 }

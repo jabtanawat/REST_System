@@ -44,7 +44,7 @@ namespace REST.Controllers
         {
             var branchId = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             var _bill = new GetSF_BillController(_db);
-            ViewBag.Table = _bill.Bill(null, DateTime.Now.ToString("dd/MM/yyyy"), branchId);
+            ViewBag.Table = _bill.GetBill_ByDate(DateTime.Now.ToString("dd/MM/yyyy"), branchId);
             return View();
         }
 

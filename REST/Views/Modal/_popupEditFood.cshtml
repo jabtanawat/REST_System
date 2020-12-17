@@ -1,0 +1,85 @@
+﻿<!-- Modal PopupEditFood -->
+@model REST.ViewModels.ViewSF_BillSub;
+
+<div class="modal fade" id="popupEditFood" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="popupEditFoodTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <p class="font-weight-bold mb-0">แก้ไขรายการอาหาร</p>
+                        </div>
+                        <div class="col text-right">
+                            <button type="button" class="btn btn-sm btn-danger py-0" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-11 mx-auto">
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label col-form-label-sm text-sm-right">เลขที่บิล :</label>
+                                <div class="col-8">
+                                    <input asp-for="BillId" id="modBillId" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label col-form-label-sm text-sm-right">รหัสอาหาร :</label>
+                                <div class="col-8">
+                                    <input asp-for="FoodId" id="txtFoodId" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label col-form-label-sm text-sm-right">ชื่ออาหาร :</label>
+                                <div class="col-8">
+                                    <input asp-for="FoodName" id="txtFoodName" type="text" readonly class="form-control-plaintext form-control-sm border-bottom">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label col-form-label-sm text-sm-right">จำนวน :</label>
+                                <div class="col-8">
+                                    <input asp-for="Amount" id="txtAmount" type="text" class="form-control-plaintext form-control-sm numberonly text-right border-bottom">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label col-form-label-sm text-sm-right">ราคา :</label>
+                                <div class="col-8">
+                                    <input asp-for="Price" id="txtPrice" type="text" readonly class="form-control-plaintext form-control-sm text-right border-bottom">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-4 col-form-label col-form-label-sm text-sm-right">ราคารวม :</label>
+                                <div class="col-8">
+                                    <input id="txtTotal" type="text" readonly class="form-control-plaintext form-control-sm text-right border-bottom">
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-6 mx-auto"><button type="button" class="btn btn-sm btn-block btn-primary" btn-edit>แก้ไขรายการ</button></div>
+                            </div>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#popupEditFood').on('shown.bs.modal', function () {
+        const amount = $('#txtAmount').val()
+        const price = $('#txtPrice').val()
+        const total = parseFloat(amount.replace(/,/g, '')) * parseFloat(price.replace(/,/g, ''))
+        $('#txtTotal').val(numeral(total).format('0,0.00'))
+
+        document.getElementById("txtAmount").addEventListener("blur", () => {
+            const amount = $('#txtAmount').val()
+            const price = $('#txtPrice').val()
+            const total = parseFloat(amount.replace(/,/g, '')) * parseFloat(price.replace(/,/g, ''))
+            $('#txtTotal').val(numeral(total).format('0,0.00'))
+        })      
+
+        document.querySelector("[btn-edit]").addEventListener("click", () => {
+            EditAmount('@Model.i', $('#txtAmount').val(), $('#txtPrice').val(), $('#txtTotal').val() )
+        })
+    })
+</script>

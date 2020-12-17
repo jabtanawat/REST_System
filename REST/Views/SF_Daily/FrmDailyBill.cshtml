@@ -39,14 +39,14 @@
                     <div class="card border-0">
                         <div class="card-body table-responsive p-0" scroll>
                             <table class="table table-md table-bordered table-head-fixed text-nowrap">
-                                <thead class="thead-black">
+                                <thead class="thead-primary-light">
                                     <tr>
                                         <th class="text-center" style="width:5%;">ลำดับ</th>
-                                        <th class="text-center">เลขที่บิล</th>
+                                        <th class="text-center" style="width:30%;">เลขที่บิล</th>
                                         <th class="text-center" style="width:15%;">วันที่บิล</th>
-                                        <th class="text-center">ชื่อโต๊ะ</th>
+                                        <th class="text-center" style="width:25%;">ชื่อโต๊ะ</th>
                                         <th class="text-center" style="width:15%;">จำนวนเงิน</th>
-                                        <th class="text-center" style="width:15%;"><i class="fas fa-info-circle"></i></th>
+                                        <th class="text-center" style="width:10%;"> </th>
                                     </tr>
                                 </thead>
                                 <tbody id="table-body">
@@ -62,8 +62,10 @@
                                                     <td>@row.BillId</td>
                                                     <td class="text-center">@row.Dates</td>
                                                     <td>@row.TableName</td>
-                                                    <td class="text-right">@row.PriceTotal.ToString("N2")</td>
-                                                    <td class="text-center bg-info-light"><a href="@Url.Action("FrmPayment", "SF_Payment", new { id = row.BillId})" class="text-info"><i class="fab fa-paypal"></i>&nbsp;ชำระเงิน</a></td>
+                                                    <td class="text-right">@row.SumBalance</td>
+                                                    <td class="text-center">
+                                                        <a href="@Url.Action("FrmPayment", "SF_Payment", new { id = row.BillId})" class="text-info"><i class="fas fa-street-view"></i>&nbsp;ดูข้อมูล</a>
+                                                    </td>
                                                 </tr>
                                             }
                                         }
@@ -129,8 +131,8 @@
                                 + `<td>${val.billId}</td>`
                                 + `<td class="text-center">${val.dates}</td>`
                                 + `<td>${val.tableName}</td>`
-                                + `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
-                                + `<td class="text-center bg-info-light"><a href="${link}" class="text-info"><i class="fab fa-paypal"></i>&nbsp;ชำระเงิน</td>`
+                                + `<td class="text-right">${numeral(val.sumBalance).format('0,0.00')}</td>`
+                                + `<td class="text-center"><a href="${link}" class="text-info"><i class="fas fa-street-view"></i>&nbsp;ดูข้อมูล</td>`
                                 + '</tr>';
 
                             $('#table-body').append(t)
@@ -161,8 +163,8 @@
                                 + `<td>${val.billId}</td>`
                                 + `<td class="text-center">${val.dates}</td>`
                                 + `<td>${val.tableName}</td>`
-                                + `<td class="text-right">${numeral(val.priceTotal).format('0,0.00')}</td>`
-                                + `<td class="text-center bg-info-light"><a href="${link}" class="text-info"><i class="fab fa-paypal"></i>&nbsp;ชำระเงิน</td>`
+                                + `<td class="text-right">${numeral(val.sumBalance).format('0,0.00')}</td>`
+                                + `<td class="text-center"><a href="${link}" class="text-info"><i class="fas fa-street-view"></i>&nbsp;ดูข้อมูล</td>`
                                 + '</tr>';
 
                             $('#table-body').append(t)

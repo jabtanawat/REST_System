@@ -76,17 +76,19 @@
 
 <script>
     $('#popupAccountChart').on('shown.bs.modal', function () {
+        //$('[popupScroll]').slimScroll({
+        //    height: 300,
+        //    railBorderRadius: 0,
+        //    railVisible: true,
+        //    distance: '-10px'
+        //});
+    })
+    $(document).ready(function () {
         $('[popupScroll]').slimScroll({
-            height: 300,
+            height: 500,
             railBorderRadius: 0,
             railVisible: true,
             distance: '-10px'
         });
     })
-    //$(document).ready(function () {
-    //    $('#DT_Staple').DataTable({
-    //        "info": false,
-    //        "ordering": false
-    //    });
-    //})
 </script>
