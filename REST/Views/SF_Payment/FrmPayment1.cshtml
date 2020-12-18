@@ -93,7 +93,7 @@
                                                     x++;
                                                     if (row.Status != 4)
                                                     {
-                                                        total += row.Price * row.Amount;
+                                                        total += Share.FormatDecimal(row.Price) * Share.FormatDecimal(row.Amount);
                                                     }
                                                     <tr>
                                                         <td class="text-center">@x</td>

@@ -40,6 +40,8 @@ namespace REST.ViewModels
         public string MoneyChange { get; set; }
 
 
+
+        public string Sub { get; set; }
         public List<ViewSF_BillSub> BillSub { get; set; }
 
         public List<ViewSF_OrderSub> OrderSub { get; set; }

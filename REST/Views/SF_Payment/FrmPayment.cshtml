@@ -84,7 +84,7 @@
 
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="bodyt">
                                         @{
 
                                             if (Model.BillSub != null && Model.BillSub.Count() > 0)
@@ -97,28 +97,23 @@
                                                     string A = "A" + x;
                                                     if (row.Status != 2)
                                                     {
-                                                        total += row.Price * row.Amount;
+                                                        total += Share.FormatDecimal(row.Price) * Share.FormatDecimal(row.Amount);
                                                     }
                                                     <tr>
                                                         <td class="text-center">@x</td>
                                                         <td hidden>@row.i</td>
                                                         <td>@row.FoodId</td>
                                                         <td>@row.FoodName</td>
-                                                        <td class="text-right">
-                                                            <input id="@A" type="text" value="@row.Amount" readonly class="form-control-plaintext form-table-control-sm text-right numberonly Amount">
-                                                        </td>
+                                                        <td class="text-right">@row.Amount</td>
                                                         <td class="text-right">@row.Price</td>
                                                         <td class="text-right">@Share.Cnumber(Share.FormatDouble(total), 2)</td>
                                                         <td class="text-center">
-                                                            @*<a href="#" data-toggle="ajax-modal" data-target="#popupMember" data-url="@Url.Action("_popupEditFood", "Modal", new {BillId = row.BillId, i = row.i, FoodId = row.FoodId })" class="text-danger">
-                                                                <i class="far fa-file-alt"></i>
-                                                            </a>*@
                                                             <div class="btn-group">
                                                                 <button class="btn btn-info-light btn-table-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                     <i class="fas fa-cog"></i>
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left">
-                                                                    <button type="button" class="dropdown-item btn-sm" href="#" data-toggle="ajax-modal" data-target="#popupMember" data-url="@Url.Action("_popupEditFood", "Modal", new {BillId = row.BillId, i = row.i, FoodId = row.FoodId })">แก้ไขจำนวน</button>
+                                                                    <button type="button" class="dropdown-item btn-sm" href="#" onclick="ModalEdit('@row.BillId', '@row.i', '@row.FoodId')">แก้ไขจำนวน</button>
                                                                     <a class="dropdown-item col-form-label-sm" href="#" id="EditRemove">ลบรายการ</a>
                                                                 </div>
                                                             </div>
@@ -223,7 +218,7 @@
                         </section>
                         <div class="row">
                             <div class="col-sm-6"><button type="button" class="btn btn-sm btn-primary btn-block" btn-bill><i class="fas fa-print"></i> พิมพ์บิล</button></div>
-                            <div class="col-sm-6"><button type="button" class="btn btn-sm btn-success btn-block" btn-cancel><i class="fab fa-paypal"></i> ชำระเงิน</button></div>
+                            <div class="col-sm-6"><button type="button" class="btn btn-sm btn-success btn-block" btn-payment><i class="fab fa-paypal"></i> ชำระเงิน <span class="text-danger">(F2)</span></button></div>
                         </div>                        
                     </div>
                 </div>
@@ -274,15 +269,6 @@
         /* Modal */
         var PlaceHolderElement = $('#PlaceHolderHere')
         $('button[data-toggle="ajax-modal"]').click(function (event) {
-            var url = $(this).data('url')
-            var decodedUrl = decodeURIComponent(url)
-            $.get(decodedUrl).done(function (data) {
-                PlaceHolderElement.html(data)
-                PlaceHolderElement.find('.modal').modal('show')
-            })
-        })
-
-        $('a[data-toggle="ajax-modal"]').click(function (event) {
             var url = $(this).data('url')
             var decodedUrl = decodeURIComponent(url)
             $.get(decodedUrl).done(function (data) {
@@ -371,6 +357,15 @@
                     PlaceHolderElement.find('.modal').modal('show')
                 })
                 return false;
+            } else if (e.which == 113) {
+                // F2 Show Payment
+                var url = '@Url.Action("_popupCalculate", "Modal")'
+                var decodedUrl = decodeURIComponent(url)
+                $.get(decodedUrl).done(function (data) {
+                    PlaceHolderElement.html(data)
+                    PlaceHolderElement.find('.modal').modal('show')
+                })
+                return false;
             }
         });
 
@@ -397,19 +392,8 @@
 
         // EditRemove
         $('body').on('click', '#EditRemove', function () {
-            $(this).parents('tr').remove();
-        })
-
-        function EditAmount(i, amount, price, total) {
-            alert(i + amount + price + total)
-
-            $('#popupEditFood').modal('hide')
-        }
-
-        // BTN-Bill
-        document.querySelector("[btn-bill]").addEventListener('click', () => {
             Swal.fire({
-                text: "ต้องการเช็คบิลหรือไม่ ?",
+                text: "ต้องการลบรายการหรือไหม ?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -419,39 +403,189 @@
             }).then((result) => {
                 if (result.value) {
 
-                    document.FrmPayment.action = '@Url.Action("FrmBill")'
-                    document.FrmPayment.submit();
+                    $(this).parents('tr').remove();
 
-                    @*var data = new FormData();
-                    data.append('TableId', tableId);
-                    data.append('MemberId', memberId);
-                    data.append('SumBalance', balance);
-                    data.append('ServicePersen', servicePersen);
-                    data.append('ServiceBath', serviceBath);
-                    data.append('MemberPersen', memberPersen);
-                    data.append('MemberBath', memberBath);
-                    data.append('Persen', persen);
-                    data.append('PersenBath', persenBath);
-                    data.append('Balance', txtsum.value);
-                    data.append('Total', txttotal.value);
+                    // เช็คข้อมูลในตาราง
+                    var table = document.getElementById('bodyt')
+                    var sumTotal = 0
+
+                    for (let x = 0; x < table.rows.length; x++) {
+
+                        table.rows[x].cells[0].innerHTML = x + 1
+
+                        sumTotal += parseFloat(table.rows[x].cells[6].innerHTML.replace(/,/g, ''))
+
+                    }
+
+                    // Calculate
+                    $('#txtBalance').val(numeral(sumTotal).format('0,0.00'))
+                    const balance = parseFloat($('#txtBalance').val().replace(/,/g, '')) // Balance
+                    const servicePersen = parseFloat($('#txtServiceP').val().replace(/,/g, '')) // Service
+                    const serviceBath = balance * servicePersen / 100
+                    const memberPersen = parseFloat($('#txtMemP').val().replace(/,/g, '')) // Member
+                    const memberBath = balance * memberPersen / 100
+                    const persen = parseFloat($('#txtPersP').val().replace(/,/g, '')) // Persen
+                    const persB = balance * persen / 100
+                    const bs = balance + serviceBath - persB
+                    const price = bs - memberBath
+
+                    const v = price * 7 / 107
+
+                    $('#txtServiceB').val(numeral(serviceBath).format('0,0.00'))
+                    $('#txtMemB').val(numeral(memberBath).format('0,0.00'))
+                    $('#txtPersB').val(numeral(persB).format('0,0.00'))
+                    $('#txtSumBalance').val(numeral(price).format('0,0.00'))
+                    $('#txtBeforeVat').val(numeral(price - v).format('0,0.00'))
+                    $('#txtVatBath').val(numeral(v).format('0,0.00'))
+                    $('#txtAfterVat').val(numeral(price).format('0,0.00'))
+                }
+            })
+        })
+
+        // ModalEdit
+        function ModalEdit(billid, i, foodid) {
+
+            var PlaceHolderElement = $('#PlaceHolderHere')
+
+            // เช็คข้อมูลในตาราง
+            var table = document.getElementById('bodyt')
+            var modalAmount = 0
+            for (let x = 0; x < table.rows.length; x++) {
+                var id = (table.rows[x].cells[1].innerHTML)
+                if (id == i) {
+                    modalAmount = table.rows[x].cells[4].innerHTML
+                }
+            }
+            var url = '@Url.Action("_popupEditFood", "Modal")?BillId=' + billid + '&i=' + i + '&FoodId=' + foodid + '&Amount=' + modalAmount
+            $.get(url).done(function (data) {
+                PlaceHolderElement.html(data)
+                PlaceHolderElement.find('.modal').modal('show')
+            })
+        }
+
+        function EditAmount(i, amount, total) {
+
+            // เช็คข้อมูลในตาราง
+            var table = document.getElementById('bodyt')
+            var sumTotal = 0
+
+            for (let x = 0; x < table.rows.length; x++) {
+                var id = (table.rows[x].cells[1].innerHTML)
+                if (id == i) {
+                    table.rows[x].cells[4].innerHTML = amount
+                    table.rows[x].cells[6].innerHTML = total
+                }
+
+                sumTotal += parseFloat(table.rows[x].cells[6].innerHTML.replace(/,/g, ''))
+
+            }
+
+            // Calculate
+            $('#txtBalance').val(numeral(sumTotal).format('0,0.00'))
+            const balance = parseFloat($('#txtBalance').val().replace(/,/g, '')) // Balance
+            const servicePersen = parseFloat($('#txtServiceP').val().replace(/,/g, '')) // Service
+            const serviceBath = balance * servicePersen / 100
+            const memberPersen = parseFloat($('#txtMemP').val().replace(/,/g, '')) // Member
+            const memberBath = balance * memberPersen /100
+            const persen = parseFloat($('#txtPersP').val().replace(/,/g, '')) // Persen
+            const persB = balance * persen / 100
+            const bs = balance + serviceBath - persB
+            const price = bs - memberBath
+
+            const v = price * 7 / 107
+
+            $('#txtServiceB').val(numeral(serviceBath).format('0,0.00'))
+            $('#txtMemB').val(numeral(memberBath).format('0,0.00'))
+            $('#txtPersB').val(numeral(persB).format('0,0.00'))
+            $('#txtSumBalance').val(numeral(price).format('0,0.00'))
+            $('#txtBeforeVat').val(numeral(price - v).format('0,0.00'))
+            $('#txtVatBath').val(numeral(v).format('0,0.00'))
+            $('#txtAfterVat').val(numeral(price).format('0,0.00'))
+
+            $('#popupEditFood').modal('hide')
+        }
+
+        // BTN-Bill
+        document.querySelector("[btn-bill]").addEventListener('click', () => {
+            Swal.fire({
+                text: "ต้องการพิมพ์บิลหรือไม่ ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.value) {
+
+                    var tdata = [];
+
+                    // ตาราง
+                    var t = document.getElementById('bodyt')
+
+                    if (t.rows.length > 0) {
+                        for (let x = 0; x < t.rows.length; x++) {
+                            var foodid = t.rows[x].cells[2].innerHTML
+                            var amount = t.rows[x].cells[4].innerHTML
+                            var price = t.rows[x].cells[5].innerHTML
+                            var total = t.rows[x].cells[6].innerHTML
+
+                            var obj = { FoodId: foodid, Amount: amount, Price: price, Total: total }
+                            tdata.push(obj)
+                        }
+                    } else {
+                        Swal.fire({ text: "ไม่มีรายการอาหาร", icon: 'warning' })
+                        return;
+                    }
+
+                    var data = new FormData();
+                    data.append('BillId', $('#txtBillId').val());
+                    data.append('TableId', $('#txtTableId').val());
+                    data.append('MemberId', $('#txtMemberId').val());
+                    data.append('SumBalance', $('#txtSumBalance').val());
+                    data.append('Balance', $('#txtBalance').val());
+                    data.append('ServicePersen', $('#txtServiceP').val());
+                    data.append('ServiceBath', $('#txtServiceB').val());
+                    data.append('MemberPersen', $('#txtMemP').val());
+                    data.append('MemberBath', $('#txtMemB').val());
+                    data.append('Persen', $('#txtPersP').val());
+                    data.append('PersenBath', $('#txtPersB').val());
+                    data.append('BeforeVat', $('#txtBeforeVat').val());
+                    data.append('VatPersen', $('#VatPersen').val());
+                    data.append('VatBath', $('#VatBath').val());
+                    data.append('AfterVat', $('#txtAfterVat').val());
+                    data.append('Sub', JSON.stringify(tdata));
 
                     $.ajax({
                         type: 'POST',
-                        url: '@Url.Action("FrmBill", "SF_Payment")',
+                        url: '@Url.Action("EditBill", "SF_Payment")',
                         contentType: false,
                         processData: false,
                         data: data,
                         success: function (data) {
                             $.each(data, function (index, val) {
                                 if (val == "success") {
-                                    window.location.href = '@Url.Action("Index", "StoreFront")'
+                                    //window.location.href = '@Url.Action("FrmPayment", "SF_Payment")?id=' + $('#txtBillId').val()
+                                     window.location.href = '@Url.Action("FrmDailyBill", "SF_Daily")'
+                                } else if (val == "errorDate") {
+                                    Swal.fire({ text: "วันที่บิลไม่ตรงกัน !", icon: 'warning' })
                                 } else {
                                     Swal.fire({ text: "ไม่สามารถบันทึกข้อมูลได้", icon: 'warning'} )
                                 }
                             })
                         }
-                    })*@
+                    })
                 }
+            })
+        })
+
+        // BTN-Payment
+        document.querySelector("[btn-payment]").addEventListener('click', () => {
+            var url = '@Url.Action("_popupCalculate", "Modal")'
+            var decodedUrl = decodeURIComponent(url)
+            $.get(decodedUrl).done(function (data) {
+                PlaceHolderElement.html(data)
+                PlaceHolderElement.find('.modal').modal('show')
             })
         })
     </script>

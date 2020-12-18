@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using REST.ApiControllers;
 using REST.Data;
 using REST.ViewModels;
+using REST.Service;
 
 namespace REST.Controllers
 {
@@ -142,11 +143,20 @@ namespace REST.Controllers
             return PartialView("_popupMenuTable");
         }
 
-        public IActionResult _popupEditFood(string BillId, int i, string FoodId)
+        public IActionResult _popupEditFood(string BillId, int i, string FoodId, string Amount)
         {
-            var _Get = new GetSF_BillController(_db);
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
-            var item = _Get.GetBillSub_ByFood(BillId, i, FoodId, branchid);
+            var _Get = new GetSF_BillController(_db);
+            var billSub = _Get.GetBillSub_ByFood(BillId, i, FoodId, branchid);
+            
+            var item = new ViewSF_BillSub();
+            item.BillId = billSub.BillId;
+            item.FoodId = billSub.FoodId;
+            item.FoodName = billSub.FoodName;
+            item.Amount = Share.Cnumber(Share.FormatDouble(Amount), 2);
+            item.Price = Share.Cnumber(Share.FormatDouble(billSub.Price), 2);
+            item.i = i;
+
             return PartialView("_popupEditFood", item);
         }
     }

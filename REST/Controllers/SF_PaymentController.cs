@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using REST.ApiControllers;
 using REST.Data;
 using REST.Models;
@@ -108,10 +109,14 @@ namespace REST.Controllers
                 _db.SF_Bill.Add(item);
                 _db.SaveChanges();
 
+                
+
                 //Svae Payment Sub
                 foreach (var row in _order)
                 {
                     i++;
+
+                    decimal Total = row.Amount * row.Price;
 
                     var itemSub = new SF_BillSub();
                     itemSub.BillId = DocRunning;
@@ -120,6 +125,7 @@ namespace REST.Controllers
                     itemSub.Status = 1;
                     itemSub.Amount = row.Amount;
                     itemSub.Price = row.Price;
+                    itemSub.Total = Total;
                     itemSub.BranchId = branchid;
                     _db.SF_BillSub.Add(itemSub);
                     _db.SaveChanges();
@@ -152,6 +158,92 @@ namespace REST.Controllers
                 return View(info);
             }
 
+        }
+
+        [HttpPost]
+        public IActionResult EditBill(ViewFrmPayment info)
+        {
+            var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
+            string Status = "success";
+            var item = new SF_Bill();
+            dynamic Sub = JsonConvert.DeserializeObject(info.Sub);
+            int i = 0;
+            try
+            {               
+
+                item = _db.SF_Bill.FirstOrDefault(x => x.BillId == info.BillId && x.BranchId == branchid);
+
+                if (DateTime.Now.Date > item.Dates)
+                {
+                    return Json(new { data = "errorDate" });
+                }
+
+                // Save Bill
+                item.MemberId = info.MemberId;
+                item.St = 1;
+                item.Dates = Share.FormatDate(DateTime.Now).Date;
+                item.SumBalance = Share.FormatDecimal(info.SumBalance);
+                item.Balance = Share.FormatDecimal(info.Balance);
+                item.ServicePersen = Share.FormatDecimal(info.ServicePersen);
+                item.ServiceBath = Share.FormatDecimal(info.ServiceBath);
+                item.MemberPersen = Share.FormatDecimal(info.MemberPersen);
+                item.MemberBath = Share.FormatDecimal(info.MemberBath);
+                item.Persen = Share.FormatDecimal(info.Persen);
+                item.PersenBath = Share.FormatDecimal(info.PersenBath);
+                item.VatPersen = Share.FormatDecimal(info.VatPersen);
+                item.VatBath = Share.FormatDecimal(info.VatBath);
+                item.VatPersen = Share.FormatDecimal(info.VatPersen);
+                item.VatBath = Share.FormatDecimal(info.VatBath);
+                item.BeforeVat = Share.FormatDecimal(info.BeforeVat);
+                item.AfterVat = Share.FormatDecimal(info.AfterVat);
+                // -------------------------------------------------------
+                item.BranchId = branchid;
+                item.CreateUser = User.Identity.Name;
+                item.CreateDate = Share.FormatDate(DateTime.Now).Date;
+                item.UpdateUser = User.Identity.Name;
+                item.UpdateDate = Share.FormatDate(DateTime.Now).Date;
+
+                _db.SF_Bill.Update(item);
+                _db.SaveChanges();
+
+
+                // Delete Data BillSub And Save BillSub
+                var delete = _db.SF_BillSub.Where(x => x.BillId == info.BillId && x.BranchId == branchid).ToList();
+                _db.SF_BillSub.RemoveRange(delete);
+                _db.SaveChanges();
+
+                //Svae Payment Sub
+                foreach (dynamic result in Sub)
+                {                   
+                    i++;
+
+                    string FoodId = result.FoodId;
+                    decimal Amount = result.Amount;
+                    decimal Price = result.Price;
+                    decimal Total = result.Total;
+
+                    var itemSub = new SF_BillSub();
+                    itemSub.BillId = info.BillId;
+                    itemSub.i = i;
+                    itemSub.FoodId = FoodId;
+                    itemSub.Status = 1;
+                    itemSub.Amount = Amount;
+                    itemSub.Price = Price;
+                    itemSub.Total = Total;
+                    itemSub.BranchId = branchid;
+                    _db.SF_BillSub.Add(itemSub);
+                    _db.SaveChanges();
+                }
+
+                toastrAlert("เช็คบิล", "แก้ไขบิลเรียบร้อยแล้ว", Enums.NotificationToastr.success);
+                Status = "success";
+            }
+            catch (Exception)
+            {
+                Status = "error";
+            }
+
+            return Json(new { data = Status });
         }
 
         [HttpPost]
@@ -224,8 +316,8 @@ namespace REST.Controllers
                     itemSub.PaymentId = DocRunning;
                     itemSub.i = i;
                     itemSub.FoodId = row.FoodId;
-                    itemSub.Amount = row.Amount;
-                    itemSub.Price = row.Price;
+                    itemSub.Amount = Share.FormatDecimal(row.Amount);
+                    itemSub.Price = Share.FormatDecimal(row.Price);
                     itemSub.BranchId = branchid;
                     _db.SF_PaymentSub.Add(itemSub);
                     _db.SaveChanges();

@@ -15,6 +15,7 @@ namespace REST.Models
         public int Status { get; set; }
         public decimal Amount { get; set; }
         public decimal Price { get; set; }
+        public decimal Total { get; set; }
         public string BranchId { get; set; }
     }
 }

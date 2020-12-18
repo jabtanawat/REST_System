@@ -88,9 +88,9 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(4))
                             Item.Status = data.GetInt32(4);
                         if (!data.IsDBNull(5))
-                            Item.Amount = data.GetDecimal(5);
+                            Item.Amount = Share.Cnumber(Share.FormatDouble(data.GetDecimal(5)), 2);
                         if (!data.IsDBNull(6))
-                            Item.Price = data.GetDecimal(6);
+                            Item.Price = Share.Cnumber(Share.FormatDouble(data.GetDecimal(6)), 2);
                         List.Add(Item);
                     }
                 }
@@ -126,9 +126,9 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(4))
                             Item.Status = data.GetInt32(4);
                         if (!data.IsDBNull(5))
-                            Item.Amount = data.GetDecimal(5);
+                            Item.Amount = Share.Cnumber(Share.FormatDouble(data.GetDecimal(5)), 2);
                         if (!data.IsDBNull(6))
-                            Item.Price = data.GetDecimal(6);
+                            Item.Price = Share.Cnumber(Share.FormatDouble(data.GetDecimal(6)), 2);
                     }
                 }
             }
@@ -244,9 +244,9 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(5))
                             Item.FoodName = data.GetString(5);
                         if (!data.IsDBNull(6))
-                            Item.Amount = data.GetDecimal(6);
+                            Item.Amount = Share.Cnumber(Share.FormatDouble(data.GetDecimal(6)), 2);
                         if (!data.IsDBNull(7))
-                            Item.Price = data.GetDecimal(7);
+                            Item.Price = Share.Cnumber(Share.FormatDouble(data.GetDecimal(7)), 2);
                         List.Add(Item);
                     }
                 }
