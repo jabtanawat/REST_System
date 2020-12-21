@@ -13,6 +13,7 @@ namespace REST.ViewModels
         public string FoodName { get; set; }
         public decimal Amount { get; set; }
         public decimal Price { get; set; }
+        public string Total { get; set; }
         public string BranchId { get; set; }
     }
 }

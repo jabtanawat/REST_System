@@ -105,7 +105,7 @@ namespace REST.ApiControllers
         public List<ViewSF_PaymentSub> PaymentSubList(string id, string branchid)
         {
             var List = new List<ViewSF_PaymentSub>();
-            var sql = $"SELECT PaymentId, i, P.FoodId, F.FoodName, Amount, P.Price "
+            var sql = $"SELECT PaymentId, i, P.FoodId, F.FoodName, Amount, P.Price, P.Total "
                     + $"FROM SF_PaymentSub AS P "
                     + $"LEFT JOIN CD_Food AS F ON P.FoodId = F.FoodId "
                     + $"WHERE P.BranchId = '{branchid}' ";
@@ -134,6 +134,8 @@ namespace REST.ApiControllers
                             Item.Amount = data.GetDecimal(4);
                         if (!data.IsDBNull(5))
                             Item.Price = data.GetDecimal(5);
+                        if (!data.IsDBNull(6))
+                            Item.Total = Share.Cnumber(Share.FormatDouble(data.GetDecimal(6)), 2);
                         List.Add(Item);
                     }
                 }

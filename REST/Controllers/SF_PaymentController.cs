@@ -192,8 +192,6 @@ namespace REST.Controllers
                 item.PersenBath = Share.FormatDecimal(info.PersenBath);
                 item.VatPersen = Share.FormatDecimal(info.VatPersen);
                 item.VatBath = Share.FormatDecimal(info.VatBath);
-                item.VatPersen = Share.FormatDecimal(info.VatPersen);
-                item.VatBath = Share.FormatDecimal(info.VatBath);
                 item.BeforeVat = Share.FormatDecimal(info.BeforeVat);
                 item.AfterVat = Share.FormatDecimal(info.AfterVat);
                 // -------------------------------------------------------
@@ -255,45 +253,52 @@ namespace REST.Controllers
             int i = 0;
             try
             {
+                
+                var bill = _db.SF_Bill.FirstOrDefault(x => x.BillId == info.BillId && x.BranchId == branchid);
+                // ตรวจสอบวันที่ ว่าวันเดียวกันไหม
+                if (DateTime.Now.Date != bill.Dates)
+                {
+                    return Json(new { data = "errorDate" });
+                }
+                // ตรวจสอบว่าบิล มีการแก้ไขยอดชำระหรือไหม เอายอดเงินมาเปรียบเทียบกัน
+                if (bill.SumBalance != Share.FormatDecimal(info.Balance))
+                {
+                    return Json(new { data = "errorSumBalance" });
+                }
                 // รายการอาหาร
-                var billsub = _Bill.BillSubById(info.BillId, branchid);
+                var billsub = _db.SF_BillSub.Where(x => x.BillId == info.BillId && x.BranchId == branchid).ToList();
                 // เลข running
                 var _Running = new GetRunningController(_db);
                 string DocRunning = _Running.Running("Payment", branchid);
 
-                // Updata Status Table = 1 ว่าง
-                var list = _db.SF_Payment.Where(x => x.BillId == info.BillId && x.BranchId == branchid).ToList();
-                if (list.Count == 0)
-                {
-                    var table = _db.CD_Table.FirstOrDefault(x => x.TableId == info.TableId && x.BranchId == branchid);
-                    table.TableST = 1;
-                    _db.CD_Table.Update(table);
-                    _db.SaveChanges();
-                }
-
                 // Save Payment
                 item.PaymentId = DocRunning;
                 item.BillId = info.BillId;
-                item.TableId = info.TableId;
-                item.MemberId = info.MemberId;
+                item.TableId = bill.TableId;
+                item.MemberId = bill.MemberId;
                 item.St = 1;
                 item.Dates = Share.FormatDate(DateTime.Now).Date;
-                item.Total = Share.FormatDecimal(info.Total);
-                item.ServicePersen = Share.FormatDecimal(info.ServicePersen);
-                item.ServiceBath = Share.FormatDecimal(info.ServiceBath);
-                item.MemberPersen = Share.FormatDecimal(info.MemberPersen);
-                item.MemberBath = Share.FormatDecimal(info.MemberBath);
-                item.Persen = Share.FormatDecimal(info.Persen);
-                item.PersenBath = Share.FormatDecimal(info.PersenBath);
-                item.Balance = Share.FormatDecimal(info.Balance);
+                item.SumBalance = Share.FormatDecimal(bill.SumBalance);
+                item.Balance = Share.FormatDecimal(bill.Balance);                
+                item.ServicePersen = Share.FormatDecimal(bill.ServicePersen);
+                item.ServiceBath = Share.FormatDecimal(bill.ServiceBath);
+                item.MemberPersen = Share.FormatDecimal(bill.MemberPersen);
+                item.MemberBath = Share.FormatDecimal(bill.MemberBath);
+                item.Persen = Share.FormatDecimal(bill.Persen);
+                item.PersenBath = Share.FormatDecimal(bill.PersenBath);
+                item.VatPersen = Share.FormatDecimal(bill.VatPersen);
+                item.VatBath = Share.FormatDecimal(bill.VatBath);
+                item.BeforeVat = Share.FormatDecimal(bill.BeforeVat);
+                item.AfterVat = Share.FormatDecimal(bill.AfterVat);
                 item.Coupon = Share.FormatDecimal(info.Coupon);
-                item.SumBalance = Share.FormatDecimal(info.SumBalance);
+                item.Total = Share.FormatDecimal(info.Total);
                 item.Cash1 = info.Cash1;
                 item.Cash1Bath = Share.FormatDecimal(info.Cash1Bath);
                 item.Cash2 = info.Cash2;
                 item.Cash2Bath = Share.FormatDecimal(info.Cash2Bath);
                 item.Cash3 = info.Cash3;
                 item.Cash3Bath = Share.FormatDecimal(info.Cash3Bath);
+                item.Cash3Type = info.Cash3Type;
                 item.Cash3Number = info.Cash3Number;
                 item.MoneyPut = Share.FormatDecimal(info.MoneyPut);
                 item.MoneyChange = Share.FormatDecimal(info.MoneyChange);
@@ -318,14 +323,15 @@ namespace REST.Controllers
                     itemSub.FoodId = row.FoodId;
                     itemSub.Amount = Share.FormatDecimal(row.Amount);
                     itemSub.Price = Share.FormatDecimal(row.Price);
+                    itemSub.Total = Share.FormatDecimal(row.Total);
                     itemSub.BranchId = branchid;
                     _db.SF_PaymentSub.Add(itemSub);
                     _db.SaveChanges();
                 }                              
 
                 // Updata Status Bill = 2 ชำระเงินแล้ว
-                var bill = _db.SF_Bill.FirstOrDefault(x => x.BillId == info.BillId && x.BranchId == branchid);
-                bill.St = 2;
+                var bill1 = _db.SF_Bill.FirstOrDefault(x => x.BillId == info.BillId && x.BranchId == branchid);
+                bill1.St = 2;
                 _db.SF_Bill.Update(bill);
                 _db.SaveChanges();
 
@@ -361,16 +367,30 @@ namespace REST.Controllers
             item.MemberType = member.TypeName;
 
             item.SumBalance = Share.Cnumber(Share.FormatDouble(payment.SumBalance), 2);
-            item.Total = Share.Cnumber(Share.FormatDouble(payment.Total), 2);
+            //item.Total = Share.Cnumber(Share.FormatDouble(payment.Total), 2);
             item.ServicePersen = Share.Cnumber(Share.FormatDouble(payment.ServicePersen), 2);
             item.ServiceBath = Share.Cnumber(Share.FormatDouble(payment.ServiceBath), 2);
             item.MemberPersen = Share.Cnumber(Share.FormatDouble(payment.MemberPersen), 2);
             item.MemberBath = Share.Cnumber(Share.FormatDouble(payment.MemberBath), 2);
             item.Persen = Share.Cnumber(Share.FormatDouble(payment.Persen), 2);
             item.PersenBath = Share.Cnumber(Share.FormatDouble(payment.PersenBath), 2);
+            item.BeforeVat = Share.Cnumber(Share.FormatDouble(payment.BeforeVat), 2);
+            item.VatPersen = Share.Cnumber(Share.FormatDouble(payment.VatPersen), 2);
+            item.VatBath = Share.Cnumber(Share.FormatDouble(payment.VatBath), 2);
+            item.AfterVat = Share.Cnumber(Share.FormatDouble(payment.AfterVat), 2);
             item.Coupon = Share.Cnumber(Share.FormatDouble(payment.Coupon), 2);
+            item.Total = Share.Cnumber(Share.FormatDouble(payment.Total), 2);
             item.MoneyPut = Share.Cnumber(Share.FormatDouble(payment.MoneyPut), 2);
             item.MoneyChange = Share.Cnumber(Share.FormatDouble(payment.MoneyChange), 2);
+
+            item.Cash1 = payment.Cash1;
+            item.Cash1Bath = Share.Cnumber(Share.FormatDouble(payment.Cash1Bath), 2);
+            item.Cash2 = payment.Cash2;
+            item.Cash2Bath = Share.Cnumber(Share.FormatDouble(payment.Cash2Bath), 2);
+            item.Cash3 = payment.Cash3;
+            item.Cash3Bath = Share.Cnumber(Share.FormatDouble(payment.Cash3Bath), 2);
+            item.Cash3Type = payment.Cash3Type;
+            item.Cash3Number = payment.Cash3Number;
 
             item.PaymentSub = _GetPayment.PaymentSubList(id, branchid);
             return View(item);
@@ -381,8 +401,15 @@ namespace REST.Controllers
             var branchid = User.Claims.FirstOrDefault(c => c.Type == "BranchId")?.Value;
             try
             {
-                // Update Status Payment = 2 ยกเลิกเอกสาร
+                
                 var payment = _db.SF_Payment.FirstOrDefault(x => x.PaymentId == id && x.BranchId == branchid);
+                // ตรวจสอบวัน ว่าวันเดียวกันไหม
+                if (DateTime.Now.Date != payment.Dates)
+                {
+                    Alert("", "วันที่ไม่ตรงกัน !", Enums.NotificationType.warning);
+                    return View();
+                }
+                // Update Status Payment = 2 ยกเลิกเอกสาร
                 payment.St = 2;
                 _db.SF_Payment.Update(payment);
                 _db.SaveChanges();

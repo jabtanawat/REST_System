@@ -24,6 +24,10 @@ namespace REST.ViewModels
         public string MemberBath { get; set; }
         public string Persen { get; set; }
         public string PersenBath { get; set; }
+        public string VatPersen { get; set; }
+        public string VatBath { get; set; }
+        public string BeforeVat { get; set; }
+        public string AfterVat { get; set; }
         public string Balance { get; set; }
         public string Coupon { get; set; }
         public string SumBalance { get; set; }
@@ -35,6 +39,7 @@ namespace REST.ViewModels
         public string Cash2Bath { get; set; }
         public Boolean Cash3 { get; set; } // บัตรเครดิต
         public string Cash3Bath { get; set; }
+        public int Cash3Type { get; set; } // ประเภทบัตรเครดิต
         public string Cash3Number { get; set; } // เลขบัตรเครดิต
 
         public List<ViewSF_PaymentSub> PaymentSub { get; set; }

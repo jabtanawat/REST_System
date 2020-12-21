@@ -2,6 +2,7 @@
 @model REST.ViewModels.ViewSF_Payment;
 @{
     ViewData["Title"] = "ระบบหน้าร้าน";
+    ViewData["System"] = "ข้อมูลชำระเงิน";
     ViewData["link"] = Url.Action("FrmDailyPayment", "SF_Daily");
     Layout = "_Payment";
 }
@@ -15,7 +16,7 @@
         <div class="col-xl-8 col-lg-8 col-md-8 pr-md-0 order-md-first order-last">
             <!-- 1 -->
             <section>
-                <div class="card">
+                <div class="card rounded-0">
                     <div class="card-body">
                         <section class="bill-header">
                             <div class="row">
@@ -81,9 +82,9 @@
                         </section>
                         <div class="card border-0">
                             <div class="card-body table-responsive p-0" scroll>
-                                <p class="font-weight-bold mt-2"><i class="far fa-dot-circle"></i>&nbsp;รายการอาหาร</p>
+                                <p class="font-weight-bold mt-2 mb-1"><i class="far fa-dot-circle"></i>&nbsp;รายการอาหาร</p>
                                 <table class="table table-md table-bordered table-head-fixed text-nowrap">
-                                    <thead class="thead-black">
+                                    <thead class="thead-primary-light">
                                         <tr>
                                             <th class="text-center" style="width:5%;">ลำดับ</th>
                                             <th class="text-center">รหัส</th>
@@ -101,16 +102,14 @@
                                                 var x = 0;
                                                 foreach (var row in Model.PaymentSub)
                                                 {
-                                                    decimal total = 0;
                                                     x++;
-                                                    total += row.Price * row.Amount;
                                                     <tr>
                                                         <td class="text-center">@x</td>
                                                         <td>@row.FoodId</td>
                                                         <td>@row.FoodName</td>
                                                         <td class="text-right">@row.Amount</td>
                                                         <td class="text-right">@row.Price</td>
-                                                        <td class="text-right">@Share.Cnumber(Share.FormatDouble(total), 2)</td>
+                                                        <td class="text-right">@row.Total</td>
                                                     </tr>
                                                 }
                                             }
@@ -128,22 +127,124 @@
                     </div>
                 </div>
             </section>
+            <section class="payment-footer">
+                <div class="card rounded-0 mt-3">
+                    <div class="card-body">
+                        <p class="mb-0"><i class="far fa-dot-circle"></i>&nbsp;ชำระเงินโดย</p>
+                        <hr class="mt-1" />
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <!-- ผลรวมทั้งหมด -->
+                                @*<div class="form-group mb-0 row">
+                                    <label class="col-4 col-form-label-sm font-weight-bold">จำนวนเงินที่ต้องชำระ :</label>
+                                    <div class="col">
+                                        <input asp-for="Total" type="text" readonly class="form-control-plaintext form-control-sm text-right border-bottom" placeholder="0.00">
+                                    </div>
+                                </div>*@
+                                <!-- คูปอง -->
+                                <div class="form-group mb-0 row">
+                                    <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">ส่วนลดคูปอง :</label>
+                                    <div class="col-xl-8 col-lg-7 col-sm-8">
+                                        <input asp-for="Coupon" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                    </div>
+                                </div>
+                                <!-- รับเงิน -->
+                                <div class="form-group mb-0 row">
+                                    <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">รับเงิน :</label>
+                                    <div class="col-xl-8 col-lg-7 col-sm-8">
+                                        <input asp-for="MoneyPut" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                    </div>
+                                </div>
+                                <!-- เงินทอน -->
+                                <div class="form-group mb-0 row">
+                                    <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">เงินทอน :</label>
+                                    <div class="col-xl-8 col-lg-7 col-sm-8">
+                                        <input asp-for="MoneyChange" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">                                
+                                <div class="form-group mb-1 row">
+                                    <div class="col-4 ml-4">
+                                        <input asp-for="Cash1" class="form-check-input mt-2" type="checkbox" id="cash1" checked>
+                                        <label class="form-check-label col-form-label-sm" for="cash1">
+                                            เงินสด
+                                        </label>
+                                    </div>
+                                    <div class="col"><input asp-for="Cash1Bath" id="txtCash1" type="text" class="form-control-plaintext form-control-sm text-right border-bottom numberonly" placeholder="0.00"></div>
+                                </div>
+                                <div class="form-group mb-1 row">
+                                    <div class="col-4 ml-4">
+                                        <input asp-for="Cash2" class="form-check-input mt-2" type="checkbox" id="cash2">
+                                        <label class="form-check-label col-form-label-sm" for="cash2">
+                                            เงินโอน
+                                        </label>
+                                    </div>
+                                    <div class="col"><input asp-for="Cash2Bath" id="txtCash2" type="text" class="form-control-plaintext form-control-sm text-right border-bottom numberonly" placeholder="0.00"></div>
+                                </div>
+                                <div class="form-group mb-1 row">
+                                    <div class="col-4 ml-4">
+                                        <input asp-for="Cash3" class="form-check-input mt-2" type="checkbox" id="cash3">
+                                        <label class="form-check-label col-form-label-sm" for="cash3">
+                                            Credit & Debit
+                                        </label>
+                                    </div>
+                                    <div class="col"><input asp-for="Cash3Bath" id="txtCash3" type="text" class="form-control-plaintext form-control-sm text-right border-bottom numberonly" placeholder="0.00"></div>
+                                </div>
+                                <div class="form-group mb-1 row">
+                                    <div class="col-4 ml-4 text-right">
+                                        <label class="form-check-label col-form-label-sm" for="autoSizingCheck">
+                                            Card Type :
+                                        </label>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-check form-check-inline">
+                                            <input asp-for="Cash3Type" class="form-check-input" type="radio" name="Cash3Type" id="T1" value="1">
+                                            <label class="form-check-label" for="T1"><img src="~/Images/System/Svg/VISA.svg" width="40" height="30" alt="" loading="lazy"></label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input asp-for="Cash3Type" class="form-check-input" type="radio" name="Cash3Type" id="T2" value="2">
+                                            <label class="form-check-label" for="T2"><img src="~/Images/System/Svg/MASTERCARD.svg" width="40" height="30" alt="" loading="lazy"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-1 row">
+                                    <div class="col-4 ml-4 text-right">
+                                        <label class="form-check-label col-form-label-sm" for="autoSizingCheck">
+                                            Number :
+                                        </label>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group input-group-sm">
+                                            <div class="input-group-prepend">
+                                                @*<button class="btn btn-secondary" type="button" ><i class="far fa-credit-card"></i></button>*@
+                                                <span class="input-group-text"><i class="far fa-credit-card"></i></span>
+                                            </div>
+                                            <input asp-for="Cash3Number" type="text" id="txtNumberCash3" class="form-control" placeholder="xxxxxxxxxxxxx">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
 
         <div class="col-xl-4 col-lg-4 col-md-4">
             <!-- 3 -->
             <section>
-                <div class="card">
+                <div class="card rounded-0">
                     <div class="card-body">
                         <section class="bill-payment">
-                            <div class="alert alert-primary text-center py-1 mb-0" role="alert">
-                                <h6>ยอดบิล</h6>
+                            <div class="alert alert-primary text-center py-1 mb-0 rounded-0" role="alert">
+                                <h6 class="mb-0">ยอดบิล</h6>
                             </div>
                             <div class="form-group mb-0">
-                                <input asp-for="SumBalance" type="text" readonly class="form-control-plaintext form-control-lg text-right text-danger" style="font-size: 2rem;font-weight: bold;">
+                                <input asp-for="Total" type="text" readonly class="form-control-plaintext form-control-lg text-right text-danger" style="font-size: 2rem;font-weight: bold;">
                             </div>
-                            <div class="alert alert-primary text-center py-1 mb-1" role="alert">
-                                <h6>รายละเอียดบิล</h6>
+                            <div class="alert alert-primary text-center py-1 mb-1 rounded-0" role="alert">
+                                <h6 class="mb-0">รายละเอียดบิล</h6>
                             </div>
                         </section>
                         <section scroll-payment>
@@ -184,28 +285,30 @@
                                     <input asp-for="PersenBath" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
-                            <!-- คูปอง -->
+                            <!-- ก่อนภาษีมูลค่าเพิ่ม -->
                             <div class="form-group mb-0 row">
-                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">ส่วนลดคูปอง :</label>
-                                <div class="col-xl-8 col-lg-7 col-sm-8">
-                                    <input asp-for="Coupon" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                <label class="col-xl-4 col-lg-6 col-sm-4 col-form-label col-form-label-sm">ก่อนภาษีมูลค่าเพิ่ม :</label>
+                                <div class="col-xl-8 col-lg-6 col-sm-8">
+                                    <input asp-for="BeforeVat" id="txtBeforeVat" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
-                            <hr />
-                            <!-- รับเงิน -->
+                            <!-- Vat -->
                             <div class="form-group mb-0 row">
-                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">รับเงิน :</label>
-                                <div class="col-xl-8 col-lg-7 col-sm-8">
-                                    <input asp-for="MoneyPut" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                <label class="col-xl-4 col-lg-6 col-sm-4 col-form-label col-form-label-sm">ภาษีมูลค่าเพิ่ม :</label>
+                                <div class="col-sm">
+                                    <input asp-for="VatPersen" id="txtVatPersen" type="text" class="form-control-plaintext form-control-sm text-right" readonly placeholder="0">
+                                </div>
+                                <div class="col-xl-5 col-lg-3 col-sm-6">
+                                    <input asp-for="VatBath" id="txtVatBath" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
                             </div>
-                            <!-- เงินทอน -->
+                            <!-- ยอดรวมสุทธิ -->
                             <div class="form-group mb-0 row">
-                                <label class="col-xl-4 col-lg-5 col-sm-4 col-form-label col-form-label-sm">เงินทอน :</label>
-                                <div class="col-xl-8 col-lg-7 col-sm-8">
-                                    <input asp-for="MoneyChange" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
+                                <label class="col-xl-4 col-lg-6 col-sm-4 col-form-label col-form-label-sm">ยอดรวมสุทธิ :</label>
+                                <div class="col-xl-8 col-lg-6 col-sm-8">
+                                    <input asp-for="AfterVat" id="txtAfterVat" type="text" readonly class="form-control-plaintext form-control-sm text-right" placeholder="0.00">
                                 </div>
-                            </div>
+                            </div>                            
                         </section>
                         <div class="row">
                             <div class="col-sm-6"><button type="button" class="btn btn-sm btn-primary btn-block"><i class="fas fa-print"></i> พิมใบเสร็จ</button></div>
@@ -228,14 +331,14 @@
     <script>
         $(document).ready(function () {
             $('[scroll').slimScroll({
-                height: $(window).height() - $('.navbar').height() - $('.bill-header').height() - 92,
+                height: $(window).height() - $('.navbar').height() - $('.bill-header').height() - $('.payment-footer').height() - 108,
                 railBorderRadius: 0,
                 railVisible: true,
                 distance: '-10px'
             });
 
             $('[scroll-payment]').slimScroll({
-                height: $(window).height() - $('.navbar').height() - $('.bill-payment').height() - 130,
+                height: $(window).height() - $('.navbar').height() - $('.bill-payment').height() - 127,
                 railBorderRadius: 0,
                 railVisible: true,
                 distance: '-10px'

@@ -35,6 +35,7 @@ namespace REST.ViewModels
         public string Cash2Bath { get; set; } // เงินโอน
         public Boolean Cash3 { get; set; } // บัตรเครดิต checkbox
         public string Cash3Bath { get; set; } // บัตรเครดิต
+        public int Cash3Type { get; set; } // ประเภทบัตรเครดิต
         public string Cash3Number { get; set; } // เลขบัตรเครดิต
         public string MoneyPut { get; set; }
         public string MoneyChange { get; set; }

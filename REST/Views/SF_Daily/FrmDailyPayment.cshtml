@@ -39,12 +39,12 @@
                     <div class="card border-0">
                         <div class="card-body table-responsive p-0" scroll>
                             <table class="table table-md table-bordered table-head-fixed text-nowrap">
-                                <thead class="thead-black">
+                                <thead class="thead-primary-light">
                                     <tr>
                                         <th class="text-center" style="width:5%;">ลำดับ</th>
-                                        <th class="text-center">เลขเอกสารชำระเงิน</th>
-                                        <th class="text-center">เลขที่บิล</th>
-                                        <th class="text-center">ชื่อโต๊ะ</th>
+                                        <th class="text-center" style="width:20%;">เลขที่ชำระเงิน</th>
+                                        <th class="text-center" style="width:20%;">เลขที่บิล</th>
+                                        <th class="text-center" style="width:20%;">ชื่อโต๊ะ</th>
                                         <th class="text-center" style="width:15%;">วันที่ชำระเงิน</th>
                                         <th class="text-center" style="width:15%;">จำนวนเงิน</th>
                                         <th class="text-center" style="width:5%;"><i class="fas fa-info-circle"></i></th>
@@ -67,7 +67,7 @@
                                                     <td class="text-right">@Share.Cnumber(Share.FormatDouble(row.SumBalance), 2)</td>
                                                     @if (row.St == 1)
                                                     {
-                                                        <td class="text-center"><a href="@Url.Action("FrmPaymentView", "SF_Payment", new { id = row.PaymentId})" class="text-info"><i class="far fa-edit"></i></a></td>
+                                                        <td class="text-center"><a href="@Url.Action("FrmPaymentView", "SF_Payment", new { id = row.PaymentId})" class="text-info">View</a></td>
                                                     }
                                                     else
                                                     {
@@ -143,7 +143,7 @@
 
                                 if (val.st == 1)
                                 {
-                                    t += `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-edit"></i></a></td>`;
+                                    t += `<td class="text-center"><a href="${link}" class="text-info">View</a></td>`;
                                 }
                                 else
                                 {
@@ -185,7 +185,7 @@
 
                                 if (val.st == 1)
                                 {
-                                    t += `<td class="text-center"><a href="${link}" class="text-info"><i class="far fa-edit"></i></a></td>`;
+                                    t += `<td class="text-center"><a href="${link}" class="text-info">View</td>`;
                                 }
                                 else
                                 {

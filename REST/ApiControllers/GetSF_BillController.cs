@@ -31,7 +31,7 @@ namespace REST.ApiControllers
             var sql = $"SELECT BillId, Dates, TableName, SumBalance "
                     + $"FROM SF_Bill "
                     + $"LEFT JOIN CD_Table ON SF_Bill.TableId = CD_Table.TableId "
-                    + $"WHERE SF_Bill.BranchId = '{branchid}' ";
+                    + $"WHERE SF_Bill.BranchId = '{branchid}' AND SF_Bill.St = '1' ";
             if (Date != null)
                 sql += $"AND SF_Bill.Dates = '{Share.ConvertFieldDate(Date)}' ";
 

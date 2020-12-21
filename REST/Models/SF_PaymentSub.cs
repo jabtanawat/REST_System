@@ -14,6 +14,7 @@ namespace REST.Models
         public string FoodId { get; set; }
         public decimal Amount { get; set; }
         public decimal Price { get; set; }
+        public decimal Total { get; set; }
         public string BranchId { get; set; }
     }
 }

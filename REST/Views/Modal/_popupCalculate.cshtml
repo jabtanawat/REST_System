@@ -94,7 +94,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <!-- Left -->
-                        <div class="col-md-6 bg-light">
+                        <div class="col-md-7">
                             <div class="form-group mt-2 mb-0 row">
                                 <label class="col-5 col-form-label font-weight-bold text-right">จำนวนเงิน :</label>
                                 <div class="col-7">
@@ -113,12 +113,6 @@
                                     <input id="txtTotal" type="text" class="form-control-plaintext form-control-lg text-right border-bottom" placeholder="0.00" style="font-weight: bold;">
                                 </div>
                             </div>
-                            @*<div class="form-group mb-0 row">
-                                <label class="col-5 col-form-label font-weight-bold text-right">เงินทอน :</label>
-                                <div class="col-7">
-                                    <input id="txtChang" type="text" readonly class="form-control-plaintext form-control-lg text-right text-primary" placeholder="0.00" style="font-weight: bold;">
-                                </div>
-                            </div>*@
                             <p class="font-weight-bold col-form-label-sm text-center mt-3 border-bottom">ชำระเงินโดย</p>
                             <div class="form-group mb-1 row">
                                 <div class="col-4 ml-4">
@@ -129,10 +123,21 @@
                                 </div>
                                 <div class="col"><input id="txtCash1" type="text" class="form-control form-control-sm text-right numberonly" placeholder="0.00"></div>
                             </div>
+                            <!-- ยอดเงินปัดเศษ -->
+                            @*<div class="form-group mb-1 row">
+            <div class="col-4 ml-4 text-right">
+                <label class="form-check-label col-form-label-sm">
+                    ยอดเงินปัดเศษ :
+                </label>
+            </div>
+            <div class="col">
+                <input type="text" id="txtOver" class="form-control form-control-sm text-right" placeholder="0.00">
+            </div>
+        </div>*@
                             <div class="form-group row">
                                 <div class="col-4 ml-4 text-right">
                                     <label class="form-check-label col-form-label-sm">
-                                        เงินทอน
+                                        เงินทอน :
                                     </label>
                                 </div>
                                 <div class="col">
@@ -148,7 +153,14 @@
                                         เงินโอน
                                     </label>
                                 </div>
-                                <div class="col"><input id="txtCash2" type="text" class="form-control form-control-sm text-right numberonly" placeholder="0.00"></div>
+                                <div class="col">
+                                    <div class="input-group input-group-sm">
+                                        <input id="txtCash2" type="text" class="form-control form-control-sm text-right numberonly" placeholder="0.00">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button" btn-transfer><i class="fas fa-shekel-sign"></i></button>
+                                        </div>
+                                    </div>                                    
+                                </div>
                             </div>
                             <hr />
                             <div class="form-group mb-1  row">
@@ -158,30 +170,37 @@
                                         Credit & Debit
                                     </label>
                                 </div>
-                                <div class="col"><input id="txtCash3" type="text" class="form-control form-control-sm text-right numberonly" placeholder="0.00"></div>
+                                <div class="col">
+                                    <div class="input-group input-group-sm">
+                                        <input id="txtCash3" type="text" class="form-control form-control-sm text-right numberonly" placeholder="0.00">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button" btn-credit><i class="far fa-credit-card"></i></button>
+                                        </div>
+                                    </div>                                    
+                                </div>
                             </div>
                             <div class="form-group mb-1 row">
-                                <div class="col-3 ml-4">
+                                <div class="col-4 ml-4 text-right">
                                     <label class="form-check-label col-form-label-sm" for="autoSizingCheck">
-                                        Card Type
+                                        Card Type :
                                     </label>
                                 </div>
                                 <div class="col">
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="CardType" id="T1" value="1" disabled>
-                                        <label class="form-check-label" for="inlineRadio1"><img src="~/Images/System/Svg/VISA.svg" width="30" height="30" alt="" loading="lazy"></label>
+                                        <input class="form-check-input" type="radio" name="Cash3Type" id="T1" value="1" disabled>
+                                        <label class="form-check-label" for="T1"><img src="~/Images/System/Svg/VISA.svg" width="40" height="30" alt="" loading="lazy"></label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="CardType" id="T2" value="2" disabled>
-                                        <label class="form-check-label" for="inlineRadio2"><img src="~/Images/System/Svg/MASTERCARD.svg" width="30" height="30" alt="" loading="lazy"></label>
+                                        <input class="form-check-input" type="radio" name="Cash3Type" id="T2" value="2" disabled>
+                                        <label class="form-check-label" for="T2"><img src="~/Images/System/Svg/MASTERCARD.svg" width="40" height="30" alt="" loading="lazy"></label>
                                     </div>
                                 </div>
 
                             </div>
                             <div class="form-group mb-1 row">
-                                <div class="col-3 ml-4">
+                                <div class="col-4 ml-4 text-right">
                                     <label class="form-check-label col-form-label-sm" for="autoSizingCheck">
-                                        Number
+                                        Number :
                                     </label>
                                 </div>
                                 <div class="col">
@@ -194,9 +213,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <hr />
+                            <!-- ผลรวมทั้งหมด -->
+                            <div class="form-group row">
+                                <label class="col-5 col-form-label-sm font-weight-bold text-right">ผลรวมทั้งหมด :</label>
+                                <div class="col-7">
+                                    <input id="SUMPRICEALL" type="text" readonly class="form-control-plaintext form-control-sm text-right border-bottom" placeholder="0.00">
+                                </div>
+                            </div>
                         </div>
                         <!-- Right -->
-                        <div class="col-md-6 ml-auto">
+                        <div class="col-md-5 ml-auto">
                             <div class="form-group mt-2">
                                 <input id="txtNumberCalculate" type="text" class="form-control form-control-lg text-right text-danger bg-white" placeholder="0.00" style="font-weight: bold;">
                             </div>
@@ -257,8 +284,10 @@
         $('#txtSum').val($('#txtSumBalance').val())
         $('#txtTotal').val($('#txtSumBalance').val())
         $('#txtCash1').val($('#txtSumBalance').val())
+        $('#txtOver').val('0.00')
         $('#txtCash2').val('0.00')
         $('#txtCash3').val('0.00')
+        $('#SUMPRICEALL').val($('#txtSumBalance').val())
 
         const txtsum = document.getElementById('txtSum')
         const txtcoupon = document.getElementById('txtCoupon')
@@ -279,7 +308,33 @@
 
         numberCalculate.value = '0.00'
 
+        document.getElementById('cash1').addEventListener('change', () => {
+            if ($('#cash1').prop("checked") == false) {
+                $('#txtCash1').val('0.00')
+            } else {
+                $('#txtCash1').val($('#txtSum').val())
+            }
+
+            CheckTypeCash('cash1')
+        })
+
+        document.getElementById('cash2').addEventListener('change', () => {
+            if ($('#cash2').prop("checked") == false) {
+                $('#txtCash2').val('0.00')
+                $('#txtNumberCalculate').val('0.00')
+            }
+
+            CheckTypeCash('cash2')
+        })
+
         document.getElementById('cash3').addEventListener('change', () => {
+            if ($('#cash3').prop("checked") == false) {
+                $('#txtCash3').val('0.00')
+                $('#txtNumberCalculate').val('0.00')
+            }
+
+            CheckTypeCash('cash3')
+
             if ($('#cash3').prop("checked") == true) {
                 $('#T1').prop('checked', true)
                 $('#T1').prop('disabled', false)
@@ -291,11 +346,20 @@
                 $('#T1').prop('disabled', true)
                 $('#T2').prop('disabled', true)
                 $('#txtNumberCash3').prop('readonly', true)
-            }
+            }            
         })
 
+        function CheckTypeCash(a) {
+            if ($('#cash1').prop("checked") == true && $('#cash2').prop("checked") == true && $('#cash3').prop("checked") == true) {
+                Swal.fire({ text: "ไม่สามารถเลือกชำระเงิน 3 อย่างได้", icon: 'warning' })
+                console.log(a)
+                $(`#${a}`).prop('checked', false)
+                return;
+            }
+        }
+
         document.getElementById('txtNumberCalculate').addEventListener('keyup', () => {
-            var t = parseFloat(numberCalculate.value.replace(/,/g, '')) - parseFloat(txttotal.value.replace(/,/g, ''))
+            var t = parseFloat(numberCalculate.value.replace(/,/g, '')) - parseFloat($('#txtCash1').val().replace(/,/g, ''))
             txtchang.value = numeral(t).format('0,0.00')
 
             if (parseFloat(txtchang.value.replace(/,/g, '')) < 0)
@@ -315,6 +379,26 @@
 
         })
 
+        document.getElementById('txtCash1').addEventListener('blur', () => {
+            BlurSumCash()
+        })
+
+        document.getElementById('txtCash2').addEventListener('blur', () => {
+            BlurSumCash()
+        })
+
+        document.getElementById('txtCash3').addEventListener('blur', () => {
+            BlurSumCash()
+        })
+
+        function BlurSumCash() {
+            let cash1 = parseFloat($('#txtCash1').val().replace(/,/g, ''))
+            let cash2 = parseFloat($('#txtCash2').val().replace(/,/g, ''))
+            let cash3 = parseFloat($('#txtCash3').val().replace(/,/g, ''))
+            let total = cash1 + cash2 + cash3
+            $('#SUMPRICEALL').val(numeral(total).format('0,0.00'))
+        }
+
         class Calculatore {
 
             clear() {
@@ -331,7 +415,7 @@
 
                 numberCalculate.value = numberCalculate.value.toString() + number.toString()
 
-                txtchang.value = numeral(parseFloat(numberCalculate.value.replace(/,/g, '')) - parseFloat(txttotal.value.replace(/,/g, ''))).format('0,0.00')
+                txtchang.value = numeral(parseFloat(numberCalculate.value.replace(/,/g, '')) - parseFloat($('#txtCash1').val().replace(/,/g, ''))).format('0,0.00')
 
                 if (parseFloat(txtchang.value.replace(/,/g, '')) < 0)
                     txtchang.value = numeral(0).format('0,0.00')
@@ -344,7 +428,7 @@
                 else
                     numberCalculate.value = numeral(number).format('0,0.00')
 
-                txtchang.value = numeral(parseFloat(numberCalculate.value.replace(/,/g, '')) - parseFloat(txttotal.value.replace(/,/g, ''))).format('0,0.00')
+                txtchang.value = numeral(parseFloat(numberCalculate.value.replace(/,/g, '')) - parseFloat($('#txtCash1').val().replace(/,/g, ''))).format('0,0.00')
 
                 if (parseFloat(txtchang.value.replace(/,/g, '')) < 0)
                     txtchang.value = numeral(0).format('0,0.00')
@@ -377,46 +461,52 @@
         })
 
         coupon.addEventListener('click', () => {
-            $('#txtCoupon').focus()
+            $('#txtCoupon').select()
         })
 
         clearNumber.addEventListener('click', () => {
             calculator.clear()
         })
 
-        document.querySelector('[data-print]').addEventListener('click', () => {
-            var data = new FormData();
-            data.append('BillId', billId);
-            data.append('TableId', tableId);
-            data.append('MemberId', memberId);
-            data.append('SumBalance', balance);
-            data.append('ServicePersen', servicePersen);
-            data.append('ServiceBath', serviceBath);
-            data.append('MemberPersen', memberPersen);
-            data.append('MemberBath', memberBath);
-            data.append('Persen', persen);
-            data.append('PersenBath', persenBath);
-            data.append('Balance', txtsum.value);
-            data.append('Coupon', txtcoupon.value);
-            data.append('Total', txttotal.value);
-            data.append('MoneyPut', numberCalculate.value);
-            data.append('MoneyChange', txtchang.value);
-            data.append('Cash1', $('#cash1').prop("checked"));
-            data.append('Cash1Bath', $('#txtCash1').val());
-            data.append('Cash2', $('#cash2').prop("checked"));
-            data.append('Cash2Bath', $('#txtCash2').val());
-            data.append('Cash3', $('#cash3').prop("checked"));
-            data.append('Cash3Bath', $('#txtCash3').val());
-            data.append('Cash3Number', $('#txtNumberCash3').val());
+        document.querySelector('[btn-transfer]').addEventListener('click', () => {
+            $('#cash1').prop("checked", false)
+            $('#txtCash1').val('0.00')
+            $('#cash2').prop("checked", true)
+            $('#txtCash2').val($('#txtSum').val())
+            $('#txtNumberCalculate').val($('#txtSum').val())
+            $('#cash3').prop("checked", false)
+            $('#txtCash3').val('0.00')            
+            $('#T1').prop('checked', false)
+            $('#T2').prop('checked', false)
+            $('#T1').prop('disabled', true)
+            $('#T2').prop('disabled', true)
+            $('#txtNumberCash3').prop('readonly', true)
+        }) 
 
-            if ($('#txtNumberCalculate').val() == '' || $('#txtNumberCalculate').val() == 0) {
-                Swal.fire({ text: "กรุณากรอกจำนวนเงิน", icon: 'warning' })
-                return;
-            }
+        document.querySelector('[btn-credit]').addEventListener('click', () => {
+            $('#cash1').prop("checked", false)
+            $('#txtCash1').val('0.00')
+            $('#cash2').prop("checked", false)
+            $('#txtCash2').val('0.00')            
+            $('#cash3').prop("checked", true)
+            $('#txtCash3').val($('#txtSum').val())
+            $('#txtNumberCalculate').val($('#txtSum').val())
+            $('#T1').prop('checked', true)
+            $('#T1').prop('disabled', false)
+            $('#T2').prop('disabled', false)
+            $('#txtNumberCash3').prop('readonly', false)
+        }) 
+
+        document.querySelector('[data-print]').addEventListener('click', () => {            
 
             if ($('#cash1').prop("checked") == true) {
                 if ($('#txtCash1').val() == '' || $('#txtCash1').val() == 0) {
-                    Swal.fire({ text: "กรุณากรอกจำนวนเงินสด", icon: 'warning' })
+                    Swal.fire({ text: "กรุณากรอกจำนวนเงินสด", icon: 'warning' })                    
+                    return;
+                }
+
+                if ($('#txtNumberCalculate').val() == '' || $('#txtNumberCalculate').val() == 0) {
+                    Swal.fire({ text: "กรุณากรอกจำนวนเงิน", icon: 'warning' }, $('#txtNumberCalculate').select())                    
                     return;
                 }
             }
@@ -444,6 +534,62 @@
                 return;
             }
 
+            // ถ้าเงินสดอย่างเดียว
+            if ($('#cash1').prop("checked") == true && $('#cash2').prop("checked") == false && $('#cash3').prop("checked") == false) {
+                $('#txtCash1').val($('#txtSum').val())
+                $('#txtNumberCalculate').val($('#txtSum').val())
+            }
+
+            // ถ้าเงินโอนอย่างเดียว
+            if ($('#cash1').prop("checked") == false && $('#cash2').prop("checked") == true && $('#cash3').prop("checked") == false) {
+                $('#txtCash2').val($('#txtSum').val())
+                $('#txtNumberCalculate').val($('#txtSum').val())
+            }
+
+            // ถ้าเงินบัตรเครดิตอย่างเดียว
+            if ($('#cash1').prop("checked") == false && $('#cash2').prop("checked") == false && $('#cash3').prop("checked") == true) {
+                $('#txtCash3').val($('#txtSum').val())
+                $('#txtNumberCalculate').val($('#txtSum').val())
+            }
+
+            if (parseFloat($('#SUMPRICEALL').val().replace(/,/g, '')) != parseFloat($('#txtTotal').val().replace(/,/g, ''))) {
+                Swal.fire({ text: "จำนวนเงินที่ชำระไม่ถูกต้อง", icon: 'warning' })
+                return;
+            }
+
+            var data = new FormData();
+            data.append('BillId', billId);
+            data.append('TableId', tableId);
+            data.append('MemberId', memberId);
+            data.append('SumBalance', balance);
+            data.append('ServicePersen', servicePersen);
+            data.append('ServiceBath', serviceBath);
+            data.append('MemberPersen', memberPersen);
+            data.append('MemberBath', memberBath);
+            data.append('Persen', persen);
+            data.append('PersenBath', persenBath);
+            data.append('Balance', txtsum.value);
+            data.append('Coupon', txtcoupon.value);
+            data.append('Total', txttotal.value);
+            data.append('MoneyPut', numberCalculate.value);
+            data.append('MoneyChange', txtchang.value);
+            data.append('Cash1', $('#cash1').prop("checked"));
+            data.append('Cash1Bath', $('#txtCash1').val());
+            data.append('Cash2', $('#cash2').prop("checked"));
+            data.append('Cash2Bath', $('#txtCash2').val());
+            data.append('Cash3', $('#cash3').prop("checked"));
+            data.append('Cash3Bath', $('#txtCash3').val());
+
+            if ($('#T1').prop('checked') == true) {
+                data.append('Cash3Type', 1);
+            } else if ($('#T2').prop('checked') == true) {
+                data.append('Cash3Type', 2);
+            } else {
+                data.append('Cash3Type', 0);
+            }
+            
+            data.append('Cash3Number', $('#txtNumberCash3').val());
+
             $.ajax({
                 type: 'POST',
                 url: '@Url.Action("FrmPayment", "SF_Payment")',
@@ -454,6 +600,10 @@
                     $.each(data, function (index, val) {
                         if (val == "success") {
                             window.location.href = '@Url.Action("Index", "StoreFront")'
+                        } else if (val == "errorSumBalance") {
+                            Swal.fire({ text: "กรุณาเช็คบิลก่อน", icon: 'warning' })
+                        } else if (val == "errorDate") {
+                            Swal.fire({ text: "วันที่ไม่ตรงกัน", icon: 'warning' })
                         } else {
                             Swal.fire({ text: "ไม่สามารถบันทึกข้อมูลได้", icon: 'warning'} )
                         }
