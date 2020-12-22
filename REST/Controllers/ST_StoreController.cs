@@ -459,7 +459,7 @@ namespace REST.Controllers
             item.SupplierId = ST_Trans.SupplierId;
 
             var supplier = _db.MB_Supplier.FirstOrDefault(x => x.SupplierId == ST_Trans.SupplierId);
-            item.SupplierName = supplier.Title + " " + supplier.FirstName + " " + supplier.LastName;
+            item.SupplierName = supplier.Name;
 
             item.Reference = ST_Trans.Reference;
             item.SumTax = Share.Cnumber(Share.FormatDouble(ST_Trans.SumTax), 2);

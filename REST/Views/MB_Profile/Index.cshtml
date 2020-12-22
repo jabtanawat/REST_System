@@ -1,6 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Member Profile";
-    ViewData["System"] = "ทะเบียนสมาชิก";
+    ViewData["System"] = "สมาชิก";
     Layout = "_Member";
 }
 
@@ -12,12 +12,12 @@
     <div class="card-body" scroll>
 
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col-xl mx-auto">
 
                 <section>
                     <div class="d-flex mb-2">
                         <div class="mr-2">
-                            <a href="@Url.Action("FrmProfile", "MB_Profile", new { mode = "Add"})" class="btn btn-sm btn-success"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmProfile", "MB_Profile", new { mode = "Add"})" class="text-success col-form-label-sm"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มสมาชิก</a>
                         </div>
                     </div>
                     <hr />
@@ -25,7 +25,7 @@
 
                 <section class="Frm-Table">
                     <table id="DT_Table" class="table table-md table-hover table-bordered">
-                        <thead class="thead-black">
+                        <thead class="thead-primary-light">
                             <tr>
                                 <th class="text-center" style="width:20%;"> รหัส </th>
                                 <th class="text-center"> ชื่อ - นามสกุล </th>

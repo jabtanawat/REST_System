@@ -25,6 +25,7 @@ namespace REST.Data
         public DbSet<CD_Position> CD_Position{ get; set; }
         public DbSet<CD_Table> CD_Table { get; set; }
         public DbSet<CD_UserLogin> CD_UserLogin { get; set; }
+        public DbSet<CD_UserRoleGroup> CD_UserRoleGroup { get; set; }
 
         // ***StapleBalance
         public DbSet<StapleBalance> StapleBalance { get; set; }

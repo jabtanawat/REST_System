@@ -5,10 +5,10 @@
     Layout = "_StoreBack";
 }
 
-<div class="card">
+<div class="card rounded-0">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col-xl mx-auto">
                 <form name="FrmRunning" method="post">
                     <div class="row">
                         <div class="col-md-6 mx-auto">
@@ -16,31 +16,31 @@
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">สาขา :</label>
                                 <div class="col-sm-7">
                                     <input asp-for="BranchId" type="hidden" />
-                                    <input asp-for="BranchName" type="text" readonly class="form-control-plaintext form-control-sm" />
+                                    <input asp-for="BranchName" type="text" readonly class="form-control-plaintext form-control-sm border-bottom rounded-0" />
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ชื่อเอกสาร :</label>
                                 <div class="col-sm-7">
-                                    <input asp-for="NameTh" type="text" readonly class="form-control-plaintext form-control-sm" />
+                                    <input asp-for="NameTh" type="text" readonly class="form-control-plaintext form-control-sm border-bottom rounded-0" />
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ตัวคุมเอกสาร :</label>
                                 <div class="col-sm-7">
-                                    <input asp-for="Name" type="text" readonly class="form-control-plaintext form-control-sm" />
+                                    <input asp-for="Name" type="text" readonly class="form-control-plaintext form-control-sm border-bottom rounded-0" />
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ตัวอักษรนำหน้า :</label>
                                 <div class="col-sm-7">
-                                    <input asp-for="Front" type="text" class="form-control form-control-sm" />
+                                    <input asp-for="Front" type="text" class="form-control-plaintext form-control-sm border-bottom rounded-0" />
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ตัวเลข :</label>
                                 <div class="col-sm-7">
-                                    <input asp-for="Number" type="text" class="form-control form-control-sm" />
+                                    <input asp-for="Number" type="text" class="form-control-plaintext form-control-sm border-bottom rounded-0" />
                                 </div>
                             </div>
                             <div class="form-group row">
@@ -52,7 +52,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">รูปแบบฟอร์มวันที่ :</label>
                                 <div class="col-sm-7">
-                                    <select asp-for="SetDate" class="form-control form-control-sm">
+                                    <select asp-for="SetDate" class="form-control-plaintext form-control-sm border-bottom rounded-0">
                                         <option value="" selected>-- กรุณาเลือกรูปแบบ --</option>
                                         <option value="yy">yy</option>
                                         <option value="yyMM">yyMM</option>

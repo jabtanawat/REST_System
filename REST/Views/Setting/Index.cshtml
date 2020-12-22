@@ -5,10 +5,10 @@
     Layout = "_StoreBack";
 }
 
-<div class="card">
+<div class="card rounded-0">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col-xl mx-auto">
                 <div class="row">
                     <div class="col-xl-10 mx-auto">
                         <form name="FrmSetting" method="post">
@@ -29,14 +29,14 @@
                             <div class="form-group row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">Service Charge :</label>
                                 <div class="col-sm-4">
-                                    <input asp-for="Service" type="text" class="form-control form-control-sm text-right numberonly">
+                                    <input asp-for="Service" type="text" class="form-control-plaintext form-control-sm border-bottom rounded-0 text-right numberonly">
                                 </div>
                                 <label class="col-sm-3 col-form-label col-form-label-sm">%</label>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-5 col-form-label col-form-label-sm text-sm-right">ค่าเฉลี่ยคะแนนสะสม 1 คะแนน = :</label>
                                 <div class="col-sm-4">
-                                    <input asp-for="PointNumber" type="text" class="form-control form-control-sm text-right numberonly">
+                                    <input asp-for="PointNumber" type="text" class="form-control-plaintext form-control-sm border-bottom rounded-0 text-right numberonly">
                                 </div>
                                 <label class="col-sm-3 col-form-label col-form-label-sm">บาท</label>
                             </div>

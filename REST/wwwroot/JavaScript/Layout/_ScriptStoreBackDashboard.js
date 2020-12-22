@@ -8,13 +8,14 @@
 
 $(function () {
     $('.sidbar-menu').slimScroll({
-        height: $(window).height() - $('.nav_header').height(),
+        height: $(window).height() - $('.nav_header').height() - 60,
         distance: '-10px'
     });
 
     $(window).resize(function () {
         $('.sidbar-menu').slimScroll({
-            height: $(window).height() - $('.nav_header').height() - $('.navbar').outerHeight()
+            height: $(window).height() - $('.nav_header').height() - $('.navbar').outerHeight() - 65,
+            distance: '-10px'
         });
     });
 });

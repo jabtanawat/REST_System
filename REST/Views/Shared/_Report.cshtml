@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Restaurant System</title>
+    <link rel="stylesheet" href="~/Plugins/Bootstrap-4.5.2/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/Plugins/Fontawesome-Free-5.14.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/Plugins/SlimScroll-1.3.8/libs/prettify/prettify.css" />
+    <link rel="stylesheet" href="~/StyleSheet/Main.css" />
+    <link rel="stylesheet" href="~/StyleSheet/Layout/_StyleStoreBackDashboard.css" />
+    <link rel="stylesheet" href="~/Plugins/ToastrAlert/toastr.css" />
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+
+    <!---------- modal ผู้ใช้งาน ---------->
+    <div class="modal fade bd-example-modal-sm" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="text-center">
+                        <img src="~/Images/System/REST_User.png" class="rounded-circle" style="width: 100px; height: 100px;" />
+                        <div class="form-group mt-3">
+                            <h5>ชื่อ: @User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value</h5>
+                            <h5>สาขา: @User.Claims.FirstOrDefault(c => c.Type == "BranchName")?.Value</h5>
+                        </div>
+                    </div>
+                    <div class="form-group mt-5">
+                        <div class="row">
+                            <div class="col">
+                                <a class="btn btn-secondary btn-sm btn-block shadow-sm" asp-controller="Home" asp-action="Index">หน้าหลัก</a>
+                            </div>
+                            <div class="col">
+                                <a class="btn btn-danger btn-sm btn-block shadow-sm" asp-controller="Login" asp-action="Logout">Logout.</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrapper d-flex">
+        <div class="sidemenu">
+            <div class="sidebar" id="Scoll">
+                <div class="nav_header">
+                    <div class="text-center mt-3">
+                        <div class="round_header">
+                            <a href="#" class="nav-link link_picture">
+                                <img src="~/Images/System/Svg/P-RP.svg" class="rounded picture_header" />
+                            </a>
+                        </div>
+                        <div class="text_header mt-2">
+                            <a href="#" class="nav-link link_header">ระบบรายงาน</a>
+                        </div>
+                    </div>
+                    <hr />
+                </div>                
+                <section class="sidbar-menu">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="#Collapse6" data-toggle="collapse" class="nav-link collapsed px-2">
+                                <img src="~/Images/System/Svg/P-SF.svg" class="nav_icon" />
+                                <span class="nav_text">ระบบหน้าร้าน</span>
+                                <span class="fas fa-caret-right nav_icon_right"></span>
+                            </a>
+                            <ul class="navbar-nav collapse multi-collapse show list_hide" id="Collapse6">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- รายการบิล</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- รายการชำระเงิน</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr />
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="#Collapse5" data-toggle="collapse" class="nav-link collapsed px-2">
+                                <img src="~/Images/System/Svg/P-KC.svg" class="nav_icon" />
+                                <span class="nav_text">ระบบห้องครัว</span>
+                                <span class="fas fa-caret-right nav_icon_right"></span>
+                            </a>
+                            <ul class="navbar-nav collapse multi-collapse show list_hide" id="Collapse5">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- ออเดอร์รายวัน</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr />
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="#Collapse4" data-toggle="collapse" class="nav-link collapsed px-2">
+                                <img src="~/Images/System/Svg/P-ST.svg" class="nav_icon" />
+                                <span class="nav_text">ระบบสั่งซื้อ</span>
+                                <span class="fas fa-caret-right nav_icon_right"></span>
+                            </a>
+                            <ul class="navbar-nav collapse multi-collapse show list_hide" id="Collapse4">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- รายการสั่งซื้อ</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr />
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="#Collapse3" data-toggle="collapse" class="nav-link collapsed px-2">
+                                <img src="~/Images/System/Svg/P-MG.svg" class="nav_icon" />
+                                <span class="nav_text">ระบบบัญชี</span>
+                                <span class="fas fa-caret-right nav_icon_right"></span>
+                            </a>
+                            <ul class="navbar-nav collapse multi-collapse show list_hide" id="Collapse3">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- ผังบัญชี</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- รายวันทั่วไป</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr />
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="#Collapse2" data-toggle="collapse" class="nav-link px-2">
+                                <img src="~/Images/System/Svg/P-MB.svg" class="nav_icon" />
+                                <span class="nav_text">ระบบบุคลากร</span>
+                                <span class="fas fa-caret-right nav_icon_right"></span>
+                            </a>
+                            <ul class="navbar-nav collapse multi-collapse list_hide" id="Collapse2">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- พนักงาน</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- สมาชิก</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- ผู้จัดจำหน่าย</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="#Collapse1" data-toggle="collapse" class="nav-link px-2">
+                                <img src="~/Images/System/Svg/P-CD.svg" class="nav_icon" />
+                                <span class="nav_text">ระบบทะเบียน</span>
+                                <span class="fas fa-caret-right nav_icon_right"></span>
+                            </a>
+                            <ul class="navbar-nav collapse multi-collapse list_hide" id="Collapse1">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- โซนที่นั่ง</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- โต๊ะ</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- กลุ่มอาหารและเครื่องดื่ม</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- อาหารและเครื่องดื่ม</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- เครื่องเคียง</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- วัตถุดิบและอุปกรณ์</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- ตำแหน่งงาน</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a href="#" class="nav-link px-2"><i class="far fa-dot-circle nav_icon text-primary"></i><span class="nav_text ml-1">สาขา</span></a></li>
+                        <li class="nav-item"><a href="#" class="nav-link px-2"><i class="far fa-dot-circle nav_icon text-primary"></i><span class="nav_text ml-1">ผู้ใช้งานระบบ</span></a></li>
+                    </ul>
+                </section>                
+            </div>
+        </div>
+
+        <div class="content">
+            <nav class="navbar navbar-expand-lg sticky-top navbar-light bg-white nav__bar">
+                <div class="container-fluid">
+                    <div class="d-flex justify-content-start">
+                        <a href="#" class="sidemenuClick button_hide navbar-text"><i class="fas fa-align-left"></i></a>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        @ViewData["System"] - Restaurant System
+                    </div>
+                    <div class="d-flex justify-content-end navbar-nav">
+                        <a class="nav-item nav-link active" href="#" data-toggle="modal" data-target=".bd-example-modal-sm"><i class="fas fa-user-cog"></i></a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Plugins/Jquery-3.5.1/jquery-3.5.1.js"></script>
+    <script src="~/Plugins/Bootstrap-4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/Plugins/Fontawesome-Free-5.14.0/js/all.min.js"></script>
+    <script src="~/Plugins/Sweetalert2/sweetalert2.all.min.js"></script>
+    <script src="~/Plugins/SlimScroll-1.3.8/libs/prettify/prettify.js"></script>
+    <script src="~/Plugins/SlimScroll-1.3.8/jquery.slimscroll.min.js"></script>
+    <script src="~/JavaScript/Layout/_ScriptStoreBackDashboard.js"></script>
+    <script src="~/Plugins/ToastrAlert/toastr.min.js"></script>
+    <partial name="_NotificationPanel" />
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

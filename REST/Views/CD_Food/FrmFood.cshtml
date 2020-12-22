@@ -32,15 +32,15 @@
     </style>
 }
 
-<div class="card">
+<div class="card rounded-0">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col-xl mx-auto">
                 <!-- Header -->
                 <section class="FrmHeader">
                     <div class="d-flex mb-2">
                         <div class="mr-auto">
-                            <a href="@Url.Action("FrmFood", "CD_Food", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmFood", "CD_Food", new { mode = "Add" })" class="text-success col-form-label-sm"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มอาหาร</a>
                         </div>
                     </div>
                     <hr />
@@ -167,10 +167,10 @@
                     </form>
 
                     <!-- Table Staple -->
-                    <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;วัตถุดิบ</p>
+                    <p class="font-weight-bold mt-3 mb-1"><i class="far fa-dot-circle"></i>&nbsp;วัตถุดิบ</p>
                     <table class="table table-md table-bordered" id="tableStaple">
                         <caption><a href="#" class="text-primary" data-toggle="ajax-modal" data-target="#popupStaple" data-url="@Url.Action("_popupStaple", "Modal")">เพิ่มรายการ</a></caption>
-                        <thead class="thead-black">
+                        <thead class="thead-primary-light">
                             <tr>
                                 <th class="text-center" style="width:5%"><i class="fas fa-sort"></i></th>
                                 <th class="text-center">ชื่อ</th>

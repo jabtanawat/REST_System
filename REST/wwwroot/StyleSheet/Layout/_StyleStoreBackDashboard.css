@@ -25,12 +25,12 @@
 
 /* HEADER SIDEBAR */
 
-.wrapper .sidemenu .sidebar .nav_header .round_header .picture_header {
-    height: 50px;
-    width: 50px;
-    display: none;
-    transition: all ease 0.25s;
-}
+    .wrapper .sidemenu .sidebar .nav_header .round_header .link_picture {
+        height: 50px;
+        width: 50px;
+        display: none;
+        transition: all ease 0.25s;
+    }
 
 .wrapper .sidemenu .sidebar .nav_header .text_header {
     font-size: 2rem;
@@ -234,13 +234,18 @@
     padding: 8px 0 8px 0;
 }
 
-.wrapper.active .sidemenu .sidebar .nav_header .round_header .picture_header {
+.wrapper.active .sidemenu .sidebar .nav_header .round_header .link_picture {
     display: block;
     height: 20px;
     width: 20px;
     display: inline-flex;
     justify-content: center;
     align-items: center;
+}
+
+.wrapper.active .sidemenu .sidebar .nav_header .round_header .link_picture .picture_header {
+    height: 30px;
+    width: 30px;
 }
 
 .wrapper.active .sidemenu .sidebar .nav_header .nav-link .header_icon {

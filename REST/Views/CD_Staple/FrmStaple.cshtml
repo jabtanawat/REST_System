@@ -5,7 +5,7 @@
     Layout = "_StoreBack";
 }
 
-<div class="card">
+<div class="card rounded-0">
     <div class="card-body">
         <div class="row">
             <div class="col-xl mx-auto">
@@ -13,7 +13,7 @@
                 <section class="FrmHeader">
                     <div class="d-flex mb-2">
                         <div class="mr-auto">
-                            <a href="@Url.Action("FrmStaple", "CD_Staple", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmStaple", "CD_Staple", new { mode = "Add" })" class="text-success col-form-label-sm"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มวัตถุดิบ</a>
                         </div>
                     </div>
                     <hr />
@@ -133,7 +133,7 @@
 
                 <!-- Table -->
                 <section>
-                    <p class="font-weight-bold mt-3"><i class="far fa-dot-circle"></i>&nbsp;ประวัติการซื้อ</p>
+                    <p class="font-weight-bold mt-3 mb-1"><i class="far fa-dot-circle"></i>&nbsp;ประวัติการซื้อ</p>
                     <table class="table table-md table-bordered">                        
                         <thead class="thead-primary-light">
                             <tr>

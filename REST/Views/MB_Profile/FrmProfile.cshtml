@@ -2,7 +2,7 @@
 @model ViewMB_Member;
 @{
     ViewData["Title"] = "Member Profile";
-    ViewData["System"] = "ทะเบียนสมาชิก";
+    ViewData["System"] = "สมาชิก";
     Layout = "_Member";
 }
 
@@ -14,12 +14,12 @@
     <div class="card-body">
 
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col-xl mx-auto">
                 <!-- Header -->
                 <section>
                     <div class="d-flex mb-2">
                         <div class="mr-auto">
-                            <a href="@Url.Action("FrmEmproyee", "MB_Emproyee", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmEmproyee", "MB_Emproyee", new { mode = "Add" })" class="text-success col-form-label-sm"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มสมาชิก</a>
                         </div>
                     </div>
                     <hr />
@@ -29,7 +29,7 @@
                     <form name="FrmMember" method="post">
                         <!-- profile -->
                         <section class="mb-3">
-                            <div class="alert alert-primary py-2 mb-0" role="alert">
+                            <div class="alert alert-primary py-1 mb-2" role="alert">
                                 <i class="fas fa-user"></i>&nbsp;&nbsp;ข้อมูล
                             </div>
                             <div class="row">
@@ -177,7 +177,7 @@
 
                         <!-- Interest -->
                         <section>
-                            <div class="alert alert-success py-2 mb-0" role="alert">
+                            <div class="alert alert-success py-1 mb-2" role="alert">
                                 <i class="fas fa-poll"></i>&nbsp;&nbsp;โปรโมชั่น
                             </div>
                             <div class="row">
@@ -239,7 +239,7 @@
 
                         <!-- Address -->
                         <section class="content-address">
-                            <div class="alert alert-primary py-2 mb-0" role="alert">
+                            <div class="alert alert-primary py-1 mb-2" role="alert">
                                 <i class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;ที่อยู่
                             </div>
                             <div class="row">

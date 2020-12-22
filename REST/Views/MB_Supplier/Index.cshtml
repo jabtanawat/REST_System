@@ -11,12 +11,12 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col-xl mx-auto">
                 <!-- Header -->
                 <section>
                     <div class="d-flex mb-2">
                         <div class="mr-2">
-                            <a href="@Url.Action("FrmSupplier", "MB_Supplier", new { mode = "Add"})" class="btn btn-sm btn-success"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmSupplier", "MB_Supplier", new { mode = "Add"})" class="text-success col-form-label-sm"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มผู้จัดจำหน่าย</a>
                         </div>
                     </div>
                     <hr />
@@ -24,10 +24,10 @@
                 <!-- Table -->
                 <section>
                     <table id="DT_Table" class="table table-md table-hover table-bordered">
-                        <thead class="thead-black">
+                        <thead class="thead-primary-light">
                             <tr>
                                 <th class="text-center" style="width:20%;"> รหัส </th>
-                                <th class="text-center"> ชื่อ - นามสกุล </th>
+                                <th class="text-center"> ชื่อผู้จัดจำหน่าย </th>
                                 @*<th class="text-center" style="width:20%;"> ตำแหน่งงาน </th>*@
                                 <th class="text-center" style="width:5%;"> <i class="fas fa-info"></i> </th>
                             </tr>
@@ -37,7 +37,7 @@
                             {
                                 <tr>
                                     <td>@row.SupplierId</td>
-                                    <td>@row.Title @row.FirstName @row.LastName</td>
+                                    <td>@row.Name</td>
                                     @*<td>@row.PositionName</td>*@
                                     <td class="text-center"><a href="@Url.Action("FrmSupplier", "MB_Supplier", new { mode = "Edit", id = row.SupplierId})" class="text-info"><i class="fas fa-edit"></i></a></td>
                                 </tr>

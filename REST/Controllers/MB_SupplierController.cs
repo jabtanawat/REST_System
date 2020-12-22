@@ -120,9 +120,7 @@ namespace REST.Controllers
                             item.DateRegister = Share.FormatDate(info.DateRegister).Date;
                             item.TaxNumber = info.TaxNumber;
                             item.IdCard = info.IdCard;
-                            item.Title = info.Title;
-                            item.FirstName = info.FirstName;
-                            item.LastName = info.LastName;
+                            item.Name = info.Name;
                             item.PhoneNumber1 = info.PhoneNumber1;
                             item.PhoneNumber2 = info.PhoneNumber2;
                             item.Email = info.Email;
@@ -157,9 +155,7 @@ namespace REST.Controllers
                         item = _db.MB_Supplier.FirstOrDefault(x => x.SupplierId == info.SupplierId);
                         item.TaxNumber = info.TaxNumber;
                         item.IdCard = info.IdCard;
-                        item.Title = info.Title;
-                        item.FirstName = info.FirstName;
-                        item.LastName = info.LastName;
+                        item.Name = info.Name;
                         item.PhoneNumber1 = info.PhoneNumber1;
                         item.PhoneNumber2 = info.PhoneNumber2;
                         item.Email = info.Email;
@@ -237,9 +233,7 @@ namespace REST.Controllers
             item.DateRegister = info.DateRegister.ToString("dd/MM/yyyy");
             item.TaxNumber = info.TaxNumber;
             item.IdCard = info.IdCard;
-            item.Title = info.Title;
-            item.FirstName = info.FirstName;
-            item.LastName = info.LastName;
+            item.Name = info.Name;
             item.PhoneNumber1 = info.PhoneNumber1;
             item.PhoneNumber2 = info.PhoneNumber2;
             item.Email = info.Email;

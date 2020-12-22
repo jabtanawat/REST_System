@@ -13,12 +13,12 @@
 <div class="card">
     <div class="card-body">
         <div class="row">
-            <div class="col-xl-11 mx-auto">
+            <div class="col-xl mx-auto">
                 <!-- Header -->
                 <section class="FrmHeader">
                     <div class="d-flex mb-2">
                         <div class="mr-auto">
-                            <a href="@Url.Action("FrmSupplier", "MB_Supplier", new { mode = "Add" })" class="btn btn-sm btn-success mr-3"><i class="fas fa-folder-plus"></i>&nbsp;&nbsp;เพิ่ม</a>
+                            <a href="@Url.Action("FrmSupplier", "MB_Supplier", new { mode = "Add" })" class="text-success col-form-label-sm"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มผู้จัดจำหน่าย</a>
                         </div>
                     </div>
                     <hr />
@@ -28,7 +28,7 @@
                     <form name="FrmSupplier" method="post">
                         <!-- profile -->
                         <section>
-                            <div class="alert alert-primary py-2 mb-0" role="alert">
+                            <div class="alert alert-primary py-1 mb-2" role="alert">
                                 <i class="fas fa-user"></i>&nbsp;&nbsp;ข้อมูล
                             </div>
                             <div class="row">
@@ -84,8 +84,6 @@
                                         <span asp-validation-for="TaxNumber" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label form-label-sm">เลขที่บัตรประชาชน :</label>
@@ -93,27 +91,17 @@
                                         <span asp-validation-for="IdCard" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-6">
+                            </div>
+                            <div class="row">                                
+                                <div class="col-xl-6 col-lg-6 col-md-6">
                                     <div class="form-group">
-                                        <label class="col-form-label form-label-sm">คำนำหน้า :</label>
-                                        <input asp-for="Title" type="text" class="form-control form-control-sm">
-                                        <span asp-validation-for="Title" class="text-danger col-form-label-sm"></span>
+                                        <label class="col-form-label form-label-sm">ชื่อผู้จัดจำหน่าย :</label>
+                                        <input asp-for="Name" type="text" class="form-control form-control-sm">
+                                        <span asp-validation-for="Name" class="text-danger col-form-label-sm"></span>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label form-label-sm">ชื่อ :</label>
-                                        <input asp-for="FirstName" type="text" class="form-control form-control-sm">
-                                        <span asp-validation-for="FirstName" class="text-danger col-form-label-sm"></span>
-                                    </div>
-                                </div>
-                                <div class="col-xl-3 col-lg-4 col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-form-label form-label-sm">นามสกุล :</label>
-                                        <input asp-for="LastName" type="text" class="form-control form-control-sm">
-                                        <span asp-validation-for="LastName" class="text-danger col-form-label-sm"></span>
-                                    </div>
-                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-xl-3 col-lg-4 col-md-6">
                                     <div class="form-group">
                                         <label class="col-form-label form-label-sm">โทรศัพท์ (1) :</label>
@@ -177,7 +165,7 @@
                         </section>
                         <!-- Address -->
                         <section>
-                            <div class="alert alert-primary py-2 mb-0" role="alert">
+                            <div class="alert alert-primary py-1 mb-2" role="alert">
                                 <i class="fas fa-map-marked-alt"></i>&nbsp;&nbsp;ที่อยู่
                             </div>
                             <div class="row">

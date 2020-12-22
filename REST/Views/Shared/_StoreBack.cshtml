@@ -127,9 +127,9 @@
                         </li>
                     </ul>
                     @*<hr />
-                    <ul class="navbar-nav">
-                        <li class="nav-item item_click_Running"><a asp-controller="Running" asp-action="Index" class="nav-link px-2"><i class="fas fa-sort-numeric-down nav_icon"></i><span class="nav_text ml-1">เลข Running</span></a></li>
-                    </ul>*@
+        <ul class="navbar-nav">
+            <li class="nav-item item_click_Running"><a asp-controller="Running" asp-action="Index" class="nav-link px-2"><i class="fas fa-sort-numeric-down nav_icon"></i><span class="nav_text ml-1">เลข Running</span></a></li>
+        </ul>*@
                     <hr />
                     <ul class="navbar-nav">
                         <li class="nav-item item_click">
@@ -156,6 +156,33 @@
                     <ul class="navbar-nav">
                         <li class="nav-item item_click">
                             <a href="#Collapse5" data-toggle="collapse" class="nav-link collapsed px-2">
+                                <i class="far fa-id-badge nav_icon"></i>
+                                <span class="nav_text">กำหนดสิทธิ์การใช้งาน</span>
+                                <span class="fas fa-caret-right nav_icon_right"></span>
+                            </a>
+                            <ul class="navbar-nav collapse multi-collapse show list_hide" id="Collapse5">
+                                <li class="nav-item">
+                                    <a asp-controller="Running" asp-action="Index" class="nav-link link-list">
+                                        <span class="nav_text_list">- ผู้ใช้งานระบบ</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link link-list">
+                                        <span class="nav_text_list">- กำหนดระดับผู้ใช้งาน</span>
+                                    </a>
+                                </li>
+                                <li class="nav-item item_click_UserRoleGroup">
+                                    <a href="@Url.Action("Index", "CD_UserRoleGroup")" class="nav-link link-list">
+                                        <span class="nav_text_list">- กลุ่มผู้ใช้งาน</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <hr />
+                    <ul class="navbar-nav">
+                        <li class="nav-item item_click">
+                            <a href="#Collapse5" data-toggle="collapse" class="nav-link collapsed px-2">
                                 <i class="fas fa-cogs nav_icon"></i>
                                 <span class="nav_text">จัดการระบบ</span>
                                 <span class="fas fa-caret-right nav_icon_right"></span>
@@ -164,11 +191,6 @@
                                 <li class="nav-item item_click_Running">
                                     <a asp-controller="Running" asp-action="Index" class="nav-link link-list">
                                         <span class="nav_text_list">- เลข Running</span>
-                                    </a>
-                                </li>
-                                <li class="nav-item item_click_Position">
-                                    <a href="#" class="nav-link link-list">
-                                        <span class="nav_text_list">- กำหนดสิทธิ์การใช้งาน</span>
                                     </a>
                                 </li>
                                 <li class="nav-item item_click_Setting">
@@ -180,8 +202,8 @@
                         </li>
                     </ul>
                     @*<ul class="navbar-nav">
-                        <li class="nav-item item_click_Setting"><a asp-controller="Setting" asp-action="Index" class="nav-link px-2"><i class="fas fa-cogs nav_icon"></i><span class="nav_text ml-1">ตั้งค่าระบบ</span></a></li>
-                    </ul>*@
+            <li class="nav-item item_click_Setting"><a asp-controller="Setting" asp-action="Index" class="nav-link px-2"><i class="fas fa-cogs nav_icon"></i><span class="nav_text ml-1">ตั้งค่าระบบ</span></a></li>
+        </ul>*@
                 </section>                
             </div>
         </div>

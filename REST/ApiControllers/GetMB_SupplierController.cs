@@ -27,7 +27,7 @@ namespace REST.ApiControllers
         public List<ViewMB_Supplier> SupplierAll()
         {
             var list = new List<ViewMB_Supplier>();
-            var sql = $"SELECT SupplierId, Title, FirstName, LastName "
+            var sql = $"SELECT SupplierId, Name "
                     + $"FROM MB_Supplier";
             using (var command = _db.Database.GetDbConnection().CreateCommand())
             {
@@ -41,11 +41,7 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(0))
                             item.SupplierId = data.GetString(0);
                         if (!data.IsDBNull(1))
-                            item.Title = data.GetString(1);
-                        if (!data.IsDBNull(2))
-                            item.FirstName = data.GetString(2);
-                        if (!data.IsDBNull(3))
-                            item.LastName = data.GetString(3);
+                            item.Name = data.GetString(1);
                         list.Add(item);
                     }
                 }

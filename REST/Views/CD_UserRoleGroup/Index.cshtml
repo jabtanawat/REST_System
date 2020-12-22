@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "ระบบทะเบียน";
+    ViewData["System"] = "กลุ่มผู้ใช้งาน";
+    Layout = "_StoreBack";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Plugins/DataTables/DataTables-1.10.21/css/dataTables.bootstrap4.min.css" />
+}
+
+<div class="card rounded-0">
+    <div class="card-body">
+        <!-- Header -->
+        <section>
+            <div class="d-flex mb-2">
+                <div class="mr-2">
+                    <a href="@Url.Action("FrmUserRoleGroup", "CD_UserRoleGroup", new { mode = "Add"})" class="text-success col-form-label-sm"><i class="fas fa-folder-plus"></i>&nbsp;เพิ่มกลุ่มผู้ใช้งาน</a>
+                </div>
+            </div>
+            <hr />
+        </section>
+        <!-- Table -->
+        <section>
+            <table id="DT_Table" class="table table-md table-hover table-bordered">
+                <thead class="thead-primary-light">
+                    <tr>
+                        <th class="text-center" style="width:10%;"> รหัส </th>
+                        <th class="text-center" style="width:20%;"> กลุ่มผู้ใช้งาน </th>
+                        <th class="text-center" style="width:10%;"> สิทธิ์กำหนดคุณสมบัติ </th>
+                        <th class="text-center" style="width:10%;"> สิทธิ์บันทึกข้อมูล </th>
+                        <th class="text-center" style="width:10%;"> สิทธิ์อนุมัติข้อมูล </th>
+                        <th class="text-center" style="width:10%;"> สิทธิ์เรียกดูข้อมูล </th>
+                        <th class="text-center" style="width:10%;"> สิทธิ์พิมพ์รายงาน </th>
+                        <th class="text-center" style="width:5%;"> Active </th>
+                        <th class="text-center" style="width:5%;"> <i class="fas fa-info-circle"></i> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in ViewBag.Data)
+                    {
+                        <tr>
+                            <td>@row.RoleGroupId</td>
+                            <td>@row.RoleGroupName</td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input ml-n1" checked="@row.SystemConfig" />
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input ml-n1" checked="@row.SaveData" />
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input ml-n1" checked="@row.ApproveData" />
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input ml-n1" checked="@row.ViewData" />
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input ml-n1" checked="@row.PrintReport" />
+                            </td>
+                            <td class="text-center">
+                                <input type="checkbox" class="form-check-input ml-n1" checked="@row.Active" />
+                            </td>
+                            <td class="text-center"><a href="@Url.Action("FrmUserRoleGroup", "CD_UserRoleGroup", new { mode = "Edit", id = row.RoleGroupId})" class="text-dark"><i class="fas fa-pencil-alt"></i></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Plugins/DataTables/datatables.min.js"></script>
+    <script src="~/Plugins/DataTables/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".item_click_UserRoleGroup").addClass("active");
+
+            $('#DT_Table').DataTable({
+                "info": false,
+                "ordering": false
+            });
+        });
+    </script>
+}

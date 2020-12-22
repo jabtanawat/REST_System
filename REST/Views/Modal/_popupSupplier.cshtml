@@ -5,7 +5,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col">
-                        <h6 class="font-weight-bold" id="exampleModalCenterTitle"><i class="fas fa-database mr-2"></i>ข้อมูล Supplier</h6>
+                        <h6 class="font-weight-bold" id="exampleModalCenterTitle"><i class="fas fa-database mr-2"></i>ข้อมูลผู้จัดจำหน่าย</h6>
                     </div>
                     <div class="col text-right">
                         <button type="button" class="btn btn-table-sm btn-danger text-white" data-dismiss="modal" aria-label="Close">
@@ -16,11 +16,11 @@
                 </div>
                 <hr />
                 <table id="DT_Staple" class="table table-md table-bordered table-hover mt-3">
-                    <thead class="thead-black">
+                    <thead class="thead-primary-light">
                         <tr>
                             <th class="text-center" style="width:2rem;"></th>
                             <th class="text-center" style="width:10rem;">รหัส</th>
-                            <th class="text-center">ชื่อ</th>
+                            <th class="text-center">ผู้จัดจำหน่าย</th>
                         </tr>
                     </thead>
                     <tbody id="TB_Staple">
@@ -30,7 +30,7 @@
                                 <tr>
                                     <td class="text-center bg-info-light"><a href="#" onclick="showSupplier('@row.SupplierId')" class="text-info">เลือก</a></td>
                                     <td>@row.SupplierId</td>
-                                    <td>@row.Title @row.FirstName @row.LastName</td>
+                                    <td>@row.Name</td>
                                 </tr>
                             }
                         }

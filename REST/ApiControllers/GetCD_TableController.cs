@@ -72,7 +72,7 @@ namespace REST.ApiControllers
         public List<ViewTable> TableZoneStatus(string ZoneId, string Status, string branchid)
         {
             var List = new List<ViewTable>();
-            var sql = $"SELECT TableId, TableName, Personal, Description, TableST, "
+            var sql = $"SELECT ZoneId, TableId, TableName, Personal, Description, TableST, "
                     + $"(SELECT ISNULL(SUM(Amount * Price), 0) FROM SF_OrderSub LEFT JOIN SF_Order ON SF_OrderSub.OrderId = SF_Order.OrderId WHERE SF_OrderSub.BranchId = '{branchid}' AND SF_Order.Success = '1' AND SF_OrderSub.TableId = CD_Table.TableId) AS Total "
                     + $"FROM CD_Table "
                     + $"WHERE BranchId = '{branchid}' ";
@@ -90,15 +90,17 @@ namespace REST.ApiControllers
                     while (data.Read())
                     {
                         var Item = new ViewTable();
-                        Item.TableId = data.GetString(0);
-                        Item.TableName = data.GetString(1);
-                        if (!data.IsDBNull(2))
-                            Item.Personal = data.GetInt32(2);
+                        if (!data.IsDBNull(0))
+                            Item.ZoneId = data.GetString(0);
+                        Item.TableId = data.GetString(1);
+                        Item.TableName = data.GetString(2);
                         if (!data.IsDBNull(3))
-                            Item.Description = data.GetString(3);
-                        Item.TableST = data.GetInt32(4);
-                        if (!data.IsDBNull(5))
-                            Item.Total = Share.Cnumber(Share.FormatDouble(data.GetDecimal(5)), 0);
+                            Item.Personal = data.GetInt32(3);
+                        if (!data.IsDBNull(4))
+                            Item.Description = data.GetString(4);
+                        Item.TableST = data.GetInt32(5);
+                        if (!data.IsDBNull(6))
+                            Item.Total = Share.Cnumber(Share.FormatDouble(data.GetDecimal(6)), 0);
                         List.Add(Item);
                     }
                 }

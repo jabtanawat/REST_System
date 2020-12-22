@@ -13,9 +13,7 @@ namespace REST.Models
         public DateTime DateRegister { get; set; }
         public string TaxNumber { get; set; }
         public string IdCard { get; set; }
-        public string Title { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string Name { get; set; }
         public string PhoneNumber1 { get; set; }
         public string PhoneNumber2 { get; set; }
         public string Email { get; set; }

@@ -27,7 +27,7 @@ namespace REST.ApiControllers
         public List<ViewST_Trans> TransAll(string branchid)
         {
             var List = new List<ViewST_Trans>();
-            string sql = $"SELECT Documents, DateDocument, Title, FirstName, LastName, SumBalance "
+            string sql = $"SELECT Documents, DateDocument, Name, SumBalance "
                     + $"FROM ST_Trans  "
                     + $"LEFT JOIN MB_Supplier ON ST_Trans.SupplierId = MB_Supplier.SupplierId "
                     + $"WHERE ST_Trans.BranchId = '{branchid}' ";
@@ -48,11 +48,7 @@ namespace REST.ApiControllers
                         if (!data.IsDBNull(2))
                             Item.SupplierName = data.GetString(2);
                         if (!data.IsDBNull(3))
-                            Item.SupplierName += ' ' + data.GetString(3);
-                        if (!data.IsDBNull(4))
-                            Item.SupplierName += ' ' + data.GetString(4);
-                        if (!data.IsDBNull(5))
-                            Item.SumBalance = Share.Cnumber(Share.FormatDouble(data.GetDecimal(5)), 2);
+                            Item.SumBalance = Share.Cnumber(Share.FormatDouble(data.GetDecimal(3)), 2);
                         List.Add(Item);
                     }
                 }
